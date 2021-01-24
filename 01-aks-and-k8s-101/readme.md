@@ -10,21 +10,19 @@ Here is the agenda for the workshops:
 Slides 
  * Kubernetes introduction
  * AKS introduction
-Lab-01 - AKS setup (RG, ACR, AKS with ACR interaction)
-Lab-02 - install kubectl and connect to your cluster
-Lab-03 - setting up you shell for better AKS/kubectl experience
-Slides
- * Introduce app
-Lab-04 - Containerizing your application
-Slides
- * Kubernetes Concepts
-Lab-05	Creating and managing pods
-Lab-06	Readiness and Liveness probes
-Lab-07  Configmaps and secrets
-Lab-08	Creating and Managing Services
-Lab-09	Deployments
-Lab-10	Rolling Updates
-Lab-11  Cleaning up
+ * Lab-01 - AKS setup (RG, ACR, AKS with ACR interaction)
+ * Lab-02 - install kubectl and connect to your cluster
+ * Lab-03 - setting up you shell for better AKS/kubectl experience
+ * Slides - Introduce app
+ * Lab-04 - Containerizing your application
+ * Slides - Basic k8s Concepts 
+ * Lab-05 - Creating and managing pods
+ * Lab-06 - Readiness and Liveness probes
+ * Lab-07 - Configmaps and secrets
+ * Lab-08 - Creating and Managing Services
+ * Lab-09 - Deployments
+ * Lab-10 - Rolling Updates
+ * Lab-11 - Cleaning up
 
 ## Links
 
