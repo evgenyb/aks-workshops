@@ -2,7 +2,7 @@
 
 I decided to dedicate 2021 to Azure Kubernetes Services (AKS) and here is the preliminary set of workshops with draft content (both dates and content are subject to change) that I am planning to work on:
 
-## Workshop #1 - AKS and Kubernetes 101
+## [Workshop #1 - AKS and Kubernetes 101](01-aks-and-k8s-101/readme.md)
 
 This is introduction level (101) workshop for those of you who have never worked with neither AKS nor Kubernetes. I expect that you have some basic understanding of containerization concept and know what docker and docker images are. This workshop covers the basics of using Kubernetes and you will learn how to:
  * Provision basic AKS cluster and integrate it with Azure Container Registry (ACR)
