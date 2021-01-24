@@ -6,10 +6,8 @@ This is introduction level (101) workshop for those of you who have never worked
  * Use `kubectl` to deploy, configure, monitor, update and delete your apps 
 
 Here is the agenda for the workshops:
-
-Slides 
- * Kubernetes introduction
- * AKS introduction
+ 
+ * Slides - Kubernetes and AKS introduction
  * Lab-01 - AKS setup (RG, ACR, AKS with ACR interaction)
  * Lab-02 - install kubectl and connect to your cluster
  * Lab-03 - setting up you shell for better AKS/kubectl experience
