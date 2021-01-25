@@ -1,9 +1,8 @@
 # Workshop #1 - AKS and Kubernetes 101
 
-This is introduction level (101) workshop for those of you who have never worked with neither AKS nor Kubernetes. I expect that you have some basic understanding of containerization concept and know what docker and docker images are. 
-
 ![logo](images/logo.png)
 
+This is introduction level (101) workshop for those of you who have never worked with neither AKS nor Kubernetes. I expect that you have some basic understanding of containerization concept and know what docker and docker images are. 
 
 This workshop covers the basics of using Kubernetes and you will learn how to:
  * Provision basic AKS cluster and integrate it with Azure Container Registry (ACR)
