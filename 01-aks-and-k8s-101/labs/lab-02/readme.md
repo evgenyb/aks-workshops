@@ -1,5 +1,5 @@
 
-# lab-03 - setting up you shell (bash or PowerShell) for better AKS/kubectl experience
+# lab-02 - setting up you shell (bash or PowerShell) for better AKS/kubectl experience
 
 ## Estimated completion time - 15 min
 
@@ -167,4 +167,4 @@ Your prompt should now show both your git repository status (if you are inside g
 
 ## Next: Containerizing your application
 
-[Go to lab-04](../lab-04/readme.md)
+[Go to lab-03](../lab-03/readme.md)
