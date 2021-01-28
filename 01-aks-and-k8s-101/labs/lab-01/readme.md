@@ -91,7 +91,7 @@ kube-system       Active   7m58s
 * [az aks install-cli](https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest?WT.mc_id=AZ-MVP-5003837#az_aks_install_cli)
 * [Overview of kubectl](https://kubernetes.io/docs/reference/kubectl/overview/)
 
-## Next: name of next lab
+## Next: setting up you shell for better AKS/kubectl experience
 
 [Go to lab-02](../lab-02/readme.md)
 
