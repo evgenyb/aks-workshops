@@ -39,11 +39,18 @@ az aks create -g iac-aks-ws1-rg -n aks-ws1 -c 1 --generate-ssh-keys --attach-acr
 
 ## Task #2 - install kubectl
 
-To manage a Kubernetes cluster, you use `kubectl`, the Kubernetes command-line client. To install kubectl locally, use the [az aks install-cli](https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837#az_aks_install_cli) command. You may need to use `sudo` if you are running on WSL
+To manage a Kubernetes cluster, you use `kubectl`, the Kubernetes command-line client. To install kubectl locally, use the [az aks install-cli](https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837#az_aks_install_cli) command. 
 
 ```bash
 az aks install-cli
 ```
+
+You may need to use `sudo` if you are running on WSL, in this case run 
+
+```bash
+sudo az aks install-cli
+```
+
 
 For a complete list of kubectl operations, see [Overview of kubectl](https://kubernetes.io/docs/reference/kubectl/overview/).
 
@@ -53,15 +60,25 @@ To configure `kubectl` to connect to your Kubernetes cluster, use the [az aks ge
 az aks get-credentials -g iac-aks-ws1-rg -n aks-ws1
 ```
 
-## Task 3 - verify the connection to your cluster
+## Task #3 - verify the connection to your cluster
 
-To verify the connection to your cluster, let's use the kubectl get command to return a list of the cluster nodes and namespaces.
+To verify the connection to your cluster, let's use the kubectl get command to return a list of the cluster nodes 
 
 ```bash
 kubectl get nodes
+NAME                                STATUS   ROLES   AGE     VERSION
+aks-nodepool1-95835493-vmss000000   Ready    agent   6m24s   v1.18.14
+```
 
+and namespaces
+
+```bash
 kubectl get ns
-
+NAME              STATUS   AGE
+default           Active   7m56s
+kube-node-lease   Active   7m58s
+kube-public       Active   7m58s
+kube-system       Active   7m58s
 ```
 
 ## Useful links
