@@ -1,6 +1,6 @@
 # lab-xx - name
 
-## Estimated completion time - 15 min
+## Estimated completion time - xx min
 
 intro 
 
