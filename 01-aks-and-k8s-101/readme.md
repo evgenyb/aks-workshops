@@ -12,8 +12,8 @@ This workshop covers the basics of using Kubernetes and you will learn how to:
 Here is the agenda for the workshops:
  
  * Slides - Kubernetes and AKS introduction
- * Lab-01 - AKS setup
- * Lab-02 - setting up you shell for better AKS/kubectl experience
+ * [Lab-01](labs/lab-01/readme.md) - AKS setup
+ * [Lab-02](labs/lab-02/readme.md) - setting up you shell for better AKS/kubectl experience
  * Slides - Introduce app
  * Lab-03 - Containerizing your application
  * Slides - Basic k8s Concepts 
