@@ -13,6 +13,7 @@ To start learning and experimenting with Kubernetes concepts, commands and opera
 
 * Provision resource group for all resources needed during the workshop
 * Provision Azure Container Registry (ACR)
+* Provision Azure Log Analytics Workspace
 * Provision Azure Kubernetes Service (AKS) and integrate it with ACR
 * Install `kubectl` command 
 * Connect to AKS cluster
@@ -26,15 +27,26 @@ First, you need to create resource group. I suggest we all use the same resource
 az group create -g iac-aks-ws1-rg -l westeurope
 ```
 
-Next, create Azure Container Registry. ACR name should be globally unique, therefore I suggest that we use the following naming convention: `iacaksws1<YOU-NAME>`, so for example for me it will be  `iacaksws1evg`.
+Next, create Azure Container Registry. ACR name should be globally unique, therefore I suggest that we use the following naming convention: `iacaksws1<YOU-NAME>acr`, so for example for me it will be  `iacaksws1evgacr`.
 
 ```bash
-az acr create -g iac-aks-ws1-rg -n iacaksws1<YOU-NAME> --sku Basic
+az acr create -g iac-aks-ws1-rg -n iacaksws1<YOU-NAME>acr --sku Basic
 ```
+
+Provision Log Analytics Workspace. LA workspace name must be globally unique, therefore I suggest that we use the following naming convention: `iac-aks-ws1-<YOU-NAME>-la`, so for example for me it will be  `iac-aks-ws1-evg-la`.
+
+```bash
+az monitor log-analytics workspace create -g iac-aks-ws1-rg -n iac-aks-ws1-<YOU-NAME>-la
+```
+
 Finally, provision AKS. Let's use the same cluster name - `aks-ws1`
 
 ```bash
-az aks create -g iac-aks-ws1-rg -n aks-ws1 -c 1 --generate-ssh-keys --attach-acr iacaksws1<YOU-NAME> 
+# get workspace resource id
+az monitor log-analytics workspace show -g iac-aks-ws1-rg -n iac-aks-ws1-<YOU-NAME>-la --query id
+"/subscriptions/8878beb2-5e5d-4418-0000-783674eea324/resourcegroups/iac-aks-ws1-rg/providers/microsoft.operationalinsights/workspaces/iac-aks-ws1-<YOU-NAME>-la"
+#
+az aks create -g iac-aks-ws1-rg -n aks-ws1 -c 1 --generate-ssh-keys --attach-acr iacaksws1<YOU-NAME>acr --enable-addons monitoring --workspace-resource-id "/subscriptions/8878beb2-5e5d-4418-0000-783674eea324/resourcegroups/iac-aks-ws1-rg/providers/microsoft.operationalinsights/workspaces/iac-aks-ws1-<YOU-NAME>-la"
 ```
 
 ## Task #2 - install kubectl

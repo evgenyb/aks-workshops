@@ -67,7 +67,7 @@ Once you have tested our application and it works, you can package it as a conta
 
 ![deploy-to-acr-step3](images/publish-to-acr-step3.png)
 
-If you follow our naming convention, the resource group name will be `iac-aks-ws1-rg` and ACR name will be `iacaksws1<YOU-NAME>`.
+If you follow our naming convention, the resource group name will be `iac-aks-ws1-rg` and ACR name will be `iacaksws1<YOU-NAME>acr`.
 
 5. When all is set, click `Publish`
 
@@ -119,14 +119,14 @@ And finally, Push the Image to ACR
 
 ```bash
 # login to ACR
-az acr login --name iacaksws1<YOU-NAME>
+az acr login --name iacaksws1<YOU-NAME>acr
 Login Succeeded
 
 # Use docker tag to create an alias of the image with the fully qualified path to your ACR registry.
-docker tag apia:1.0.0 iacaksws1<YOU-NAME>.azurecr.io/apia:1.0.0
+docker tag apia:1.0.0 iacaksws1<YOU-NAME>acr.azurecr.io/apia:1.0.0
 
 # Now that you've tagged the image with the fully qualified path to your private registry, you can push it to the registry with docker push
-docker push iacaksws1<YOU-NAME>.azurecr.io/apia:1.0.0
+docker push iacaksws1<YOU-NAME>acr.azurecr.io/apia:1.0.0
 ```
 If command runs successful, check the ACR at the Azure portal. Now `apia` repository should have 2 tags of the `apia` image.
 
@@ -138,7 +138,7 @@ If command runs successful, check the ACR at the Azure portal. Now `apia` reposi
 Yet another way you can build and push your images is by using [az acr build](https://docs.microsoft.com/en-us/cli/azure/acr?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837#az_acr_build) cli command. To do so, run the following command from within the `api-a` project folder. Note, that this time we used `:v1` as a image version.
 
 ```bash
-az acr build --registry iacaksws1<YOU-NAME> --image apia:v1 --file Dockerfile ..
+az acr build --registry iacaksws1<YOU-NAME>acr --image apia:v1 --file Dockerfile ..
 ```
 If command runs successful, check the ACR at the Azure portal. Now `apia` repository should have 3 tags of the `apia` image.
 
@@ -149,7 +149,7 @@ If command runs successful, check the ACR at the Azure portal. Now `apia` reposi
 Now that we have image at the ACR, and our AKS cluster is integrated with ACR, we can run this image at the AKS
 
 ```bash
-kubectl run app-a --image iacaksws1<YOU-NAME>.azurecr.io/apia:v1
+kubectl run app-a --image iacaksws1<YOU-NAME>acr.azurecr.io/apia:v1
 pod/app-a created
 ```
 
