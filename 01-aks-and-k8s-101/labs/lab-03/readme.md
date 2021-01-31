@@ -126,7 +126,7 @@ docker tag apia:1.0.0 iacaksws1<YOU-NAME>.azurecr.io/apia:1.0.0
 # Now that you've tagged the image with the fully qualified path to your private registry, you can push it to the registry with docker push
 docker push iacaksws1<YOU-NAME>.azurecr.io/apia:1.0.0
 ```
-If command runs successful, check the ACR at the Azure portal. Now `apia` repository should have 2 versions of the image.
+If command runs successful, check the ACR at the Azure portal. Now `apia` repository should have 2 tags of the image.
 
 ![acr1](images/portal-acr-4.png)
 
@@ -138,7 +138,7 @@ Yet another way you can build and push your images using `az acr build` cli comm
 ```powershell
 az acr build --registry iacaksws1<YOU-NAME> --image apia:v1 --file Dockerfile ..
 ```
-If command runs successful, check the ACR at the Azure portal. Now `apia` repository should have 3 versions of the image.
+If command runs successful, check the ACR at the Azure portal. Now `apia` repository should have 3 tags of the image.
 
 ![acr1](images/portal-acr-3.png)
 
