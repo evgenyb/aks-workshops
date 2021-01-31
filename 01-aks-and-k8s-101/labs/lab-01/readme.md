@@ -44,13 +44,23 @@ To manage a Kubernetes cluster, you use `kubectl`, the Kubernetes command-line c
 ```bash
 az aks install-cli
 ```
+If you are using PowerShell, you need to update system PATH environment variable and add new item for  `%userprofile%\.azure-kubectl`. 
 
-You may need to use `sudo` if you are running on WSL, in this case run 
+![env](images/env.png)
+
+* Open the Start Search, type in `env`, and choose `Edit the system environment variables`
+* Click the `Environment Variables…` button.
+* Select `Path` variable under `System variables` section
+* CLick `Edit...`
+* Click `New` and set variable to `%userprofile%\.azure-kubectl`
+
+You need to reset your PowerShell (and cmd) session(s) for change to take effect.
+
+If you are running on WSL, you may need to use `sudo` , in this case run 
 
 ```bash
 sudo az aks install-cli
 ```
-
 
 For a complete list of kubectl operations, see [Overview of kubectl](https://kubernetes.io/docs/reference/kubectl/overview/).
 

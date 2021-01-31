@@ -25,7 +25,7 @@ namespace api_a.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
-            _logger.LogInformation("Calling get.");
+            _logger.LogInformation("Getting weather forecast.");
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
