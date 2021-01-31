@@ -27,7 +27,7 @@ If you don't have an Azure account, please create one before the workshop.
 ## Install `az cli`
 
 Download and install latest version of `az cli` from this link  
-[Install the Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
+[Install the Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837)
 
 ## Test your azure account with `az cli`
 
