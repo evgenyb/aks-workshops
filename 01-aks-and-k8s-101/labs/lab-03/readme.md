@@ -208,7 +208,7 @@ curl http://localhost:7000/weatherforecast
 [{"date":"2021-02-01T21:45:40.0602016+00:00","temperatureC":19,"temperatureF":66,"summary":"Warm"},{"date":"2021-02-02T21:45:40.0621127+00:00","temperatureC":30,"temperatureF":85,"summary":"Scorching"},{"date":"2021-02-03T21:45:40.0621165+00:00","temperatureC":-16,"temperatureF":4,"summary":"Sweltering"},{"date":"2021-02-04T21:45:40.0621169+00:00","temperatureC":45,"temperatureF":112,"summary":"Mild"},{"date":"2021-02-05T21:45:40.0621171+00:00","temperatureC":18,"temperatureF":64,"summary":"Sweltering"}]
 ```
 
-If you want nicely formatted json, you can install `jq`. On PowerShell, use `choco install jq`. When installed, run the following command:
+That look quite ugly, so, if you want nicely formatted json, you should install `jq`. On PowerShell, use `choco install jq`. When installed, run the following command:
 
 ```bash
 curl -s http://localhost:7000/weatherforecast | jq
