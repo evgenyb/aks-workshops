@@ -4,6 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>api_a</RootNamespace>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <UserSecretsId>27643eaf-920b-498f-adad-b23c3a6b7d76</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
