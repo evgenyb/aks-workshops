@@ -15,7 +15,7 @@ Here is the agenda for the workshops:
  * [Lab-01](labs/lab-01/readme.md) - AKS setup
  * [Lab-02](labs/lab-02/readme.md) - setting up you shell for better AKS/kubectl experience
  * Slides - Introduce app
- * Lab-03 - Containerizing your application
+ * [Lab-03](labs/lab-03/readme.md) - Containerizing your application
  * Slides - Basic k8s Concepts 
  * Lab-04 - Creating and managing pods
  * Lab-05 - Readiness and Liveness probes
