@@ -23,7 +23,7 @@ Here is the agenda for the workshops:
  * Lab-07 - Creating and Managing Services
  * Lab-08 - Deployments
  * Lab-09 - Rolling Updates
- * Lab-10 - Cleaning up
+ * [Lab-10](labs/lab-10/readme.md) - Cleaning up
 
 ## Links
 
