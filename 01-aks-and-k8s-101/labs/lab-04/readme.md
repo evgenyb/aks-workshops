@@ -14,7 +14,6 @@ intro
 * Learn how to get pod description
 * Learn how to get delete pods
 
-
 ## Task #1 - run application at AKS
 
 Now that we published several versions of out application image into ACR, and our AKS cluster is integrated with ACR, we can run our application inside the AKS
@@ -167,6 +166,91 @@ Couple of things to mention here:
 1. As expected, IP address is accessible from inside the pod. 
 2. The `curl` pod was deleted when we exit. This is because of  `--rm` flag that tells Kubernetes to delete pod created by this command.
 
+## Task #5 - delete pod
+
+Now, let's delete `curl` pod. 
+
+```bash
+# delete single pod
+kubectl delete pod curl
+pod "curl" deleted
+```
+
+## Task #4 - testing within cluster with interactive shell
+
+In previous task we used `kubectl run -i --tty --image=...` command every time we wanted to test/debug applications in our cluster. Alternative solution can be to deploy permanent pod to the cluster and attach to it when needed. This time let's do it with yaml pod definition file and deploy it using `kubectl apply ` command. 
+
+Create new file `curl-pod.yaml` file under `lab-04` folder and add the following pod definition
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: curl
+spec:
+  containers:
+    - name: curl
+      image: "radial/busyboxplus:curl"      
+      command:
+        - sleep
+        - "3600"
+  restartPolicy: Always
+```
+
+save the file and run the following command (from within `lab-04` folder)
+
+```bash
+# deploy curl pod
+
+kubectl apply -f curl-pod.yaml
+pod/curl created
+
+# check pod status and wait when it gets status Running
+kubectl get po curl
+NAME   READY   STATUS    RESTARTS   AGE
+curl   1/1     Running   0          5m35s
+```
+
+As you can see from the pod definition file, it uses command `sleep 3600` and `restartPolicy: Always`. `sleep 3600` means that pod will be "alive" for 3600 seconds = 1 hour and then it will terminate itself. But since parameter `restartPolicy` is set to `Always`, Kubernetes will start new pod. That means that with this configuration, pod will be restarted every hour and it will look like it always running.
+
+Now, set `sleep` parameter to `60` and deploy changes. Observe what will happen with `kubectl get po curl -w` in "monitoring" terminal.
+
+```bash
+kubectl apply -f .\curl-pod.yaml
+The Pod "curl" is invalid: spec: Forbidden: pod updates may not change fields other than `spec.containers[*].image`, `spec.initContainers[*].image`, `spec.activeDeadlineSeconds` or `spec.tolerations` (only additions to existing tolerations)
+...
+```
+
+We can't update this pod, therefore we need to delete existing one and create new one.
+
+```bash
+# delete existing pod 
+kubectl delete po curl
+
+# deploy new one
+kubectl apply -f .\curl-pod.yaml
+pod/curl created
+```
+
+Wait for couple of minutes and you will see the following behavior in the "monitoring" terminal (`kubectl get po curl -w`).
+
+```bash
+kubectl get po -w
+NAME    READY   STATUS    RESTARTS   AGE
+app-a   1/1     Running   0          29h
+app-b   1/1     Running   0          23h
+app-c   1/1     Running   0          23h
+curl    0/1     Pending   0          0s
+curl    1/1     Running             0          2s
+curl    0/1     Completed           0          62s
+curl    1/1     Running             1          63s
+curl    0/1     Completed           1          2m3s
+curl    0/1     CrashLoopBackOff    1          2m18s
+curl    1/1     Running             2          2m19s
+curl    0/1     Completed           2          3m19s
+curl    0/1     CrashLoopBackOff    2          3m32s
+curl    1/1     Running             3          3m48s
+```
 
 ## Task #3 - get pod logs
 

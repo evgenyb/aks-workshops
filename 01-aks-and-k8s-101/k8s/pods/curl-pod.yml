@@ -9,8 +9,4 @@ spec:
       command:
         - sleep
         - "3600"
-      resources:
-        limits:
-          cpu: "0.2"
-          memory: "10Mi"
   restartPolicy: Always
