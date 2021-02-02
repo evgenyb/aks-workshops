@@ -10,8 +10,6 @@ To work with Kubernetes and learn `kubectl` commands we need a test application.
 * Add Docker support 
 * Learn how to build docker image
 * Learn how to build and push docker image to Azure Container Registry with Visual Studio, Docker and `az acr build` command 
-* Learn how to run application at AKS
-* Learn how to use port forward to test application
 
 ## Prerequisites
 
@@ -144,108 +142,6 @@ If command runs successful, check the ACR at the Azure portal. Now `apia` reposi
 
 ![acr1](images/portal-acr-3.png)
 
-## Task #6 - run command at Azure Kubernetes Cluster
-
-Now that we have image at the ACR, and our AKS cluster is integrated with ACR, we can run this image at the AKS
-
-```bash
-kubectl run app-a --image iacaksws1<YOU-NAME>acr.azurecr.io/apia:v1
-pod/app-a created
-```
-
-You can check the status of the your application pods
-
-```powershell
-kubectl get pod -w
-NAME    READY   STATUS              RESTARTS   AGE
-app-a   0/1     ContainerCreating   0          9s
-app-a   1/1     Running             0          12s
-```
-
-`-w` flag is a short version of `--watch` and after listing/getting the requested object (pod in this case), it will watch for changes. As you can see, `app-a` pod was first in `ContainerCreating` state and then, eventually, changed the status to `Running`.
-
-We can check application logs by running the following command
-
-```powershell
-kubectl logs app-a
-info: Microsoft.Hosting.Lifetime[0]
-      Now listening on: http://[::]:80
-info: Microsoft.Hosting.Lifetime[0]
-      Application started. Press Ctrl+C to shut down.
-info: Microsoft.Hosting.Lifetime[0]
-      Hosting environment: Production
-info: Microsoft.Hosting.Lifetime[0]
-      Content root path: /app
-```
-
-if you want to continuously observe logs, use `-f` flag
-
-```powershell
-kubectl logs app-a -f
-info: Microsoft.Hosting.Lifetime[0]
-      Now listening on: http://[::]:80
-info: Microsoft.Hosting.Lifetime[0]
-      Application started. Press Ctrl+C to shut down.
-info: Microsoft.Hosting.Lifetime[0]
-      Hosting environment: Production
-info: Microsoft.Hosting.Lifetime[0]
-      Content root path: /app
-```
-
-## Task #7 - use Port Forwarding to access your application in a cluster
-
-```bash
-# Forward a local port 7000 to a port 80 on the Pod app-a
-kubectl port-forward app-a 7000:80
-Forwarding from 127.0.0.1:7000 -> 80
-Forwarding from [::1]:7000 -> 80
-```
-
-Now open new terminal (if you use Windows Terminal click `SHift-Alt-D` and it will split your current terminal in 2). In new terminal run the following command
-
-```bash
-curl http://localhost:7000/weatherforecast
-[{"date":"2021-02-01T21:45:40.0602016+00:00","temperatureC":19,"temperatureF":66,"summary":"Warm"},{"date":"2021-02-02T21:45:40.0621127+00:00","temperatureC":30,"temperatureF":85,"summary":"Scorching"},{"date":"2021-02-03T21:45:40.0621165+00:00","temperatureC":-16,"temperatureF":4,"summary":"Sweltering"},{"date":"2021-02-04T21:45:40.0621169+00:00","temperatureC":45,"temperatureF":112,"summary":"Mild"},{"date":"2021-02-05T21:45:40.0621171+00:00","temperatureC":18,"temperatureF":64,"summary":"Sweltering"}]
-```
-
-That look quite ugly, so, if you want nicely formatted json, you should install `jq`. On PowerShell, use `choco install jq`. When installed, run the following command:
-
-```bash
-curl -s http://localhost:7000/weatherforecast | jq
-[
-  {
-    "date": "2021-02-01T21:47:51.9523787+00:00",
-    "temperatureC": -9,
-    "temperatureF": 16,
-    "summary": "Sweltering"
-  },
-  {
-    "date": "2021-02-02T21:47:51.9523827+00:00",
-    "temperatureC": 19,
-    "temperatureF": 66,
-    "summary": "Cool"
-  },
-  {
-    "date": "2021-02-03T21:47:51.9523837+00:00",
-    "temperatureC": 3,
-    "temperatureF": 37,
-    "summary": "Freezing"
-  },
-  {
-    "date": "2021-02-04T21:47:51.9523839+00:00",
-    "temperatureC": 12,
-    "temperatureF": 53,
-    "summary": "Sweltering"
-  },
-  {
-    "date": "2021-02-05T21:47:51.9523841+00:00",
-    "temperatureC": -5,
-    "temperatureF": 24,
-    "summary": "Bracing"
-  }
-]
-```
-
 ## Useful links
 
 * [Visual Studio 2019 Community Edition](https://visualstudio.microsoft.com/downloads/?WT.mc_id=AZ-MVP-5003837)
@@ -255,7 +151,7 @@ curl -s http://localhost:7000/weatherforecast | jq
 * [Container Tools in Visual Studio](https://docs.microsoft.com/en-us/visualstudio/containers/?view=vs-2019&WT.mc_id=AZ-MVP-5003837)
 * [How to configure Visual Studio Container Tools](https://docs.microsoft.com/en-us/visualstudio/containers/container-tools-configure?view=vs-2019&WT.mc_id=AZ-MVP-5003837)
 * [az acr build command](https://docs.microsoft.com/en-us/cli/azure/acr?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837#az_acr_build)
-* [https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/)
+* [Push your first image to a private Docker container registry using the Docker CLI](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli?WT.mc_id=AZ-MVP-5003837)
 
 ## Next: Creating and managing pods
 
