@@ -2,7 +2,7 @@
 
 ## Estimated completion time - xx min
 
-If you managed to solve all tasks and you still have some time, feel free to do labs marked as `Optional`. If you done with all  `Optional`, try to do some `Exercises` :) 
+If you managed to solve all tasks and you still have some time, feel free to do labs marked as `Optional`. 
 
 ## Goals
 
@@ -16,7 +16,7 @@ If you managed to solve all tasks and you still have some time, feel free to do 
 * Learn how to create pod from yaml definition file
 * Learn how to use port forward to test pod
 
-## Rask #0 - only for Windows users - setting up Windows Terminal
+## Task #0 - (only for Windows users) - setting up Windows Terminal
 
 For the most of the labs, I recommend you to use Windows Terminal, because it allows to split Terminal windows in two (and more) sessions. One will be be used to run all commands included into the labs. In the second window you will run `kubectl get ... -w` command in watching mode and you will get a realtime feedback about what kubernetes does behind the scene.
 
@@ -24,7 +24,7 @@ You can install Windows Terminal from the [Microsoft Store](https://aka.ms/termi
 
 ![Windows Terminal](images/wt-new.png)
 
-To split it, enter `Shift+Alt+D` and it will split your session vertically:
+To split current window, enter `Shift+Alt+D` and it will split your current window either vertically or horizontally:
 
 ![Windows Terminal](images/wt-split.png)
 
@@ -84,43 +84,11 @@ app-a   1/1     Running   0          5h21m   10.244.0.9    aks-nodepool1-9583549
 app-b   1/1     Running   0          2m49s   10.244.0.10   aks-nodepool1-95835493-vmss000000   <none>           <none>
 ```
 
-as you can see, now report contains additional information about pods, such as IP address and node name where pods was created.
-
-For the next exercise, open 2 terminals side by side, (or, if you use Windows Terminal, you can split your current session in two by clicking `Shift+Alt+D`). 
-In first terminal, run the following command, note `-w` flag
-
-```bash
-# Watch what happens with pods
-kubectl get pod -w
-```
-
-in the second terminal, let's start the third image from our ACR (tagged with `:latest`) and let's call it `app-c`
-
-```bash
-# Run pod app-c
-kubectl run app-c --image iacaksws1<YOU-NAME>acr.azurecr.io/apia:latest
-pod/app-c created
-```
-
-and then observe what is reported at the first terminal. You should see something similar to
-
-```bash
-kubectl get po -w
-NAME    READY   STATUS    RESTARTS   AGE
-app-a   1/1     Running   0          5h39m
-app-b   1/1     Running   0          21m
-app-c   0/1     Pending   0          0s
-app-c   0/1     Pending   0          0s
-app-c   0/1     ContainerCreating   0          0s
-app-c   0/1     Running             0          5s
-app-c   1/1     Running             0          15s
-```
-
-`-w` flag is a short version of `--watch` and after listing/getting the requested object (pod in this case), it will watch for changes. As you can see, `app-c` pod was first in `ContainerCreating` state and then, eventually, changed the status to `Running` `0/1` and finally `1/1`.
+as you can see, now report contains additional information about pods, such as IP address and node name where pods were created.
 
 ## Task #3 - get detailed information about pod 
 
-You can get information about one pod by running 
+You can get information about one concrete pod by running 
 
 ```bash
 # Get pod app-a
@@ -136,8 +104,20 @@ app-a   1/1     Running   0          20h   10.244.0.9   aks-nodepool1-95835493-v
 
 # Describe pod with verbose output
 kubectl describe pod app-a
+Name:         app-a
+Namespace:    default
+Priority:     0
+Node:         aks-nodepool1-95835493-vmss000000/10.240.0.4
+Start Time:   Wed, 03 Feb 2021 08:55:10 +0100
+Labels:       <none>
+Annotations:  <none>
+Status:       Running
+IP:           10.244.0.34
+IPs:
+  IP:  10.244.0.34
+...
 
-# Get pod app-a YAML
+# Get pod app-a definition as YAML
 kubectl get po app-a -o yaml
 apiVersion: v1
 kind: Pod
@@ -146,6 +126,20 @@ metadata:
   labels:
     run: app-a
 ...
+
+# Get pod app-a definition json
+kubectl get po app-a -o json
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "creationTimestamp": "2021-02-03T07:55:10Z",
+        "name": "app-a",
+        "namespace": "default",
+        "selfLink": "/api/v1/namespaces/default/pods/app-a",
+        "uid": "a87d3cac-9bd3-4061-9af0-2876a44c96b7"
+    },
+...    
 ```
 
 ## Task #4 - testing within cluster with interactive shell. Option #1
