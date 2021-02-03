@@ -1,24 +1,27 @@
-# lab-04 - Creating and managing pods
+# lab-04 - Creating, managing and testing pods
 
 ## Estimated completion time - xx min
 
-intro 
+If you managed to solve all tasks and you still have some time, feel free to do labs marked as `Optional`. If done with `Optional`, try to do some `Exercises` :) 
 
 ## Goals
 
 * Learn how to run application at AKS
 * Learn how to get list of pods
-* Learn how to use port forward to test pod
-* Learn how to get logs from the pod
 * Learn how to get detailed information about the pod
 * Learn how to get pod description
-* Learn how to get delete pods
+* Learn how to delete pods
+* Learn how to run pod as interactive shell for testing and debugging your apps
+* Learn how to get logs from the pod
+* Learn how to create pod from yaml definition file
+* Learn how to use port forward to test pod
 
-## Task #1 - run application at AKS
+## Task #1 - run image from ACR in AKS
 
-Now that we published several versions of out application image into ACR, and our AKS cluster is integrated with ACR, we can run our application inside the AKS
+Now that we published several versions of out application images into ACR, and our AKS cluster is integrated with ACR, we can run our application inside the AKS
 
 ```bash
+# Run pod app-a
 kubectl run app-a --image iacaksws1<YOU-NAME>acr.azurecr.io/apia:v1
 pod/app-a created
 ```
@@ -28,6 +31,7 @@ As you can see, Kubernetes reporting that `pod` `app-a` was created.
 Now, let's run another version of application (tagged with `:1.0.0`), this time let's call it `app-b`
 
 ```bash
+# Run pod app-b
 kubectl run app-b --image iacaksws1<YOU-NAME>acr.azurecr.io/apia:1.0.0
 pod/app-b created
 ```
@@ -37,6 +41,7 @@ pod/app-b created
 To get all pods, use the following command
 
 ```bash
+# List all pods 
 kubectl get pod
 NAME    READY   STATUS    RESTARTS   AGE
 app-a   1/1     Running   0          5h18m
@@ -47,6 +52,7 @@ as you can see, there are 2 pods running. Both have status `Running` and `Ready`
 To get even more information about pods, use `-o wide` flag
 
 ```bash
+# List all pods with expanded (aka "wide") output
 kubectl get po -o wide
 NAME    READY   STATUS    RESTARTS   AGE     IP            NODE                                NOMINATED NODE   READINESS GATES
 app-a   1/1     Running   0          5h21m   10.244.0.9    aks-nodepool1-95835493-vmss000000   <none>           <none>
@@ -59,12 +65,14 @@ For the next exercise, open 2 terminals side by side, (or, if you use Windows Te
 In first terminal, run the following command, note `-w` flag
 
 ```bash
+# Watch what happens with pods
 kubectl get pod -w
 ```
 
 in the second terminal, let's start the third image from our ACR (tagged with `:latest`) and let's call it `app-c`
 
 ```bash
+# Run pod app-c
 kubectl run app-c --image iacaksws1<YOU-NAME>acr.azurecr.io/apia:latest
 pod/app-c created
 ```
@@ -90,23 +98,18 @@ app-c   1/1     Running             0          15s
 You can get information about one pod by running 
 
 ```bash
+# Get pod app-a
 kubectl get po app-a
 NAME    READY   STATUS    RESTARTS   AGE
 app-a   1/1     Running   0          20h
-```
 
-note, I used `po` instead of `pod`. This is alias that you can use to save soe keystrokes :)
-
-```bash
-# -o wide will give you even more information 
+# Note, I used `po` instead of `pod`. This is alias that you can use to save some keystrokes. Another alias is `pods` :)
+# Get app-a pod with expanded (aka "wide") output
 kubectl get po app-a -o wide
 NAME    READY   STATUS    RESTARTS   AGE   IP           NODE                                NOMINATED NODE   READINESS GATES
 app-a   1/1     Running   0          20h   10.244.0.9   aks-nodepool1-95835493-vmss000000   <none>           <none>
-```
 
-To get pod manifest, use `-o yaml` or `-o json` 
-
-```bash
+# Get pod app-a YAML
 kubectl get po app-a -o yaml
 apiVersion: v1
 kind: Pod
@@ -117,7 +120,7 @@ metadata:
 ...
 ```
 
-## Task #4 - testing within cluster with interactive shell
+## Task #4 - testing within cluster with interactive shell. Option #1
 
 Quite often you need to test application from within your cluster. Because cluster is running inside it's own Virtual Network, nothing is accessible from your PC. 
 Let's try to ping of the running `app-a|b|c` pods.
@@ -137,7 +140,7 @@ Pinging 10.244.0.9 with 32 bytes of data:
 Request timed out.
 ```
 
-One common solution is to run a test pod that you can attach to and run shell commands from inside the pod. There are several well known images for such a tasks, one of them called [busybox](https://busybox.net/), but the image we will use is [busyboxplus:curl](https://hub.docker.com/r/radial/busyboxplus). This is because it contains `curl` command that need for our testing. 
+How can we test our application? One common solution is to run a test pod that you can attach to and run interactive shell commands from inside the pod. There are several well known images for such a tasks, one of them called [busybox](https://busybox.net/), but the image we will use is [busyboxplus:curl](https://hub.docker.com/r/radial/busyboxplus). This is because it contains `curl` command that need for our testing. 
 
 ```bash
 # Run pod as interactive shell
@@ -163,7 +166,7 @@ pod "curl" deleted
 
 Couple of things to mention here:
 
-1. As expected, IP address is accessible from inside the pod. 
+1. As expected, IP address is now accessible from inside the pod. 
 2. The `curl` pod was deleted when we exit. This is because of  `--rm` flag that tells Kubernetes to delete pod created by this command.
 
 ## Task #5 - delete pod
@@ -176,53 +179,7 @@ kubectl delete pod curl
 pod "curl" deleted
 ```
 
-## Task #6 - testing within cluster with interactive shell
-
-In previous task we used `kubectl run -i --tty --image=...` command every time we wanted to test/debug applications in our cluster. Alternative solution can be to deploy permanent pod to the cluster and attach to it when needed. This time let's do it with yaml pod definition file and deploy it using `kubectl apply ` command. 
-
-Create new file `curl-pod.yaml` file under `lab-04` folder and add the following pod definition
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: curl
-spec:
-  containers:
-    - name: curl
-      image: "radial/busyboxplus:curl"      
-      command:
-        - sleep
-        - "3600"
-  restartPolicy: Always
-```
-
-save the file and run the following command (from within `lab-04` folder)
-
-```bash
-# deploy curl pod
-
-kubectl apply -f curl-pod.yaml
-pod/curl created
-
-# check pod status and wait when it gets status Running
-kubectl get po curl
-NAME   READY   STATUS    RESTARTS   AGE
-curl   1/1     Running   0          5m35s
-```
-
-As you can see from the pod definition file, it uses command `sleep 3600` and `restartPolicy: Always`. `sleep 3600` means that pod will be "alive" for 3600 seconds = 1 hour and then it will terminate itself. But since parameter `restartPolicy` is set to `Always`, Kubernetes will start new pod. That means that with this configuration, pod will be restarted every hour and it will look like it always running.
-
-Now let's connect to the pod
-
-```bash
-# Interactive shell access to a running pod
-kubectl exec --stdin --tty curl -- /bin/sh
-```
-
-I personally prefer the first approach, that is - `kubectl run curl`, because it creates pod only when I need it and cleans it up when I am done with testing / debugging.
-
-## Task #7 - deploy `apia` image using yaml pod definition 
+## Task #6 - deploy `apia` image using yaml pod definition 
 
 Let's first delete all `app-a|b|c` pods from the cluster
 
@@ -258,7 +215,7 @@ kubectl apply -f app-a-pod.yaml
 pod/app-a created
 ```
 
-## Task #8 - get pod logs
+## Task #7 - get pod logs
 
 You can check pod logs by running the following command
 
@@ -288,7 +245,7 @@ info: Microsoft.Hosting.Lifetime[0]
       Content root path: /app
 ```
 
-## Task #9 - test our application
+## Task #8 - test our application
 
 ```bash
 # get the pod IP address
@@ -308,9 +265,9 @@ kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -
 pod "curl" deleted
 ```
 
-## Task #10 - use Port Forwarding to test your application in a cluster
+## Task #9 - use Port Forwarding to test your application in a cluster
 
-Here is another technique, called Port Forwarding that you can use to test your app without test pod. Kubectl port-forward allows you to access and interact with internal Kubernetes cluster processes from your localhost. The following command will start listening on port 7000 on the local machine and forward traffic to port 80 on `app-a` running in the cluster
+Here is another technique you can use to test your applications. It's called [Port Forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/) and and it allows you to access and interact with internal Kubernetes cluster processes from your localhost. The following command will start listening on port 7000 on the local machine and forward traffic to port 80 on `app-a` running in the cluster
 
 ```bash
 # Listen on port 7000 on the local machine and forward to port 80 on app-a
@@ -326,13 +283,63 @@ curl http://localhost:7000/weatherforecast
 [{"date":"2021-02-01T21:45:40.0602016+00:00","temperatureC":19,"temperatureF":66,"summary":"Warm"},{"date":"2021-02-02T21:45:40.0621127+00:00","temperatureC":30,"temperatureF":85,"summary":"Scorching"},{"date":"2021-02-03T21:45:40.0621165+00:00","temperatureC":-16,"temperatureF":4,"summary":"Sweltering"},{"date":"2021-02-04T21:45:40.0621169+00:00","temperatureC":45,"temperatureF":112,"summary":"Mild"},{"date":"2021-02-05T21:45:40.0621171+00:00","temperatureC":18,"temperatureF":64,"summary":"Sweltering"}]
 ```
 
+## Task #10 - testing within cluster with interactive shell. Option #2 (Optional)
+
+In `Task #4` we used `kubectl run -i --tty --image=...` command. This command deletes `curl` pod after shell is closed and that means that you need to execute this command every time you wanted to test/debug applications in our cluster. 
+An alternative solution can be to deploy "permanent" pod to the cluster and attach to it with interactive shell when needed. This time, let's create pod from yaml definition file and deploy it using `kubectl apply ...` command. 
+
+Create new file `curl-pod.yaml` file under `lab-04` folder and add the following pod definition
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: curl
+spec:
+  containers:
+    - name: curl
+      image: "radial/busyboxplus:curl"      
+      command:
+        - sleep
+        - "3600"
+  restartPolicy: Always
+```
+
+save the file and run the following command (from within `lab-04` folder)
+
+```bash
+# deploy curl pod
+kubectl apply -f curl-pod.yaml
+pod/curl created
+
+# check pod status and wait when it gets status Running
+kubectl get po curl
+NAME   READY   STATUS    RESTARTS   AGE
+curl   1/1     Running   0          5m35s
+```
+
+As you can see from the pod definition file, it uses command `sleep 3600` and `restartPolicy: Always`. `sleep 3600` means that pod will be "alive" for 3600 seconds = 1 hour and then it will be terminated. But since parameter `restartPolicy` is set to `Always`, Kubernetes will start new pod. That means that with this configuration, pod will be restarted every hour and it will look like it always running...
+
+Now let's connect to the pod
+
+```bash
+# Interactive shell access to a running pod
+kubectl exec --stdin --tty curl -- /bin/sh
+```
+
+I personally prefer the first approach, that is - `kubectl run curl ...`, because it creates pod only when I need it and cleans it up when I am done with testing / debugging.
+
 ## Useful links
 
 * [Kubernetes Pods](https://kubernetes.io/docs/concepts/workloads/pods/)
 * [kubectl Cheat Sheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+* [kubectl apply](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply)
+* [kubectl run](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#run)
+* [kubectl delete](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#delete)
+* [kubectl exec](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#exec)
 * [Interacting with running Pods](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#interacting-with-running-pods)
 * [Formatting output](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#formatting-output)
-* [https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/)
+* [Use Port Forwarding to Access Applications in a Cluster](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/)
 
 ## Next: Readiness and Liveness probes
 

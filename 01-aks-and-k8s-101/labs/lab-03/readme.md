@@ -153,6 +153,6 @@ If command runs successful, check the ACR at the Azure portal. Now `apia` reposi
 * [az acr build command](https://docs.microsoft.com/en-us/cli/azure/acr?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837#az_acr_build)
 * [Push your first image to a private Docker container registry using the Docker CLI](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli?WT.mc_id=AZ-MVP-5003837)
 
-## Next: Creating and managing pods
+## Next: Creating, managing and testing pods
 
 [Go to lab-04](../lab-04/readme.md)
