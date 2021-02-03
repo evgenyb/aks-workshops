@@ -93,53 +93,19 @@ You can get information about one concrete pod by running
 ```bash
 # Get pod app-a
 kubectl get po app-a
-NAME    READY   STATUS    RESTARTS   AGE
-app-a   1/1     Running   0          20h
 
 # Note, I used `po` instead of `pod`. This is alias that you can use to save some keystrokes. Another alias is `pods` :)
 # Get app-a pod with expanded (aka "wide") output
 kubectl get po app-a -o wide
-NAME    READY   STATUS    RESTARTS   AGE   IP           NODE                                NOMINATED NODE   READINESS GATES
-app-a   1/1     Running   0          20h   10.244.0.9   aks-nodepool1-95835493-vmss000000   <none>           <none>
 
 # Describe pod with verbose output
 kubectl describe pod app-a
-Name:         app-a
-Namespace:    default
-Priority:     0
-Node:         aks-nodepool1-95835493-vmss000000/10.240.0.4
-Start Time:   Wed, 03 Feb 2021 08:55:10 +0100
-Labels:       <none>
-Annotations:  <none>
-Status:       Running
-IP:           10.244.0.34
-IPs:
-  IP:  10.244.0.34
-...
 
 # Get pod app-a definition as YAML
 kubectl get po app-a -o yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  creationTimestamp: "2021-02-01T14:40:22Z"
-  labels:
-    run: app-a
-...
 
 # Get pod app-a definition json
 kubectl get po app-a -o json
-{
-    "apiVersion": "v1",
-    "kind": "Pod",
-    "metadata": {
-        "creationTimestamp": "2021-02-03T07:55:10Z",
-        "name": "app-a",
-        "namespace": "default",
-        "selfLink": "/api/v1/namespaces/default/pods/app-a",
-        "uid": "a87d3cac-9bd3-4061-9af0-2876a44c96b7"
-    },
-...    
 ```
 
 ## Task #4 - testing within cluster with interactive shell. Option #1
