@@ -2,19 +2,21 @@
 
 ## Estimated completion time - xx min
 
-If you managed to solve all tasks and you still have some time, feel free to do labs marked as `Optional`. 
+At the core of Kubernetes is the Pod. Pods represent a logical application and hold a collection of one or more containers. 
 
 ## Goals
 
-* Learn how to run application at AKS
-* Learn how to get list of pods
-* Learn how to get detailed information about the pod
-* Learn how to get pod description
-* Learn how to delete pods
-* Learn how to run pod as interactive shell for testing and debugging your apps
-* Learn how to get logs from the pod
-* Learn how to create pod from yaml definition file
-* Learn how to use port forward to test pod
+In this lab you will learn how to:
+
+* run application at AKS
+* get list of pods
+* get detailed information about the pod
+* get pod description
+* delete pods
+* run pod as interactive shell for testing and debugging your apps
+* get logs from the pod
+* create pod from yaml definition file
+* use port forward to test pod
 
 ## Task #0 - (only for Windows users) - setting up Windows Terminal
 
