@@ -2,7 +2,7 @@
 
 ## Estimated completion time - xx min
 
-If you managed to solve all tasks and you still have some time, feel free to do labs marked as `Optional`. If done with `Optional`, try to do some `Exercises` :) 
+If you managed to solve all tasks and you still have some time, feel free to do labs marked as `Optional`. If you done with all  `Optional`, try to do some `Exercises` :) 
 
 ## Goals
 
@@ -15,6 +15,31 @@ If you managed to solve all tasks and you still have some time, feel free to do 
 * Learn how to get logs from the pod
 * Learn how to create pod from yaml definition file
 * Learn how to use port forward to test pod
+
+## Rask #0 - only for Windows users - setting up Windows Terminal
+
+For the most of the labs, I recommend you to use Windows Terminal, because it allows to split Terminal windows in two (and more) sessions. One will be be used to run all commands included into the labs. In the second window you will run `kubectl get ... -w` command in watching mode and you will get a realtime feedback about what kubernetes does behind the scene.
+
+You can install Windows Terminal from the [Microsoft Store](https://aka.ms/terminal). When installed, start it, maximize it (so you have enough space) and select shell of your choice.
+
+![Windows Terminal](images/wt-new.png)
+
+To split it, enter `Shift+Alt+D` and it will split your session vertically:
+
+![Windows Terminal](images/wt-split.png)
+
+In the right session run the "watcher" command:
+
+```bash
+# Watch what happens with pods
+kubectl get pods -w
+```
+
+This command will be running and watching all state changes inside the cluster in regards to pods. 
+
+At the left session you run all commands from the labs. 
+
+![Windows Terminal](images/wt-demo.gif)
 
 ## Task #1 - run image from ACR in AKS
 
@@ -108,6 +133,9 @@ app-a   1/1     Running   0          20h
 kubectl get po app-a -o wide
 NAME    READY   STATUS    RESTARTS   AGE   IP           NODE                                NOMINATED NODE   READINESS GATES
 app-a   1/1     Running   0          20h   10.244.0.9   aks-nodepool1-95835493-vmss000000   <none>           <none>
+
+# Describe pod with verbose output
+kubectl describe pod app-a
 
 # Get pod app-a YAML
 kubectl get po app-a -o yaml
