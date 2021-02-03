@@ -157,91 +157,43 @@ Couple of things to mention here:
 1. As expected, IP address is now accessible from inside the pod. 
 2. The `curl` pod was deleted when we exit. This is because of  `--rm` flag that tells Kubernetes to delete pod created by this command.
 
-## Task #5 - delete pod
+## Task #5 - deploy `apia` image using yaml pod definition 
 
-Now, let's delete `curl` pod. 
-
-```bash
-# delete single pod
-kubectl delete pod curl
-pod "curl" deleted
-```
-
-## Task #6 - deploy `apia` image using yaml pod definition 
-
-Let's first delete all `app-a|b|c` pods from the cluster
-
-```bash
-# delete app-a|b|c pods
-kubectl delete pod app-a app-b app-c
-pod "app-a" deleted
-pod "app-b" deleted
-pod "app-c" deleted
-```
-
-Now, create new `app-a-pod.yaml` file with the following content
+Now, create new `app-d-pod.yaml` file with the following content
 
 ```yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: app-a
+  name: app-d
 spec:
   containers:
-  - name: app-a
+  - name: app-d
     image: iacaksws1<YOU-NAME>acr.azurecr.io/apia:v1
     imagePullPolicy: IfNotPresent
     resources: {}
   restartPolicy: Always
 ```
 
-Now deploy the pod
+Now deploy it using [kubectl apply](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply) command
 
 ```bash
 # deploy app-a pod
-kubectl apply -f app-a-pod.yaml
-pod/app-a created
+kubectl apply -f app-d-pod.yaml
+pod/app-d created
 ```
 
-## Task #7 - get pod logs
+## Task #6 - test your application
 
-You can check pod logs by running the following command
-
-```bash
-kubectl logs app-a
-info: Microsoft.Hosting.Lifetime[0]
-      Now listening on: http://[::]:80
-info: Microsoft.Hosting.Lifetime[0]
-      Application started. Press Ctrl+C to shut down.
-info: Microsoft.Hosting.Lifetime[0]
-      Hosting environment: Production
-info: Microsoft.Hosting.Lifetime[0]
-      Content root path: /app
-```
-
-or, if you want to stream logs, use `-f` flag
+As we already know, we can't just test our application, because it's not accessible from our PC. We need to run our `curl` pod with interactive shell and do all testing from there.
 
 ```bash
-kubectl logs app-a -f
-info: Microsoft.Hosting.Lifetime[0]
-      Now listening on: http://[::]:80
-info: Microsoft.Hosting.Lifetime[0]
-      Application started. Press Ctrl+C to shut down.
-info: Microsoft.Hosting.Lifetime[0]
-      Hosting environment: Production
-info: Microsoft.Hosting.Lifetime[0]
-      Content root path: /app
-```
-
-## Task #8 - test our application
-
-```bash
-# get the pod IP address
+# Get IP address of the app-a pod
 kubectl get po app-a -o wide
 NAME    READY   STATUS    RESTARTS   AGE   IP            NODE                                NOMINATED NODE   READINESS GATES
 app-a   1/1     Running   0          14m   10.244.0.34   aks-nodepool1-95835493-vmss000000   <none>           <none>
 
-# start our test `curl` pod
+# Start our test `curl` pod
 kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -- sh
 
 # test http://10.244.0.34/weatherforecast endpoint
@@ -253,9 +205,66 @@ kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -
 pod "curl" deleted
 ```
 
-## Task #9 - use Port Forwarding to test your application in a cluster
+## Task #7 - get pod logs
 
-Here is another technique you can use to test your applications. It's called [Port Forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/) and and it allows you to access and interact with internal Kubernetes cluster processes from your localhost. The following command will start listening on port 7000 on the local machine and forward traffic to port 80 on `app-a` running in the cluster
+You can dump pod logs by running [kubectl logs](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#logs) command
+
+```bash
+# dump pod logs (stdout)
+kubectl logs app-a
+info: Microsoft.Hosting.Lifetime[0]
+      Now listening on: http://[::]:80
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /app
+```
+
+You can also stream logs by using `-f` flag. You can stop "watching" command in the right session and run the following command 
+
+```bash
+# Stream logs from pod app-a
+kubectl logs app-a -f
+info: Microsoft.Hosting.Lifetime[0]
+      Now listening on: http://[::]:80
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /app
+```
+
+Now repeat Task #6 inside the left window, this time repeat `curl http://...` command several times and observe the right "monitoring" session, you should see new logs coming.
+
+```bash
+# Get IP address of the app-a pod
+kubectl get po app-a -o wide
+NAME    READY   STATUS    RESTARTS   AGE   IP            NODE                                NOMINATED NODE   READINESS GATES
+app-a   1/1     Running   0          14m   10.244.0.34   aks-nodepool1-95835493-vmss000000   <none>           <none>
+
+# Start our test `curl` pod
+kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -- sh
+
+# test http://10.244.0.34/weatherforecast endpoint
+[ root@curl:/ ]$ curl http://10.244.0.34/weatherforecast
+[ root@curl:/ ]$ curl http://10.244.0.34/weatherforecast
+[ root@curl:/ ]$ curl http://10.244.0.34/weatherforecast
+[ root@curl:/ ]$ curl http://10.244.0.34/weatherforecast
+[ root@curl:/ ]$ curl http://10.244.0.34/weatherforecast
+
+# exit from the pod
+[ root@curl:/ ]$ exit
+pod "curl" deleted
+```
+![log-demo](images/log-demo.gif)
+
+
+## Task #8 - use Port Forwarding to test your application in a cluster
+
+Here is another technique you can use to test your applications. It's called [Port Forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/) and it allows you to access and interact with internal Kubernetes cluster processes from your localhost. The following command will start listening on port 7000 on the local machine and forward traffic to port 80 on `app-a` running in the cluster
 
 ```bash
 # Listen on port 7000 on the local machine and forward to port 80 on app-a
@@ -264,58 +273,26 @@ Forwarding from 127.0.0.1:7000 -> 80
 Forwarding from [::1]:7000 -> 80
 ```
 
-Now open new terminal (if you use Windows Terminal click `Shift+Alt+D` and it will split your current terminal in 2). In new terminal run the following command
+Now open new terminal (or split your current windows with `Shift+Alt+D`). In new terminal run the following command
 
 ```bash
 curl http://localhost:7000/weatherforecast
 [{"date":"2021-02-01T21:45:40.0602016+00:00","temperatureC":19,"temperatureF":66,"summary":"Warm"},{"date":"2021-02-02T21:45:40.0621127+00:00","temperatureC":30,"temperatureF":85,"summary":"Scorching"},{"date":"2021-02-03T21:45:40.0621165+00:00","temperatureC":-16,"temperatureF":4,"summary":"Sweltering"},{"date":"2021-02-04T21:45:40.0621169+00:00","temperatureC":45,"temperatureF":112,"summary":"Mild"},{"date":"2021-02-05T21:45:40.0621171+00:00","temperatureC":18,"temperatureF":64,"summary":"Sweltering"}]
 ```
 
-## Task #10 - testing within cluster with interactive shell. Option #2 (Optional)
+## Task #9 - delete pod
 
-In `Task #4` we used `kubectl run -i --tty --image=...` command. This command deletes `curl` pod after shell is closed and that means that you need to execute this command every time you wanted to test/debug applications in our cluster. 
-An alternative solution can be to deploy "permanent" pod to the cluster and attach to it with interactive shell when needed. This time, let's create pod from yaml definition file and deploy it using `kubectl apply ...` command. 
-
-Create new file `curl-pod.yaml` file under `lab-04` folder and add the following pod definition
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: curl
-spec:
-  containers:
-    - name: curl
-      image: "radial/busyboxplus:curl"      
-      command:
-        - sleep
-        - "3600"
-  restartPolicy: Always
-```
-
-save the file and run the following command (from within `lab-04` folder)
+To delete pod use [kubectl delete](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#delete) command. There are several ways you can delete pod, here are two common one:
 
 ```bash
-# deploy curl pod
-kubectl apply -f curl-pod.yaml
-pod/curl created
+# Delete single pod
+kubectl delete pod app-a
+pod "app-a" deleted
 
-# check pod status and wait when it gets status Running
-kubectl get po curl
-NAME   READY   STATUS    RESTARTS   AGE
-curl   1/1     Running   0          5m35s
+# Delete a pod using the type and name specified in app-d-pod.yaml
+kubectl delete -f app-d-pod.yaml
+pod "app-d" deleted
 ```
-
-As you can see from the pod definition file, it uses command `sleep 3600` and `restartPolicy: Always`. `sleep 3600` means that pod will be "alive" for 3600 seconds = 1 hour and then it will be terminated. But since parameter `restartPolicy` is set to `Always`, Kubernetes will start new pod. That means that with this configuration, pod will be restarted every hour and it will look like it always running...
-
-Now let's connect to the pod
-
-```bash
-# Interactive shell access to a running pod
-kubectl exec --stdin --tty curl -- /bin/sh
-```
-
-I personally prefer the first approach, that is - `kubectl run curl ...`, because it creates pod only when I need it and cleans it up when I am done with testing / debugging.
 
 ## Useful links
 
@@ -324,6 +301,7 @@ I personally prefer the first approach, that is - `kubectl run curl ...`, becaus
 * [kubectl apply](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply)
 * [kubectl run](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#run)
 * [kubectl delete](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#delete)
+* [kubectl logs](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#logs)
 * [kubectl exec](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#exec)
 * [Interacting with running Pods](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#interacting-with-running-pods)
 * [Formatting output](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#formatting-output)
