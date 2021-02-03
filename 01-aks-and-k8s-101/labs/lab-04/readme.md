@@ -72,7 +72,7 @@ pod/app-c created
 and then observe what is reported at the first terminal. You should see something similar to
 
 ```bash
-kubectl.exe get po -w
+kubectl get po -w
 NAME    READY   STATUS    RESTARTS   AGE
 app-a   1/1     Running   0          5h39m
 app-b   1/1     Running   0          21m
@@ -176,7 +176,7 @@ kubectl delete pod curl
 pod "curl" deleted
 ```
 
-## Task #4 - testing within cluster with interactive shell
+## Task #6 - testing within cluster with interactive shell
 
 In previous task we used `kubectl run -i --tty --image=...` command every time we wanted to test/debug applications in our cluster. Alternative solution can be to deploy permanent pod to the cluster and attach to it when needed. This time let's do it with yaml pod definition file and deploy it using `kubectl apply ` command. 
 
@@ -213,46 +213,52 @@ curl   1/1     Running   0          5m35s
 
 As you can see from the pod definition file, it uses command `sleep 3600` and `restartPolicy: Always`. `sleep 3600` means that pod will be "alive" for 3600 seconds = 1 hour and then it will terminate itself. But since parameter `restartPolicy` is set to `Always`, Kubernetes will start new pod. That means that with this configuration, pod will be restarted every hour and it will look like it always running.
 
-Now, set `sleep` parameter to `60` and deploy changes. Observe what will happen with `kubectl get po curl -w` in "monitoring" terminal.
+Now let's connect to the pod
 
 ```bash
-kubectl apply -f .\curl-pod.yaml
-The Pod "curl" is invalid: spec: Forbidden: pod updates may not change fields other than `spec.containers[*].image`, `spec.initContainers[*].image`, `spec.activeDeadlineSeconds` or `spec.tolerations` (only additions to existing tolerations)
-...
+# Interactive shell access to a running pod
+kubectl exec --stdin --tty curl -- /bin/sh
 ```
 
-We can't update this pod, therefore we need to delete existing one and create new one.
+I personally prefer the first approach, that is - `kubectl run curl`, because it creates pod only when I need it and cleans it up when I am done with testing / debugging.
+
+## Task #7 - deploy `apia` image using yaml pod definition 
+
+Let's first delete all `app-a|b|c` pods from the cluster
 
 ```bash
-# delete existing pod 
-kubectl delete po curl
-
-# deploy new one
-kubectl apply -f .\curl-pod.yaml
-pod/curl created
+# delete app-a|b|c pods
+kubectl delete pod app-a app-b app-c
+pod "app-a" deleted
+pod "app-b" deleted
+pod "app-c" deleted
 ```
 
-Wait for couple of minutes and you will see the following behavior in the "monitoring" terminal (`kubectl get po curl -w`).
+Now, create new `app-a-pod.yaml` file with the following content
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-a
+spec:
+  containers:
+  - name: app-a
+    image: iacaksws1<YOU-NAME>acr.azurecr.io/apia:v1
+    imagePullPolicy: IfNotPresent
+    resources: {}
+  restartPolicy: Always
+```
+
+Now deploy the pod
 
 ```bash
-kubectl get po -w
-NAME    READY   STATUS    RESTARTS   AGE
-app-a   1/1     Running   0          29h
-app-b   1/1     Running   0          23h
-app-c   1/1     Running   0          23h
-curl    0/1     Pending   0          0s
-curl    1/1     Running             0          2s
-curl    0/1     Completed           0          62s
-curl    1/1     Running             1          63s
-curl    0/1     Completed           1          2m3s
-curl    0/1     CrashLoopBackOff    1          2m18s
-curl    1/1     Running             2          2m19s
-curl    0/1     Completed           2          3m19s
-curl    0/1     CrashLoopBackOff    2          3m32s
-curl    1/1     Running             3          3m48s
+# deploy app-a pod
+kubectl apply -f app-a-pod.yaml
+pod/app-a created
 ```
 
-## Task #3 - get pod logs
+## Task #8 - get pod logs
 
 You can check pod logs by running the following command
 
@@ -268,7 +274,7 @@ info: Microsoft.Hosting.Lifetime[0]
       Content root path: /app
 ```
 
-or, if you want to continuously monitor logs, use `-f` flag
+or, if you want to stream logs, use `-f` flag
 
 ```bash
 kubectl logs app-a -f
@@ -282,8 +288,29 @@ info: Microsoft.Hosting.Lifetime[0]
       Content root path: /app
 ```
 
+## Task #9 - test our application
 
-## Task #3 - use Port Forwarding to access your application in a cluster
+```bash
+# get the pod IP address
+kubectl get po app-a -o wide
+NAME    READY   STATUS    RESTARTS   AGE   IP            NODE                                NOMINATED NODE   READINESS GATES
+app-a   1/1     Running   0          14m   10.244.0.34   aks-nodepool1-95835493-vmss000000   <none>           <none>
+
+# start our test `curl` pod
+kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -- sh
+
+# test http://10.244.0.34/weatherforecast endpoint
+[ root@curl:/ ]$ curl http://10.244.0.34/weatherforecast
+[{"date":"2021-02-04T08:10:55.4596813+00:00","temperatureC":-1,"temperatureF":31,"summary":"Balmy"},{"date":"2021-02-05T08:10:55.4613436+00:00","temperatureC":23,"temperatureF":73,"summary":"Chilly"},{"date":"2021-02-06T08:10:55.461347+00:00","temperatureC":30,"temperatureF":85,"summary":"Cool"},{"date":"2021-02-07T08:10:55.4613473+00:00","temperatureC":30,"temperatureF":85,"summary":"Freezing"},{"date":"2021-02-08T08:10:55.4613475+00:00","temperatureC":22,"temperatureF":71,"summary":"Warm"}]
+
+# exit from the pod
+[ root@curl:/ ]$ exit
+pod "curl" deleted
+```
+
+## Task #10 - use Port Forwarding to test your application in a cluster
+
+Here is another technique, called Port Forwarding that you can use to test your app without test pod. Kubectl port-forward allows you to access and interact with internal Kubernetes cluster processes from your localhost. The following command will start listening on port 7000 on the local machine and forward traffic to port 80 on `app-a` running in the cluster
 
 ```bash
 # Listen on port 7000 on the local machine and forward to port 80 on app-a
@@ -299,46 +326,6 @@ curl http://localhost:7000/weatherforecast
 [{"date":"2021-02-01T21:45:40.0602016+00:00","temperatureC":19,"temperatureF":66,"summary":"Warm"},{"date":"2021-02-02T21:45:40.0621127+00:00","temperatureC":30,"temperatureF":85,"summary":"Scorching"},{"date":"2021-02-03T21:45:40.0621165+00:00","temperatureC":-16,"temperatureF":4,"summary":"Sweltering"},{"date":"2021-02-04T21:45:40.0621169+00:00","temperatureC":45,"temperatureF":112,"summary":"Mild"},{"date":"2021-02-05T21:45:40.0621171+00:00","temperatureC":18,"temperatureF":64,"summary":"Sweltering"}]
 ```
 
-That looks quite ugly, so, if you want nicely formatted json, install `jq`. On PowerShell, use `choco install jq`. When installed, run the following command:
-
-```bash
-curl -s http://localhost:7000/weatherforecast | jq
-[
-  {
-    "date": "2021-02-01T21:47:51.9523787+00:00",
-    "temperatureC": -9,
-    "temperatureF": 16,
-    "summary": "Sweltering"
-  },
-  {
-    "date": "2021-02-02T21:47:51.9523827+00:00",
-    "temperatureC": 19,
-    "temperatureF": 66,
-    "summary": "Cool"
-  },
-  {
-    "date": "2021-02-03T21:47:51.9523837+00:00",
-    "temperatureC": 3,
-    "temperatureF": 37,
-    "summary": "Freezing"
-  },
-  {
-    "date": "2021-02-04T21:47:51.9523839+00:00",
-    "temperatureC": 12,
-    "temperatureF": 53,
-    "summary": "Sweltering"
-  },
-  {
-    "date": "2021-02-05T21:47:51.9523841+00:00",
-    "temperatureC": -5,
-    "temperatureF": 24,
-    "summary": "Bracing"
-  }
-]
-```
-
-
-
 ## Useful links
 
 * [Kubernetes Pods](https://kubernetes.io/docs/concepts/workloads/pods/)
@@ -346,8 +333,6 @@ curl -s http://localhost:7000/weatherforecast | jq
 * [Interacting with running Pods](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#interacting-with-running-pods)
 * [Formatting output](https://kubernetes.io/docs/reference/kubectl/cheatsheet/#formatting-output)
 * [https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/)
-
-* link 2
 
 ## Next: Readiness and Liveness probes
 
