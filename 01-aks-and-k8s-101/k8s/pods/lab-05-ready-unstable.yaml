@@ -5,7 +5,7 @@ metadata:
 spec:
   containers:
   - name: api
-    image: iacaksws1evgacr.azurecr.io/apia:v5
+    image: iacaksws1evgacr.azurecr.io/apia:v1
     imagePullPolicy: IfNotPresent
     resources: {}
     livenessProbe:

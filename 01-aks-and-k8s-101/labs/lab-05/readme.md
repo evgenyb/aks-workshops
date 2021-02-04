@@ -291,6 +291,6 @@ The sate was `Unhealthy` 100 times over the last 13 min with reason `Readiness p
 
 * [Configure Liveness, Readiness and Startup Probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
 
-## Next: Configmaps and secrets
+## Next: Deployments
 
 [Go to lab-06](../lab-06/readme.md)
