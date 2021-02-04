@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab6-task3
+  labels:
+    app: lab6-task3
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: lab6-task3
+  template:
+    metadata:
+      labels:
+        app: lab6-task3
+    spec:
+      containers:
+      - name: api
+        image: iacaksws1evgacr.azurecr.io/apia:v5
+        imagePullPolicy: IfNotPresent
+        resources: {}
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 3    
+        readinessProbe:
+          httpGet:
+            path: /readiness
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 3
