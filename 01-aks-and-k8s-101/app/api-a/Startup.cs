@@ -10,6 +10,7 @@ namespace api_a
     {
         public Startup(IConfiguration configuration)
         {
+            Timekeeper.Start();
             Configuration = configuration;
         }
 

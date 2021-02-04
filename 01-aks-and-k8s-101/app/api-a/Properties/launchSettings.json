@@ -4,7 +4,7 @@
     "api_a": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "WeatherForecast",
+      "launchUrl": "readiness/unstable",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -14,7 +14,7 @@
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/WeatherForecast",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/health",
       "publishAllPorts": true
     }
   }

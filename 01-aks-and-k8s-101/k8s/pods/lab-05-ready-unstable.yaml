@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lab-05-ready-unstable
+spec:
+  containers:
+  - name: api
+    image: iacaksws1evgacr.azurecr.io/apia:v5
+    imagePullPolicy: IfNotPresent
+    resources: {}
+    livenessProbe:
+      httpGet:
+        path: /health
+        port: 80
+      initialDelaySeconds: 3
+      periodSeconds: 3    
+    readinessProbe:
+      httpGet:
+        path: /readiness/unstable
+        port: 80
+      initialDelaySeconds: 3
+      periodSeconds: 3    
+      
