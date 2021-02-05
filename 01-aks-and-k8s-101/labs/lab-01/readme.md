@@ -39,14 +39,14 @@ Provision Log Analytics Workspace. LA workspace name must be globally unique, th
 az monitor log-analytics workspace create -g iac-aks-ws1-rg -n iac-aks-ws1-<YOU-NAME>-la
 ```
 
-Finally, provision AKS. Let's use the same cluster name - `aks-ws1`
+Finally, provision AKS. Let's all us use the same cluster name - `aks-ws1`
 
 ```bash
 # get workspace resource id
 az monitor log-analytics workspace show -g iac-aks-ws1-rg -n iac-aks-ws1-<YOU-NAME>-la --query id
 "/subscriptions/8878beb2-5e5d-4418-0000-783674eea324/resourcegroups/iac-aks-ws1-rg/providers/microsoft.operationalinsights/workspaces/iac-aks-ws1-<YOU-NAME>-la"
 #
-az aks create -g iac-aks-ws1-rg -n aks-ws1 -c 1 --generate-ssh-keys --attach-acr iacaksws1<YOU-NAME>acr --enable-addons monitoring --workspace-resource-id "/subscriptions/8878beb2-5e5d-4418-0000-783674eea324/resourcegroups/iac-aks-ws1-rg/providers/microsoft.operationalinsights/workspaces/iac-aks-ws1-<YOU-NAME>-la"
+az aks create -g iac-aks-ws1-rg -n aks-ws1 -c 1 -k 1.19.6 --generate-ssh-keys --attach-acr iacaksws1<YOU-NAME>acr --enable-addons monitoring --workspace-resource-id "/subscriptions/8878beb2-5e5d-4418-0000-783674eea324/resourcegroups/iac-aks-ws1-rg/providers/microsoft.operationalinsights/workspaces/iac-aks-ws1-<YOU-NAME>-la"
 ```
 
 ## Task #2 - install kubectl
@@ -79,7 +79,7 @@ For a complete list of kubectl operations, see [Overview of kubectl](https://kub
 To configure `kubectl` to connect to your Kubernetes cluster, use the [az aks get-credentials](https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837#az_aks_get_credentials) command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
 ```bash
-az aks get-credentials -g iac-aks-ws1-rg -n aks-ws1
+az aks get-credentials -g iac-aks-ws1-rg -n aks-ws1 --overwrite-existing
 ```
 
 ## Task #3 - verify the connection to your cluster
@@ -87,6 +87,7 @@ az aks get-credentials -g iac-aks-ws1-rg -n aks-ws1
 To verify the connection to your cluster, let's use the kubectl get command to return a list of the cluster nodes 
 
 ```bash
+# Get nodes
 kubectl get nodes
 NAME                                STATUS   ROLES   AGE     VERSION
 aks-nodepool1-95835493-vmss000000   Ready    agent   6m24s   v1.18.14
@@ -95,6 +96,7 @@ aks-nodepool1-95835493-vmss000000   Ready    agent   6m24s   v1.18.14
 and namespaces
 
 ```bash
+# Get namespaces
 kubectl get ns
 NAME              STATUS   AGE
 default           Active   7m56s

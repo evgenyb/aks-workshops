@@ -1,4 +1,4 @@
-# lab-02 - setting up you shell (bash or PowerShell) for better AKS/kubectl experience
+# lab-02 - setting up your shell (bash or PowerShell) for better AKS/kubectl experience
 
 ## Estimated completion time - 15 min
 
