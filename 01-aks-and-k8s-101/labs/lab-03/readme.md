@@ -1,8 +1,8 @@
 # lab-03 - Containerizing your application
 
-## Estimated completion time - xx min
+## Estimated completion time - 15 min
 
-To work with Kubernetes and learn `kubectl` commands we need a test application. I created the simplest default version of `ASP.NET Core Web API` app with `WeatherForecast` controller and extended it with a couple of additional controllers that we will need in later labs. During this lab you will add Docker support, will package application as Docker image, push image to the Azure Container Registry (ACR) and will run it in AKS. This application will be our `guinea pig` application we will use with all further labs.
+To work with Kubernetes and learn `kubectl` commands we need a test application. I created the simplest default version of `ASP.NET Core Web API` app with `WeatherForecast` controller and extended it with a couple of additional controllers that we will need in later labs. During this lab you will add Docker support, will package application as Docker image and push image to the Azure Container Registry (ACR). This application will be our `guinea pig` application we will use with all further labs.
 
 ## Goals
 
