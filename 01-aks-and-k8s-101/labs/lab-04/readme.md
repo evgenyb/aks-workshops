@@ -200,7 +200,6 @@ kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -
 
 # test http://10.244.0.34/weatherforecast endpoint
 [ root@curl:/ ]$ curl http://10.244.0.34/weatherforecast
-[{"date":"2021-02-04T08:10:55.4596813+00:00","temperatureC":-1,"temperatureF":31,"summary":"Balmy"},{"date":"2021-02-05T08:10:55.4613436+00:00","temperatureC":23,"temperatureF":73,"summary":"Chilly"},{"date":"2021-02-06T08:10:55.461347+00:00","temperatureC":30,"temperatureF":85,"summary":"Cool"},{"date":"2021-02-07T08:10:55.4613473+00:00","temperatureC":30,"temperatureF":85,"summary":"Freezing"},{"date":"2021-02-08T08:10:55.4613475+00:00","temperatureC":22,"temperatureF":71,"summary":"Warm"}]
 
 # exit from the pod
 [ root@curl:/ ]$ exit
@@ -279,7 +278,6 @@ Now open new terminal (or split your current windows with `Shift+Alt+D`). In new
 
 ```bash
 curl http://localhost:7000/weatherforecast
-[{"date":"2021-02-01T21:45:40.0602016+00:00","temperatureC":19,"temperatureF":66,"summary":"Warm"},{"date":"2021-02-02T21:45:40.0621127+00:00","temperatureC":30,"temperatureF":85,"summary":"Scorching"},{"date":"2021-02-03T21:45:40.0621165+00:00","temperatureC":-16,"temperatureF":4,"summary":"Sweltering"},{"date":"2021-02-04T21:45:40.0621169+00:00","temperatureC":45,"temperatureF":112,"summary":"Mild"},{"date":"2021-02-05T21:45:40.0621171+00:00","temperatureC":18,"temperatureF":64,"summary":"Sweltering"}]
 ```
 
 ## Task #9 - delete pod

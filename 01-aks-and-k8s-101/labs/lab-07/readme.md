@@ -93,15 +93,12 @@ kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -
 
 # Test our service using IP (you should use your IP)
 [ root@curl:/ ]$ curl http://10.0.169.148/weatherforecast
-[{"date":"2021-02-06T14:49:34.676512+00:00","temperatureC":-16,"temperatureF":4,"summary":"Bracing"},{"date":"2021-02-07T14:49:34.676514+00:00","temperatureC":-13,"temperatureF":9,"summary":"Scorching"},{"date":"2021-02-08T14:49:34.6765143+00:00","temperatureC":50,"temperatureF":121,"summary":"Scorching"},{"date":"2021-02-09T14:49:34.6765145+00:00","temperatureC":47,"temperatureF":116,"summary":"Hot"},{"date":"2021-02-10T14:49:34.6765147+00:00","temperatureC":19,"temperatureF":66,"summary":"Freezing"}]
 
 # Test our service using service DNS name
 [ root@curl:/ ]$ curl http://apia-service-1/weatherforecast
-[{"date":"2021-02-06T14:50:31.2930009+00:00","temperatureC":-3,"temperatureF":27,"summary":"Hot"},{"date":"2021-02-07T14:50:31.293003+00:00","temperatureC":-9,"temperatureF":16,"summary":"Bracing"},{"date":"2021-02-08T14:50:31.2930032+00:00","temperatureC":-1,"temperatureF":31,"summary":"Scorching"},{"date":"2021-02-09T14:50:31.2930034+00:00","temperatureC":53,"temperatureF":127,"summary":"Chilly"},{"date":"2021-02-10T14:50:31.2930036+00:00","temperatureC":31,"temperatureF":87,"summary":"Balmy"}]
 
 # Test our service using service full DNS name
 [ root@curl:/ ]$ curl http://apiaapia-service-1.default.svc.cluster.local/weatherforecast
-[{"date":"2021-02-06T14:50:31.2930009+00:00","temperatureC":-3,"temperatureF":27,"summary":"Hot"},{"date":"2021-02-07T14:50:31.293003+00:00","temperatureC":-9,"temperatureF":16,"summary":"Bracing"},{"date":"2021-02-08T14:50:31.2930032+00:00","temperatureC":-1,"temperatureF":31,"summary":"Scorching"},{"date":"2021-02-09T14:50:31.2930034+00:00","temperatureC":53,"temperatureF":127,"summary":"Chilly"},{"date":"2021-02-10T14:50:31.2930036+00:00","temperatureC":31,"temperatureF":87,"summary":"Balmy"}]
 
 # Run test load with watch command. It will run "curl http://apia-service-1/weatherforecast" command every second until we stop it
 watch -n 1 curl http://apia-service-1/weatherforecast
@@ -165,7 +162,6 @@ kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -
 
 # Test service
 [ root@curl:/ ]$ curl http://apia-service-2/weatherforecast
-[{"date":"2021-02-06T14:50:31.2930009+00:00","temperatureC":-3,"temperatureF":27,"summary":"Hot"},{"date":"2021-02-07T14:50:31.293003+00:00","temperatureC":-9,"temperatureF":16,"summary":"Bracing"},{"date":"2021-02-08T14:50:31.2930032+00:00","temperatureC":-1,"temperatureF":31,"summary":"Scorching"},{"date":"2021-02-09T14:50:31.2930034+00:00","temperatureC":53,"temperatureF":127,"summary":"Chilly"},{"date":"2021-02-10T14:50:31.2930036+00:00","temperatureC":31,"temperatureF":87,"summary":"Balmy"}]
 
 # Leave the shell
 [ root@curl:/ ]$exit
@@ -193,7 +189,6 @@ kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -
 
 # Test using port :8081
 [ root@curl:/ ]$ curl http://apia-service-2:8081/weatherforecast
-[{"date":"2021-02-06T14:50:31.2930009+00:00","temperatureC":-3,"temperatureF":27,"summary":"Hot"},{"date":"2021-02-07T14:50:31.293003+00:00","temperatureC":-9,"temperatureF":16,"summary":"Bracing"},{"date":"2021-02-08T14:50:31.2930032+00:00","temperatureC":-1,"temperatureF":31,"summary":"Scorching"},{"date":"2021-02-09T14:50:31.2930034+00:00","temperatureC":53,"temperatureF":127,"summary":"Chilly"},{"date":"2021-02-10T14:50:31.2930036+00:00","temperatureC":31,"temperatureF":87,"summary":"Balmy"}]
 
 # Leave the shell
 [ root@curl:/ ]$exit
