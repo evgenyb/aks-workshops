@@ -16,7 +16,7 @@ In this lab you will learn how to:
 * scale up and scale down the Deployment 
 * delete Deployment
 
-## Task #1 - configure your lab environment
+## Task #1 - prepare your lab environment
 
 As with `lab-05`, split your terminal in two. At the right-hand window, run `kubectl get po -w` command and at the left-hand window execute labs commands.
 

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: iacaksws1<YOU-NAME>acr.azurecr.io/apia:v1
+        image: iacaksws1evgacr.azurecr.io/apia:v7
         imagePullPolicy: IfNotPresent
         resources: {}
         livenessProbe:

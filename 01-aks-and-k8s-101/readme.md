@@ -20,7 +20,7 @@ Here is the agenda for the workshops:
  * [Lab-04](labs/lab-04/readme.md) - Creating, managing and testing pods
  * [Lab-05](labs/lab-05/readme.md) - Readiness and Liveness probes
  * [Lab-06](labs/lab-06/readme.md) - Deployments
- * Lab-07 - Creating and Managing Services
+ * [Lab-07](labs/lab-07/readme.md) - Creating and Managing Services
  * Lab-08 - Configmaps and secrets
  * [Lab-10](labs/lab-10/readme.md) - Cleaning up
 
