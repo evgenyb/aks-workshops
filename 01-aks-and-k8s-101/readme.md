@@ -14,14 +14,19 @@ Here is the agenda for the workshops:
  * Slides - Kubernetes and AKS introduction
  * [Lab-01](labs/lab-01/readme.md) - AKS setup (15 min)
  * [Lab-02](labs/lab-02/readme.md) - setting up you shell for better AKS/kubectl experience (15 min)
- * Slides - Introduce app
+ * Slides - Introduce our "guinea pig" app
  * [Lab-03](labs/lab-03/readme.md) - Containerizing your application (15 min)
- * Slides - Basic k8s Concepts 
+ * Slides - Pods, Namespaces
  * [Lab-04](labs/lab-04/readme.md) - Creating, managing and testing pods (15 min)
+ * Slides - Readiness and Liveness probes
  * [Lab-05](labs/lab-05/readme.md) - Readiness and Liveness probes
+ * Slides - Deployments
  * [Lab-06](labs/lab-06/readme.md) - Deployments
+ * Slides - Services, Labels, Selectors
  * [Lab-07](labs/lab-07/readme.md) - Creating and Managing Services
+ * Slides - Configmaps and secrets
  * [Lab-08](labs/lab-08/readme.md) - Configmaps and secrets
+ * Lab-09 - AKS Kubernetes resources at the Azure portal
  * [Lab-10](labs/lab-10/readme.md) - Cleaning up
 
 ## Links
