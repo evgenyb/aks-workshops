@@ -61,7 +61,7 @@ Check the `lab-05-healthy` logs
 
 ```bash
 # Stream logs from lab-05-healthy pod
-kubectl.exe logs lab-05-healthy -f
+kubectl logs lab-05-healthy -f
 info: api_a.Controllers.HealthController[0]
       [lab-05 task #1] - always healthy
 info: api_a.Controllers.HealthController[0]
