@@ -17,11 +17,11 @@ Here is the agenda for the workshops:
  * Slides - Introduce app
  * [Lab-03](labs/lab-03/readme.md) - Containerizing your application (15 min)
  * Slides - Basic k8s Concepts 
- * [Lab-04](labs/lab-04/readme.md) - Creating, managing and testing pods
+ * [Lab-04](labs/lab-04/readme.md) - Creating, managing and testing pods (15 min)
  * [Lab-05](labs/lab-05/readme.md) - Readiness and Liveness probes
  * [Lab-06](labs/lab-06/readme.md) - Deployments
  * [Lab-07](labs/lab-07/readme.md) - Creating and Managing Services
- * Lab-08 - Configmaps and secrets
+ * [Lab-08](labs/lab-08/readme.md) - Configmaps and secrets
  * [Lab-10](labs/lab-10/readme.md) - Cleaning up
 
 ## Links

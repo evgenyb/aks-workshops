@@ -1,6 +1,6 @@
 # lab-04 - Creating, managing and testing pods
 
-## Estimated completion time - xx min
+## Estimated completion time - 15 min
 
 At the core of Kubernetes is the Pod. Pods represent a logical application and hold a collection of one or more containers. 
 
@@ -113,7 +113,7 @@ kubectl get po app-a -o json
 ## Task #4 - testing within cluster with interactive shell. Option #1
 
 Quite often you need to test application from within your cluster. Because cluster is running inside it's own Virtual Network, nothing is accessible from your PC. 
-Let's try to ping of the running `app-a|b|c` pods.
+Let's try to ping of the running `app-a|b` pods.
 
 ```bash
 # Get pods IP addresses
@@ -121,7 +121,6 @@ kubectl get po -o wide
 NAME    READY   STATUS    RESTARTS   AGE     IP            NODE                                NOMINATED NODE   READINESS GATES
 app-a   1/1     Running   0          27h     10.244.0.9    aks-nodepool1-95835493-vmss000000   <none>           <none>
 app-b   1/1     Running   0          21h     10.244.0.10   aks-nodepool1-95835493-vmss000000   <none>           <none>
-app-c   1/1     Running   0          21h     10.244.0.11   aks-nodepool1-95835493-vmss000000   <none>           <none>
 
 # try to ping `app-a`
 ping 10.244.0.9
@@ -174,7 +173,6 @@ spec:
     image: iacaksws1<YOU-NAME>acr.azurecr.io/apia:v1
     imagePullPolicy: IfNotPresent
     resources: {}
-  restartPolicy: Always
 ```
 
 Now deploy it using [kubectl apply](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply) command
@@ -223,7 +221,8 @@ info: Microsoft.Hosting.Lifetime[0]
       Content root path: /app
 ```
 
-You can also stream logs by using `-f` flag. You can stop "watching" command in the right session and run the following command 
+You can also stream logs by using `-f` flag. 
+Stop `kubectl get po -w` command at the right-hand window and run the following command instead
 
 ```bash
 # Stream logs from pod app-a
@@ -288,6 +287,10 @@ To delete pod use [kubectl delete](https://kubernetes.io/docs/reference/generate
 # Delete single pod
 kubectl delete pod app-a
 pod "app-a" deleted
+
+# Delete single pod
+kubectl delete pod app-b
+pod "app-b" deleted
 
 # Delete a pod using the type and name specified in app-d-pod.yaml
 kubectl delete -f app-d-pod.yaml

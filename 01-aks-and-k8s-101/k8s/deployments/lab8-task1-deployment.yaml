@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: lab6-task3
+  name: lab8-task1
   labels:
-    app: lab6-task3
+    app: lab8-task1
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: lab6-task3
+      app: lab8-task1
   template:
     metadata:
       labels:
-        app: lab6-task3
+        app: lab8-task1
     spec:
       containers:
       - name: api
@@ -31,3 +31,11 @@ spec:
             port: 80
           initialDelaySeconds: 3
           periodSeconds: 3
+        volumeMounts:
+        - name: secrets
+          mountPath: /app/secrets
+          readOnly: true          
+      volumes:
+      - name: secrets
+        secret:
+          secretName: secret-appsettings      

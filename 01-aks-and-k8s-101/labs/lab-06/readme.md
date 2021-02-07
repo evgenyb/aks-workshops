@@ -139,7 +139,7 @@ az acr build --registry iacaksws1<YOU-NAME>acr --image apia:v6 --file Dockerfile
 az acr build --registry iacaksws1<YOU-NAME>acr --image apia:v7 --file Dockerfile ..
 
 # Push version v8
-az acr build --registry iacaksws1<YOU-NAME>acr --image apia:v7 --file Dockerfile ..
+az acr build --registry iacaksws1<YOU-NAME>acr --image apia:v8 --file Dockerfile ..
 ```
 
 A Deployment's rollout is only triggered if Pod's template `.spec.template` is changed. 

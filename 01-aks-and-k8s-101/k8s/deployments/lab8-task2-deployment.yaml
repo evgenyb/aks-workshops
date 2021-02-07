@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: lab6-task3
+  name: lab8-task2
   labels:
-    app: lab6-task3
+    app: lab8-task2
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      app: lab6-task3
+      app: lab8-task2
   template:
     metadata:
       labels:
-        app: lab6-task3
+        app: lab8-task2
     spec:
       containers:
       - name: api
@@ -31,3 +31,16 @@ spec:
             port: 80
           initialDelaySeconds: 3
           periodSeconds: 3
+        volumeMounts:
+        - name: secrets
+          mountPath: /app/secrets
+          readOnly: true          
+        - name: logging-config
+          mountPath: /app/config          
+      volumes:
+      - name: secrets
+        secret:
+          secretName: secret-appsettings
+      - name: logging-config
+        configMap:
+          name: logging-appsettings
