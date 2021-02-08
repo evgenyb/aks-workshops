@@ -8,12 +8,20 @@ Of course you need an laptop. OS installed at this laptop doesn't really matter.
 
 Download and install [Microsoft Teams](https://products.office.com/en-US/microsoft-teams/group-chat-software)
 
-## Visual Studio Community
+## Visual Studio Community Edition
 
 Please download and install Visual Studio Community edition. 
 [Download Visual Studio Code](https://visualstudio.microsoft.com/downloads/) and make sure that `ASP.NET and web development` and `.NET Core cross-platform development` workloads are installed. If you have already installed Visual Studio, you can modify workload set from `Visual Studio Installer`.
 
 ![vs-workloads](images/vs-workloads.png)
+
+## Windows Terminal
+
+Download and install [Windows Terminal](https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701?activetab=pivot:overviewtab&atc=true)
+
+## Download and Install .NET 5.0
+
+Download and install [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0)
 
 ## Docker
 
