@@ -75,12 +75,11 @@ Create `appsettings.secrets.json` file with the following content. Imagine that 
 }
 ```
 
-Now cerate KKubernetes secret from this file using `kubectl create secret`
+Now cerate Kubernetes secret from this file using `kubectl create secret`
 
 ```bash
 # Create new secret from the appsettings.secrets.json file
 kubectl create secret generic secret-appsettings --from-file=./appsettings.secrets.json
-secret/secret-appsettings created
 
 # Get all secrets
 kubectl get secret
@@ -178,7 +177,7 @@ spec:
           secretName: secret-appsettings
 ```
 
-Note, under the `volumes` section we added new item called `secrets` of type `secrets` and we use secret `secret-appsettings` that we just deployed.
+Note, under the `volumes` section we added new item called `secrets` of type `secret` and we use secret  `secret-appsettings` that we just deployed.
 ```yaml
       volumes:
       - name: secrets
