@@ -516,7 +516,7 @@ You probably noticed logs from `health` and `readiness` endpoints are also shown
 * [Managing ASP.NET Core App Settings on Kubernetes](https://anthonychu.ca/post/aspnet-core-appsettings-secrets-kubernetes/)
 * [.NET Configuration in Kubernetes config maps with auto reload](https://medium.com/@fbeltrao/automatically-reload-configuration-changes-based-on-kubernetes-config-maps-in-a-net-d956f8c8399a)
 * [.NET Configuration in Kubernetes config maps with auto reload - repo](https://github.com/fbeltrao/ConfigMapFileProvider)
-* [Configuration in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-5.0)
+* [Configuration in ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?WT.mc_id=AZ-MVP-5003837&view=aspnetcore-5.0)
 * [Kubernetes Secret](https://kubernetes.io/docs/concepts/configuration/secret/)
 * [Kubernetes ConfigMaps](https://kubernetes.io/docs/concepts/configuration/configmap/)
 * [kubectl create secret](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-secret-em-)

@@ -75,7 +75,7 @@ For even better experience, you should install the [Cascadia code fonts](https:/
 
 ## Task #2 - configure your bash prompt
 
-If you are running Linux or mac or [Windows Subsystem for Linux (WSL)](https://docs.microsoft.com/en-us/windows/wsl/install-win10), then here is how you can configure your prompt to display the name of the cluster of your current Kubernetes context. 
+If you are running Linux or mac or [Windows Subsystem for Linux (WSL)](https://docs.microsoft.com/en-us/windows/wsl/install-win10?WT.mc_id=AZ-MVP-5003837), then here is how you can configure your prompt to display the name of the cluster of your current Kubernetes context. 
 
 Go to your home folder
 
