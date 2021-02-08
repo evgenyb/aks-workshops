@@ -156,3 +156,7 @@ If command runs successful, check the ACR at the Azure portal. Now `apia` reposi
 ## Next: Creating, managing and testing pods
 
 [Go to lab-04](../lab-04/readme.md)
+
+## Feedback
+
+* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/4) to comment on this lab. 

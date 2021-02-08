@@ -30,7 +30,7 @@ Download and install [Docker for Windows](https://docs.docker.com/docker-for-win
 ## Active Azure account
 
 If you don't have an Azure account, please create one before the workshop.
-[Create your Azure free account](https://azure.microsoft.com/en-us/free/)
+[Create your Azure free account](https://azure.microsoft.com/en-us/free/?WT.mc_id=AZ-MVP-5003837)
 
 ## Install `az cli`
 

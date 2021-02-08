@@ -217,3 +217,7 @@ service "apia-service-2" deleted
 ## Next: Configmaps and secrets
 
 [Go to lab-08](../lab-08/readme.md)
+
+## Feedback
+
+* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/8) to comment on this lab. 

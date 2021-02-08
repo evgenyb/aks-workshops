@@ -130,3 +130,7 @@ now content is decoded and you can check if it contains the correct value.
 
 ## Next: Cleaning up
 [Go to lab-10](../lab-10/readme.md)
+
+## Feedback
+
+* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/10) to comment on this lab. 

@@ -526,3 +526,7 @@ You probably noticed logs from `health` and `readiness` endpoints are also shown
 ## Next: name of next lab
 
 [Go to lab-09](../lab-09/readme.md)
+
+## Feedback
+
+* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/9) to comment on this lab. 

@@ -166,3 +166,7 @@ Your prompt should now show both your git repository status (if you are inside g
 ## Next: Containerizing your application
 
 [Go to lab-03](../lab-03/readme.md)
+
+## Feedback
+
+* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/3) to comment on this lab. 

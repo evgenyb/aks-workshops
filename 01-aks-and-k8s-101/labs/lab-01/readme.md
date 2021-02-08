@@ -119,3 +119,6 @@ kube-system       Active   7m58s
 
 [Go to lab-02](../lab-02/readme.md)
 
+## Feedback
+
+* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/2) to comment on this lab. 

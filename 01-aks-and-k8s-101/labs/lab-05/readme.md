@@ -294,3 +294,7 @@ The sate was `Unhealthy` 100 times over the last 13 min with reason `Readiness p
 ## Next: Deployments
 
 [Go to lab-06](../lab-06/readme.md)
+
+## Feedback
+
+* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/6) to comment on this lab. 
