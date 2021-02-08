@@ -26,7 +26,7 @@ Here is the agenda for the workshops:
  * [Lab-07](labs/lab-07/readme.md) - Creating and Managing Services
  * Slides - Configmaps and secrets
  * [Lab-08](labs/lab-08/readme.md) - Configmaps and secrets
- * Lab-09 - AKS Kubernetes resources at the Azure portal
+ * [Lab-09](labs/lab-09/readme.md) - AKS Kubernetes resources at the Azure portal
  * [Lab-10](labs/lab-10/readme.md) - Cleaning up
 
 ## Links

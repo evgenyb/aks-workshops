@@ -8,12 +8,6 @@ When you work with several of Kubernetes instances it's important to understand 
 
 * configure the prompt of shell of your choice to display the current Kubernetes cluster context
 
-## Useful links
-
-* [How to make a pretty prompt in Windows Terminal with Powerline, Nerd Fonts, Cascadia Code, WSL, and oh-my-posh](https://www.hanselman.com/blog/how-to-make-a-pretty-prompt-in-windows-terminal-with-powerline-nerd-fonts-cascadia-code-wsl-and-ohmyposh)
-* [oh-my-posh themes](https://github.com/JanDeDobbeleer/oh-my-posh#themes)
-* [Powershell prompt: How to display your current Kubernetes context](https://blog.guybarrette.com/powershell-prompt-how-to-display-your-current-kubernetes-context)
-
 ## Task #1 - configure your PowerShell prompt
 
 Install Posh-Git and Oh-My-Posh
@@ -163,6 +157,11 @@ Your prompt should now show both your git repository status (if you are inside g
 
 ![bash-prompt](images/bash-prompt.png)
 
+## Useful links
+
+* [How to make a pretty prompt in Windows Terminal with Powerline, Nerd Fonts, Cascadia Code, WSL, and oh-my-posh](https://www.hanselman.com/blog/how-to-make-a-pretty-prompt-in-windows-terminal-with-powerline-nerd-fonts-cascadia-code-wsl-and-ohmyposh)
+* [oh-my-posh themes](https://github.com/JanDeDobbeleer/oh-my-posh#themes)
+* [Powershell prompt: How to display your current Kubernetes context](https://blog.guybarrette.com/powershell-prompt-how-to-display-your-current-kubernetes-context)
 
 ## Next: Containerizing your application
 

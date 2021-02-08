@@ -22,6 +22,7 @@ This endpoint reads `Database:ConnectionString` from Configuration and writes lo
 ### ConfigMapTestController
 
 This endpoint writes 4 different log levels:
+
 * Info
 * Warning
 * Error
