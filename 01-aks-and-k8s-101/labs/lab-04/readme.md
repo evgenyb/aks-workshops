@@ -75,7 +75,7 @@ app-a   1/1     Running   0          5h18m
 app-b   1/1     Running   0          13s
 ```
 
-as you can see, there are 2 pods running. Both have status `Running` and `Ready` column contains `1/1`, which means that 1 out of 1 pods are in `Running` state. 
+as you can see, there are 2 pods running. Both have status `Running` and `Ready` column contains `1/1`, which means that 1 out of 1 containers are in `Running` state. 
 To get even more information about pods, use `-o wide` flag
 
 ```bash
@@ -113,7 +113,7 @@ kubectl get po app-a -o json
 ## Task #4 - testing within cluster with interactive shell. Option #1
 
 Quite often you need to test application from within your cluster. Because cluster is running inside it's own Virtual Network, nothing is accessible from your PC. 
-Let's try to ping of the running `app-a|b` pods.
+Let's try to ping of the running `app-a|b` pods IP.
 
 ```bash
 # Get pods IP addresses
@@ -129,11 +129,12 @@ Pinging 10.244.0.9 with 32 bytes of data:
 Request timed out.
 ```
 
-How can we test our application? One common solution is to run a test pod that you can attach to and run interactive shell commands from inside the pod. There are several well known images for such a tasks, one of them called [busybox](https://busybox.net/), but the image we will use is [busyboxplus:curl](https://hub.docker.com/r/radial/busyboxplus). This is because it contains `curl` command that need for our testing. 
+How can we test our application? One common solution is to run a test pod that you can attach to and run interactive shell commands from inside the pod. There are several well known images for such a tasks, one of them called [busybox](https://busybox.net/), but the image we will use is [busyboxplus:curl](https://hub.docker.com/r/radial/busyboxplus). Mainly because it contains `curl` command that we need for our testing. 
 
 ```bash
 # Run pod as interactive shell
 kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -- sh
+
 # Here is prompt from withing the pod
 [ root@curl:/ ]$ 
 
@@ -160,7 +161,7 @@ Couple of things to mention here:
 
 ## Task #5 - deploy `apia` image using yaml pod definition 
 
-Now, create new `app-d-pod.yaml` file with the following content
+Now, create new `app-d-pod.yaml` file with the following pod definition content
 
 ```yaml
 apiVersion: v1
@@ -171,14 +172,13 @@ spec:
   containers:
   - name: app-d
     image: iacaksws1<YOU-NAME>acr.azurecr.io/apia:v1
-    imagePullPolicy: IfNotPresent
     resources: {}
 ```
 
 Now deploy it using [kubectl apply](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply) command
 
 ```bash
-# deploy app-a pod
+# Deploy app-a pod
 kubectl apply -f app-d-pod.yaml
 pod/app-d created
 ```
