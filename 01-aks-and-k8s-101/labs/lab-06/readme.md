@@ -40,7 +40,7 @@ lab6-task2   1/1     1            1           6m58s   apia         iacaksws1evga
 kubectl get deployment lab6-task2 -o yaml
 
 # Get pods created by deployment
-kubectl get po | grep lab-06
+kubectl get po | grep lab6
 lab6-task2-9d58f9659-ksr5g   1/1     Running            0          12m
 
 # Get pods with specified labels
@@ -146,7 +146,7 @@ A Deployment's rollout is only triggered if Pod's template `.spec.template` is c
 
 ```bash
 # Let's update the api container and use the apia:v6 image instead of the apia:v1 image
-kubectl set image deployment/lab6-task3 api=iacaksws1evgacr.azurecr.io/apia:v6 --record
+kubectl set image deployment/lab6-task3 api=iacaksws1<YOU-NAME>acr.azurecr.io/apia:v6 --record
 
 # To see the Deployment rollout status, run
 kubectl rollout status deployment/lab6-task3
