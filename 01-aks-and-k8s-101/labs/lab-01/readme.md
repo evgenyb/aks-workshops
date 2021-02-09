@@ -8,6 +8,7 @@ To start learning and experimenting with Kubernetes concepts, commands and opera
 * Azure Container Registry (ACR)
 * Azure Kubernetes Service (AKS)
 
+![model](images/model.png)
 
 ## Goals
 
