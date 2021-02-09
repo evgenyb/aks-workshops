@@ -215,6 +215,7 @@ info: api_a.Controllers.ReadinessController[0]
       [lab-05 task #4] - always ready
 info: api_a.Controllers.HealthController[0]
       [lab-05 task #1] - always healthy```
+```
 
 As you can see, both  `/health` and `/readiness` endpoints are called every 3 seconds.
 
