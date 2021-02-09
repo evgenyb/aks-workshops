@@ -98,7 +98,7 @@ kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -
 [ root@curl:/ ]$ curl http://apia-service-1/weatherforecast
 
 # Test our service using service full DNS name
-[ root@curl:/ ]$ curl http://apiaapia-service-1.default.svc.cluster.local/weatherforecast
+[ root@curl:/ ]$ curl http://apia-service-1.default.svc.cluster.local/weatherforecast
 
 # Run test load with watch command. It will run "curl http://apia-service-1/weatherforecast" command every second until we stop it
 watch -n 1 curl http://apia-service-1/weatherforecast
