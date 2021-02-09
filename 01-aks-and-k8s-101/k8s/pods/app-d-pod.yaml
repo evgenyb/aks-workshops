@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-d
+spec:
+  containers:
+  - name: app-d
+    image: iacaksws1<YOU-NAME>acr.azurecr.io/apia:v1
+    imagePullPolicy: IfNotPresent
+    resources: {}    

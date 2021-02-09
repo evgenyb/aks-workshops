@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab8-task2
+  labels:
+    app: lab8-task2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lab8-task2
+  template:
+    metadata:
+      labels:
+        app: lab8-task2
+    spec:
+      containers:
+      - name: api
+        image: iacaksws1<YOU-NAME>acr.azurecr.io/apia:v1
+        imagePullPolicy: IfNotPresent
+        resources: {}
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 3    
+        readinessProbe:
+          httpGet:
+            path: /readiness
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        volumeMounts:
+        - name: secrets
+          mountPath: /app/secrets
+          readOnly: true          
+        - name: logging-config
+          mountPath: /app/config          
+      volumes:
+      - name: secrets
+        secret:
+          secretName: secret-appsettings
+      - name: logging-config
+        configMap:
+          name: logging-appsettings

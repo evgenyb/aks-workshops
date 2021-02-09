@@ -1,0 +1,13 @@
+﻿# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/projectSettingsUpdater.xml
+/modules.xml
+/.idea.api-a.iml
+/contentModel.xml
+# Datasource local storage ignored files
+/../../../../../../../../../../../:\Users\evgen\Projects\aks-workshops\01-aks-and-k8s-101\app\api-a\.idea\.idea.api-a.dir\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/

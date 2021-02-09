@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lab-05-healthy
+spec:
+  containers:
+  - name: api
+    image: iacaksws1evgacr.azurecr.io/apia:v1
+    imagePullPolicy: IfNotPresent
+    resources: {}
+    livenessProbe:
+      httpGet:
+        path: /health
+        port: 80
+      initialDelaySeconds: 3
+      periodSeconds: 3    

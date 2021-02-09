@@ -12,20 +12,27 @@ This workshop covers the basics of using Kubernetes and you will learn how to:
 Here is the agenda for the workshops:
  
  * Slides - Kubernetes and AKS introduction
- * Lab-01 - AKS setup (RG, ACR, AKS with ACR interaction)
- * Lab-02 - install kubectl and connect to your cluster
- * Lab-03 - setting up you shell for better AKS/kubectl experience
- * Slides - Introduce app
- * Lab-04 - Containerizing your application
- * Slides - Basic k8s Concepts 
- * Lab-05 - Creating and managing pods
- * Lab-06 - Readiness and Liveness probes
- * Lab-07 - Configmaps and secrets
- * Lab-08 - Creating and Managing Services
- * Lab-09 - Deployments
- * Lab-10 - Rolling Updates
- * Lab-11 - Cleaning up
+ * [Lab-01](labs/lab-01/readme.md) - AKS setup (15 min)
+ * [Lab-02](labs/lab-02/readme.md) - setting up you shell for better AKS/kubectl experience (15 min)
+ * Slides - Introduce our "guinea pig" app
+ * [Lab-03](labs/lab-03/readme.md) - Containerizing your application (15 min)
+ * Slides - Pods, Namespaces
+ * [Lab-04](labs/lab-04/readme.md) - Creating, managing and testing pods (15 min)
+ * Slides - Readiness and Liveness probes
+ * [Lab-05](labs/lab-05/readme.md) - Readiness and Liveness probes
+ * Slides - Deployments
+ * [Lab-06](labs/lab-06/readme.md) - Deployments
+ * Slides - Services, Labels, Selectors
+ * [Lab-07](labs/lab-07/readme.md) - Creating and Managing Services
+ * Slides - Configmaps and secrets
+ * [Lab-08](labs/lab-08/readme.md) - Configmaps and secrets
+ * [Lab-09](labs/lab-09/readme.md) - AKS Kubernetes resources at the Azure portal
+ * [Lab-10](labs/lab-10/readme.md) - Cleaning up
 
 ## Links
 
 * [Prerequisites](prerequisites.md)
+
+## Feedback
+
+* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/11) to comment on this workshop. 
