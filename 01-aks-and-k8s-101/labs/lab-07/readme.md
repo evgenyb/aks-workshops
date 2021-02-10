@@ -4,15 +4,6 @@
 
 Service in Kubernetes is an abstract way to expose an application running on a set of Pods as a network service.
 Kubernetes gives Pods their own IP addresses and a single DNS name for a set of Pods, and can load-balance across them.
-Kubernetes Pods are created and destroyed to match the state of your cluster. Each Pod gets its own IP address, however in a Deployment, the set of Pods running in one moment in time could be different from the set of Pods running that application a moment later.
-
-This leads to a problem: if some set of Pods (`app-a`) provides functionality to other Pods (`app-b`) inside your cluster, how do the `app-a` find out and keep track of which IP address to connect to, so that the `app-a` can use the `app-b` part of the workload?
-
-The name of a Service object must be a valid DNS label name.
-
-ServiceTypes
-
-ClusterIP - Exposes the Service on a cluster-internal IP. Choosing this value makes the Service only reachable from within the cluster. This is the default ServiceType.
 
 ## Goals
 
