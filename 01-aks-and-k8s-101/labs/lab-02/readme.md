@@ -35,12 +35,13 @@ Install a couple of Unix tools using [Chocolatey](https://chocolatey.org/install
 ```PowerShell
 choco install grep
 choco install sed
+choco install jq
 ```
 
-Locate the themes settings file by typing:
+Restart PowerShell session. Locate the themes settings file by typing:
 
 ```PowerShell
-$ThemeSettings
+PS C:\Users\evgen>$ThemeSettings
 
 CurrentUser          : evgen
 CurrentThemeLocation : C:\Users\evgen\Documents\PowerShell\Modules\oh-my-posh\2.0.492\Themes\Material.psm1
