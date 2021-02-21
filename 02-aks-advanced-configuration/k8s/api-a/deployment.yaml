@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-a
+  labels:
+    app: api-a
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-a
+  template:
+    metadata:
+      labels:
+        app: api-a
+    spec:
+      containers:
+      - name: api
+        image: iacws2evgacr.azurecr.io/apia:v2
+        imagePullPolicy: IfNotPresent
+        resources: {}
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 3    
+        readinessProbe:
+          httpGet:
+            path: /readiness
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        volumeMounts:
+        - name: secrets
+          mountPath: /app/secrets
+          readOnly: true          
+        - name: appsettings
+          mountPath: /app/config          
+      volumes:
+      - name: secrets
+        secret:
+          secretName: api-b-secret-appsettings
+      - name: appsettings
+        configMap:
+          name: api-b-appsettings

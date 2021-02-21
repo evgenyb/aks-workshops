@@ -31,7 +31,7 @@ az group create -g iac-aks-ws1-rg -l westeurope
 Next, create Azure Container Registry. ACR name should be globally unique, therefore I suggest that we use the following naming convention: `iacaksws1<YOU-NAME>acr`, so for example for me it will be  `iacaksws1evgacr`.
 
 ```bash
-az acr create -g iac-aks-ws1-rg -n iacaksws1<YOU-NAME>acr --sku Basic
+az acr create -g iac-aks-ws1-rg -n iacaksws1<YOUR-NAME>acr --sku Basic
 ```
 
 Provision Log Analytics Workspace. LA workspace name must be globally unique, therefore I suggest that we use the following naming convention: `iac-aks-ws1-<YOU-NAME>-la`, so for example for me it will be  `iac-aks-ws1-evg-la`.
@@ -44,7 +44,7 @@ Finally, provision AKS. Let's all us use the same cluster name - `aks-ws1`
 
 ```bash
 # get workspace resource id
-az monitor log-analytics workspace show -g iac-aks-ws1-rg -n iac-aks-ws1-<YOU-NAME>-la --query id
+az monitor log-analytics workspace show -g iac-aks-ws1-rg -n iac-aks-ws1-<YOUR-NAME>-la --query id
 "/subscriptions/8878beb2-5e5d-4418-0000-783674eea324/resourcegroups/iac-aks-ws1-rg/providers/microsoft.operationalinsights/workspaces/iac-aks-ws1-<YOU-NAME>-la"
 #
 az aks create -g iac-aks-ws1-rg -n aks-ws1 -c 1 -k 1.19.6 --generate-ssh-keys --attach-acr iacaksws1<YOU-NAME>acr --enable-addons monitoring --workspace-resource-id "/subscriptions/8878beb2-5e5d-4418-0000-783674eea324/resourcegroups/iac-aks-ws1-rg/providers/microsoft.operationalinsights/workspaces/iac-aks-ws1-<YOU-NAME>-la"
