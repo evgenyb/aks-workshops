@@ -9,11 +9,23 @@
 ## Task #1 - create AKS resources
 
 ```bash
-# Create Log Analytics
-az monitor log-analytics workspace create -g iac-ws2-base-rg -n iac-ws2-<YOUR-NAME>-la
+# Create AKS resource group
+az group create -g iac-ws2-aks-blue-rg -l westeurope 
 
-# Create Azure Container Registry
-az acr create -g iac-ws2-base-rg -n iacws2<YOUR-NAME>acr --sku Basic
+# Create AKS Vnet
+az network vnet create -g iac-ws2-aks-blue-rg -n iac-ws2-aks-blue-vnet --address-prefix 10.11.0.0/16 --subnet-name aks-net --subnet-prefix 10.11.0.0/20
+
+# Get base VNet Id
+az network vnet show -g iac-ws2-base-rg -n iac-ws2-base-vnet --query id
+
+# Establish VNet peering between from AKS VNet to base VNet
+az network vnet peering create -g iac-ws2-aks-blue-rg -n aks-blue-to-base --vnet-name iac-ws2-aks-blue-vnet --allow-vnet-access --allow-forwarded-traffic --remote-vnet "<APIM-VNET-ID>" 
+
+# Get AKS VNet ID
+az network vnet show -g iac-ws2-aks-blue-rg -n iac-ws2-aks-blue-vnet --query id
+
+# Establish VNet peering between from APIM VNet to AKS VNet
+az network vnet peering create -g iac-ws2-base-rg -n base-to-aks-blue --vnet-name iac-ws2-base-vnet --allow-vnet-access --allow-forwarded-traffic --remote-vnet "<AKS-VNET-ID>"
 
 # Get workspace resource id
 az monitor log-analytics workspace show -g iac-ws2-base-rg -n iac-ws2-<YOUR-NAME>-la --query id
@@ -36,12 +48,6 @@ az ad group show -g iac-ws2 --query objectId
 # Get Public IP prefix ID
 az network public-ip prefix show  -g iac-ws2-base-rg -n iac-ws2-pip-prefix --query id
 
-# Create public IP address from prefix 
-az network public-ip create -g iac-ws2-aks-blue-rg -n iac-ws2-aks-blue-egress-pip --sku Standard --public-ip-prefix <PREFIX-ID> 
-
-# Get public egress IP ID
-az network public-ip show -g iac-ws2-aks-blue-rg -n iac-ws2-aks-blue-egress-pip --query id
-
 # Get subnet Id
 az network vnet subnet show -g iac-ws2-aks-blue-rg --vnet-name iac-ws2-aks-blue-vnet -n aks-net  --query id
 
@@ -57,14 +63,13 @@ az aks create -g iac-ws2-aks-blue-rg -n aks-ws2-blue \
     --node-count 1 \
     --max-pods 110 \
     --enable-aad --aad-admin-group-object-ids <AAD-GROUP-ID> \
-    --kubernetes-version 1.19.7 \
+    --kubernetes-version 1.19.6 \
     --network-plugin azure \
     --network-policy calico \
     --vm-set-type VirtualMachineScaleSets \
     --docker-bridge-address 172.17.0.1/16 \
 	--enable-managed-identity \
     --assign-identity <identity-id> \
-    --load-balancer-outbound-ips <PUBLIC-EGRESS-IP-ID>\
     --vnet-subnet-id <SUBNET-ID> \
     --no-ssh-key \
     --attach-acr iacws2<YOUR-NAME>acr \

@@ -1,4 +1,4 @@
-# lab-06 - ....
+# lab-08 - deploy nginx ingress controller
 
 ## Estimated completion time - xx min
 
@@ -12,7 +12,6 @@ Ceeate `internal-ingress.yaml` with the following content
 ```yaml
 controller:
   service:
-    loadBalancerIP: 10.11.5.13
     annotations:
       service.beta.kubernetes.io/azure-load-balancer-internal: "true"
 ```
@@ -46,7 +45,7 @@ https://kubernetes.github.io/ingress-nginx/user-guide/default-backend/
 
 ## Next: 
 
-[Go to lab-07](../lab-07/readme.md)
+[Go to lab-09](../lab-09/readme.md)
 
 ## Feedback
 
