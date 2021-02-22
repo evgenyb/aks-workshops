@@ -1,5 +1,7 @@
 controller:
   service:
-    loadBalancerIP: 10.11.5.13
+    # loadBalancerIP: 10.11.5.13
     annotations:
       service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+  ## Required only if defaultBackend.enabled = false
+  ## Must be <namespace>/<service_name>

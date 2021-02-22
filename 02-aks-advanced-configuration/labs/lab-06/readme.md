@@ -26,7 +26,7 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
 # Use Helm to deploy an NGINX ingress controller
 helm install nginx-ingress ingress-nginx/ingress-nginx \
-    --namespace ingress \
+    --namespace kube-system \
     -f internal-ingress.yaml \
     --set controller.replicaCount=2 \
     --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
@@ -39,6 +39,9 @@ helm install nginx-ingress ingress-nginx/ingress-nginx \
 
 https://docs.microsoft.com/en-us/azure/aks/ingress-internal-ip
 https://docs.microsoft.com/en-us/azure/aks/ingress-tls
+https://kubernetes.io/docs/concepts/services-networking/ingress/
+https://vincentlauzon.com/2018/10/10/about-ingress-in-azure-kubernetes-service-aks/
+https://kubernetes.github.io/ingress-nginx/user-guide/default-backend/
 
 
 ## Next: 

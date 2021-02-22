@@ -24,6 +24,9 @@ Here is the agenda for the workshops:
  * Lab-05 - deploy applications and services to AKS
  * Slides - Kubernetes Ingress Controller
  * Lab-06 - create and deploy ingress
+ * Slides - API Management 101 
+ * Lab-07 - deploy api-b API to API Management
+ * Lab-08 - AKS egress 
 
 ## Links
 
