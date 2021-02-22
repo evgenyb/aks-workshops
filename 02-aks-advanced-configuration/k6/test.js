@@ -12,7 +12,7 @@ export let options = {
 
   var params = {
     headers: {
-      'Ocp-Apim-Subscription-Key': 'cc1260b7977e4a839db88f4701c59b1c',
+      'Ocp-Apim-Subscription-Key': 'xxx',
     },
   };
 
