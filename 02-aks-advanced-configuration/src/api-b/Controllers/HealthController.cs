@@ -17,7 +17,7 @@ namespace api_b.Controllers
         [HttpGet]
         public IActionResult Healthy()
         {
-            _logger.LogInformation("[api-b] - healthy");
+            //_logger.LogDebug("[api-b] - healthy");
             return Ok("[api-b] - healthy");
         }
     }

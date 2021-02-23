@@ -31,10 +31,6 @@ Here is the agenda for the workshops:
 
  
  * Slides - AAD Pod Identity
-    links
-    https://azure.github.io/aad-pod-identity/docs/
-    https://azure.github.io/aad-pod-identity/docs/demo/standard_walkthrough/
-    https://azure.github.io/aad-pod-identity/docs/demo/tutorial/
 
 ## Links
 

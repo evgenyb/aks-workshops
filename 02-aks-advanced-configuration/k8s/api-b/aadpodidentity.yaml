@@ -1,0 +1,16 @@
+apiVersion: "aadpodidentity.k8s.io/v1"
+kind: AzureIdentity
+metadata:
+  name: "api-b"
+spec:
+  type: 0
+  resourceID: "/subscriptions/8878beb2-5e5d-4418-81ae-783674eea324/resourcegroups/iac-ws2-base-rg/providers/Microsoft.ManagedIdentity/userAssignedIdentities/iac-ws2-api-b-mi"
+  clientID: "3cc406af-ac62-41fa-9b37-72007d352e0b"
+---
+apiVersion: "aadpodidentity.k8s.io/v1"
+kind: AzureIdentityBinding
+metadata:
+  name: "api-b-binding"
+spec:
+  azureIdentity: "api-b"
+  selector: "api-b"

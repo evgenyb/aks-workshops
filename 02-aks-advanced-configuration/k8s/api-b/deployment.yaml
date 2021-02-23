@@ -13,10 +13,11 @@ spec:
     metadata:
       labels:
         app: api-b
+        aadpodidbinding: api-b
     spec:
       containers:
       - name: api
-        image: iacws2evgacr.azurecr.io/apib:v3
+        image: iacws2evgacr.azurecr.io/apib:v11
         imagePullPolicy: IfNotPresent
         resources: {}
         livenessProbe:

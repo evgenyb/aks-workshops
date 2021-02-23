@@ -12,5 +12,5 @@ data:
           "Microsoft.Hosting.Lifetime": "Information"
         }
       },
-      "ApiAServiceUrl": "http://api-a-service:8081/api"
+      "ApiAServiceUrl": "http://api-a-service:8081/api"      
     }

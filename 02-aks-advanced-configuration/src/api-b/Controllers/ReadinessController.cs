@@ -17,7 +17,7 @@ namespace api_b.Controllers
         [HttpGet]
         public IActionResult Ready()
         {
-            _logger.LogInformation("[api-b] - ready");
+            //_logger.LogDebug("[api-b] - ready");
             return Ok("[api-b] - ready");
         }
     }

@@ -1,9 +1,6 @@
-﻿using api_b.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -15,11 +12,9 @@ namespace api_b.Controllers
     {
         private readonly ILogger<ApiController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly ICosmosDbService _cosmosDbService;
 
-        public ApiController(ICosmosDbService cosmosDbService, ILogger<ApiController> logger, IConfiguration configuration)
+        public ApiController(ILogger<ApiController> logger, IConfiguration configuration)
         {
-            _cosmosDbService = cosmosDbService;
             _logger = logger;
             _configuration = configuration;
         }
