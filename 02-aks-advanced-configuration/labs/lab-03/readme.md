@@ -18,13 +18,13 @@ az network vnet create -g iac-ws2-aks-blue-rg -n iac-ws2-aks-blue-vnet --address
 # Get base VNet Id
 az network vnet show -g iac-ws2-base-rg -n iac-ws2-base-vnet --query id
 
-# Establish VNet peering between from AKS VNet to base VNet
+# Establish VNet peering from AKS VNet to base VNet
 az network vnet peering create -g iac-ws2-aks-blue-rg -n aks-blue-to-base --vnet-name iac-ws2-aks-blue-vnet --allow-vnet-access --allow-forwarded-traffic --remote-vnet "<APIM-VNET-ID>" 
 
 # Get AKS VNet ID
 az network vnet show -g iac-ws2-aks-blue-rg -n iac-ws2-aks-blue-vnet --query id
 
-# Establish VNet peering between from APIM VNet to AKS VNet
+# Establish VNet peering from base VNet to AKS VNet
 az network vnet peering create -g iac-ws2-base-rg -n base-to-aks-blue --vnet-name iac-ws2-base-vnet --allow-vnet-access --allow-forwarded-traffic --remote-vnet "<AKS-VNET-ID>"
 
 # Get workspace resource id
@@ -56,6 +56,16 @@ az identity create --name iac-ws2-aks-blue-mi --resource-group iac-ws2-aks-blue-
 
 # Get managed identity ID
 az identity show --name iac-ws2-aks-blue-mi --resource-group iac-ws2-aks-blue-rg --query id
+
+# Create private DNS Zone
+az network private-dns zone create -g iac-ws2-base-rg -n ws2.iac.com
+
+# Link base vnet into private DNS zone
+az network private-dns link vnet create -g iac-ws2-base-rg -n iac-ws2-base-vnet-dns-link -z ws2.iac.com -v iac-ws2-base-vnet -e true
+
+# Link ask-blue vnet into private DNS zone
+az network private-dns link vnet create -g iac-ws2-base-rg -n iac-ws2-aks-blue-vnet-dns-link -z ws2.iac.com -v /subscriptions/8878beb2-5e5d-4418-81ae-783674eea324/resourceGroups/iac-ws2-aks-blue-rg/providers/Microsoft.Network/virtualNetworks/iac-ws2-aks-blue-vnet -e true
+
 
 # Create AKS cluster
 az aks create -g iac-ws2-aks-blue-rg -n aks-ws2-blue \

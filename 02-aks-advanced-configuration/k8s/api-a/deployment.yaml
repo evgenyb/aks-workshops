@@ -40,7 +40,7 @@ spec:
       volumes:
       - name: secrets
         secret:
-          secretName: api-b-secret-appsettings
+          secretName: api-a-secret-appsettings
       - name: appsettings
         configMap:
-          name: api-b-appsettings
+          name: api-a-appsettings

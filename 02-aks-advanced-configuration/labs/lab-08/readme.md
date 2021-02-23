@@ -17,9 +17,6 @@ controller:
 ```
 
 ```bash
-# Create a namespace for your ingress resources
-kubectl create namespace ingress
-
 # Add the ingress-nginx repository
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 

@@ -10,6 +10,7 @@
 
 ```bash
 
+kubectl create secret generic api-a-secret-appsettings --from-file=./appsettings.secrets.json
 kubectl create secret generic api-b-secret-appsettings --from-file=./appsettings.secrets.json
 
 ```
