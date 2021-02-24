@@ -8,11 +8,15 @@
 ## Task #1 - 
 
 ```bash
+# Get Public IP prefix ID
+az network public-ip prefix show  -g iac-ws2-base-rg -n iac-ws2-pip-prefix --query id
+
 # Create public IP address from prefix 
 az network public-ip create -g iac-ws2-aks-blue-rg -n iac-ws2-aks-blue-egress-pip --sku Standard --public-ip-prefix <PREFIX-ID> 
 
 # Get public egress IP ID
 az network public-ip show -g iac-ws2-aks-blue-rg -n iac-ws2-aks-blue-egress-pip --query id
+
 
 # Update AKS egress with PIP maintained by us
 az aks update -g iac-ws2-aks-blue-rg -n aks-ws2-blue  \

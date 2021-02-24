@@ -9,6 +9,9 @@
 ## Task #1 - create AKS resources
 
 ```bash
+# Set your user name for global resources (LogAnalytics, AppInsight, APIM etc...)
+YOUR_NAME="evg"
+
 # Create AKS resource group
 az group create -g iac-ws2-aks-blue-rg -l westeurope 
 
@@ -16,74 +19,61 @@ az group create -g iac-ws2-aks-blue-rg -l westeurope
 az network vnet create -g iac-ws2-aks-blue-rg -n iac-ws2-aks-blue-vnet --address-prefix 10.11.0.0/16 --subnet-name aks-net --subnet-prefix 10.11.0.0/20
 
 # Get base VNet Id
-az network vnet show -g iac-ws2-base-rg -n iac-ws2-base-vnet --query id
+BASE_VNET_ID="$(az network vnet show -g iac-ws2-base-rg -n iac-ws2-base-vnet --query id -o tsv)"
 
 # Establish VNet peering from AKS VNet to base VNet
-az network vnet peering create -g iac-ws2-aks-blue-rg -n aks-blue-to-base --vnet-name iac-ws2-aks-blue-vnet --allow-vnet-access --allow-forwarded-traffic --remote-vnet "<APIM-VNET-ID>" 
+az network vnet peering create -g iac-ws2-aks-blue-rg -n aks-blue-to-base --vnet-name iac-ws2-aks-blue-vnet --allow-vnet-access --allow-forwarded-traffic --remote-vnet $BASE_VNET_ID
 
 # Get AKS VNet ID
-az network vnet show -g iac-ws2-aks-blue-rg -n iac-ws2-aks-blue-vnet --query id
+AKS_BLUE_VNET_ID="$(az network vnet show -g iac-ws2-aks-blue-rg -n iac-ws2-aks-blue-vnet --query id -o tsv)"
 
 # Establish VNet peering from base VNet to AKS VNet
-az network vnet peering create -g iac-ws2-base-rg -n base-to-aks-blue --vnet-name iac-ws2-base-vnet --allow-vnet-access --allow-forwarded-traffic --remote-vnet "<AKS-VNET-ID>"
+az network vnet peering create -g iac-ws2-base-rg -n base-to-aks-blue --vnet-name iac-ws2-base-vnet --allow-vnet-access --allow-forwarded-traffic --remote-vnet $AKS_BLUE_VNET_ID
 
 # Get workspace resource id
-az monitor log-analytics workspace show -g iac-ws2-base-rg -n iac-ws2-<YOUR-NAME>-la --query id
+WORKSPACE_ID="$(az monitor log-analytics workspace show -g iac-ws2-base-rg -n iac-ws2-${YOUR_NAME}-la --query id -o tsv)"
 
 # Create Azure AD group iac-ws2
 az ad group create --display-name iac-ws2 --mail-nickname iac-ws2
 
 # Get your user Azure AD objectId 
-az ad user show --id "<AZURE-AD-USER-NAME>" --query objectId
+USER_ID="$(az ad user show --id "<AZURE-AD-USER-NAME>" --query objectId -o tsv)"
 
 # Sometimes userPrincipalName is in really strange format. In that case, you can try to search
-az ad user list --query "[?contains(userPrincipalName, '<PART-OF-USER-NAME>')].objectId"
+USER_ID="$(az ad user list --query "[?contains(userPrincipalName, '<PART-OF-USER-NAME>')].objectId" -o tsv)"
 
 # Add user into iac-ws2 Azure AD group. Use object Id from previous query 
-az ad group member add -g iac-ws2 --member-id <USER-AAD-OBJECT-ID>
+az ad group member add -g iac-ws2 --member-id ${USER_ID}
 
 # Get iac-ws2 Azure AD group id)
-az ad group show -g iac-ws2 --query objectId
-
-# Get Public IP prefix ID
-az network public-ip prefix show  -g iac-ws2-base-rg -n iac-ws2-pip-prefix --query id
+ADMIN_GROUP_ID="$(az ad group show -g iac-ws2 --query objectId -o tsv)"
 
 # Get subnet Id
-az network vnet subnet show -g iac-ws2-aks-blue-rg --vnet-name iac-ws2-aks-blue-vnet -n aks-net  --query id
+SUBNET_ID="$(az network vnet subnet show -g iac-ws2-aks-blue-rg --vnet-name iac-ws2-aks-blue-vnet -n aks-net --query id -o tsv)"
 
 # Create user assigned managed identity
 az identity create --name iac-ws2-aks-blue-mi --resource-group iac-ws2-aks-blue-rg
 
 # Get managed identity ID
-az identity show --name iac-ws2-aks-blue-mi --resource-group iac-ws2-aks-blue-rg --query id
-
-# Create private DNS Zone
-az network private-dns zone create -g iac-ws2-base-rg -n ws2.iac.com
-
-# Link base vnet into private DNS zone
-az network private-dns link vnet create -g iac-ws2-base-rg -n iac-ws2-base-vnet-dns-link -z ws2.iac.com -v iac-ws2-base-vnet -e true
-
-# Link ask-blue vnet into private DNS zone
-az network private-dns link vnet create -g iac-ws2-base-rg -n iac-ws2-aks-blue-vnet-dns-link -z ws2.iac.com -v /subscriptions/8878beb2-5e5d-4418-81ae-783674eea324/resourceGroups/iac-ws2-aks-blue-rg/providers/Microsoft.Network/virtualNetworks/iac-ws2-aks-blue-vnet -e true
-
+MANAGED_IDENTITY_ID="$(az identity show --name iac-ws2-aks-blue-mi --resource-group iac-ws2-aks-blue-rg --query id -o tsv)"
 
 # Create AKS cluster
 az aks create -g iac-ws2-aks-blue-rg -n aks-ws2-blue \
     --nodepool-name systempool  \
     --node-count 1 \
     --max-pods 110 \
-    --enable-aad --aad-admin-group-object-ids <AAD-GROUP-ID> \
+    --enable-aad --aad-admin-group-object-ids ${ADMIN_GROUP_ID} \
     --kubernetes-version 1.19.6 \
     --network-plugin azure \
     --network-policy calico \
     --vm-set-type VirtualMachineScaleSets \
     --docker-bridge-address 172.17.0.1/16 \
 	--enable-managed-identity \
-    --assign-identity <identity-id> \
-    --vnet-subnet-id <SUBNET-ID> \
+    --assign-identity ${MANAGED_IDENTITY_ID} \
+    --vnet-subnet-id ${SUBNET_ID} \
     --no-ssh-key \
-    --attach-acr iacws2<YOUR-NAME>acr \
-    --enable-addons monitoring --workspace-resource-id <WORKSPACE-ID> 
+    --attach-acr iacws2${YOUR_NAME}acr \
+    --enable-addons monitoring --workspace-resource-id ${WORKSPACE_ID}
 
 # Get AKS credentials
 az aks get-credentials -g iac-ws2-aks-blue-rg -n aks-ws2-blue --overwrite-existing

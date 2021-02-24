@@ -10,12 +10,6 @@ export let options = {
     ],
   };
 
-  var params = {
-    headers: {
-      'Ocp-Apim-Subscription-Key': 'xxx',
-    },
-  };
-
   export default function () {
-  let res = http.get('https://iac-ws2-evg-apim.azure-api.net/api', params);
+  let res = http.get('https://iac-ws2-evg-apim.azure-api.net/api');
 }
