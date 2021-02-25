@@ -2,7 +2,7 @@
 
 ## Estimated completion time - 15 min
 
-When you work with several of Kubernetes instances it's important to understand which instance/context you are currently working against. This is especially important when you work with Production. Luckily, it's very easy to configure both bash and PowerShell to display the cluster name of the current context as part of the shell prompt line. 
+When you work with several Kubernetes instances it's important to understand which instance/context you are currently working against. This is especially important when you work with Production cluster. Luckily, it's very easy to configure both bash and PowerShell to display the cluster name of the current context as part of the shell prompt line. 
 
 ## Goals
 
@@ -133,12 +133,13 @@ Install a couple of Unix tools using [Chocolatey](https://chocolatey.org/install
 ```PowerShell
 choco install grep
 choco install sed
+choco install jq
 ```
 
-Locate the themes settings file by typing:
+Restart PowerShell session. Locate the themes settings file by typing:
 
 ```PowerShell
-$ThemeSettings
+PS C:\Users\evgen>$ThemeSettings
 
 CurrentUser          : evgen
 CurrentThemeLocation : C:\Users\evgen\Documents\PowerShell\Modules\oh-my-posh\2.0.492\Themes\Material.psm1
