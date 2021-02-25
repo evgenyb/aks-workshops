@@ -8,7 +8,7 @@ When you work with several Kubernetes instances it's important to understand whi
 
 * configure the prompt of shell of your choice to display the current Kubernetes cluster context
 
-If you don't have `oh-my-posh` installed, use `Task #1`. If you already have `oh-my-posh` installed, and it's version is 2 or lower, use `Task #2`
+If you don't have `oh-my-posh` installed, use `Task #1`. If you already have `oh-my-posh` installed, it's version 2 and you want to keep this version, use `Task #2`
 
 ## Task #1 - configure your PowerShell prompt with oh-my-posh v3
 
@@ -41,7 +41,7 @@ Get-PoshThemes
 
 and read about them [here](https://ohmyposh.dev/docs/themes)
 
-I use `Material` theme. 
+I like and use `Material` theme, mainly because it's simple, without any extra noise :)  
 
 First, export theme config so you can customize/extend the blocks and segments.
 
@@ -49,7 +49,8 @@ First, export theme config so you can customize/extend the blocks and segments.
 Set-PoshPrompt -Theme Material
 Export-PoshTheme -FilePath ~/.oh-my-posh.omp.json
 ```
-Edit `~/.oh-my-posh.omp.json` file and add the following `block` into the list of `segments`. Checkout detailed  [configuration](https://ohmyposh.dev/docs/configure) guide. 
+
+Edit `~/.oh-my-posh.omp.json` file and add the following `block` type of [kubectl](https://ohmyposh.dev/docs/kubectl) into the list of `segments`. Checkout detailed [configuration](https://ohmyposh.dev/docs/configure) guide. 
 
 ```json
 {
@@ -68,7 +69,9 @@ Edit `~/.oh-my-posh.omp.json` file and add the following `block` into the list o
     }
 }
 ```
-it's up to you where to place it in the prompt line. I prefer it to be right before the time section
+it's up to you where to place it in the prompt line. I prefer it to be right before the `time` section
+
+![configuration](images/config.png)
 
 Set your custom theme and enjoy.
 
