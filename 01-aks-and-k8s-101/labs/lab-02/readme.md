@@ -8,7 +8,105 @@ When you work with several of Kubernetes instances it's important to understand 
 
 * configure the prompt of shell of your choice to display the current Kubernetes cluster context
 
-## Task #1 - configure your PowerShell prompt
+If you don't have `oh-my-posh` installed, use `Task #1`. If you already have `oh-my-posh` installed, and it's version is 2 or lower, use `Task #2`
+
+## Task #1 - configure your PowerShell prompt with oh-my-posh v3
+
+Install Posh-Git and Oh-My-Posh
+
+```PowerShell
+Install-Module posh-git -Scope CurrentUser
+Install-Module oh-my-posh -Scope CurrentUser
+Install-Module -Name PSReadLine -AllowPrerelease -Scope CurrentUser -Force -SkipPublisherCheck
+```
+If you got a warning telling that you already have `oh-my-posh` installed, you can either upgrade it by using `-Force` flag, or, if you want to keep your version, goto `Task #2`.
+
+Edit your profile by running `code $PROFILE` or `notepad $PROFILE`  and add these lines to the end:
+
+```PowerShell
+Import-Module posh-git
+Import-Module oh-my-posh
+```
+save the file and either restart your PowerShell session or reload your profile
+
+```powershell
+. $PROFILE
+```
+
+Next, set the theme. There are a lot of them. You can preview all themes by running this command 
+
+```powershell
+Get-PoshThemes
+```
+
+and read about them [here](https://ohmyposh.dev/docs/themes)
+
+I use `Material` theme. 
+
+First, export theme config so you can customize/extend the blocks and segments.
+
+```powershell
+Set-PoshPrompt -Theme Material
+Export-PoshTheme -FilePath ~/.oh-my-posh.omp.json
+```
+Edit `~/.oh-my-posh.omp.json` file and add the following `block` into the list of `segments`. Checkout detailed  [configuration](https://ohmyposh.dev/docs/configure) guide. 
+
+```json
+{
+    "type": "kubectl",
+    "style": "powerline",
+    "powerline_symbol": "",
+    "invert_powerline": false,
+    "foreground": "#66F68F",
+    "foreground_templates": null,
+    "background": "",
+    "background_templates": null,
+    "leading_diamond": "",
+    "trailing_diamond": "",
+    "properties": {
+        "template": "[{{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}]"
+    }
+}
+```
+it's up to you where to place it in the prompt line. I prefer it to be right before the time section
+
+Set your custom theme and enjoy.
+
+```powershell
+Set-PoshPrompt -Theme  ~/.oh-my-posh.omp.json
+```
+
+Edit your profile again by running `code $PROFILE` or `notepad $PROFILE` and new line to the end of this file:
+
+```PowerShell
+Import-Module posh-git
+Import-Module oh-my-posh
+Set-PoshPrompt -Theme  ~/.oh-my-posh.omp.json
+```
+
+save the file and either restart your PowerShell session or reload your profile
+
+```powershell
+. $PROFILE
+```
+
+Now your should have a pretty prompt that shows you you active cluster context.
+
+![ps-k8s](images/ps-k8s.png)
+
+Install a couple of Unix tools using [Chocolatey](https://chocolatey.org/install). We will use them to parse the Kubernetes config file.
+
+```PowerShell
+choco install grep
+choco install sed
+choco install jq
+```
+
+Note that as a free bonus, most of the posh themes show you the status of you git repository as well!
+
+For even better experience, you should install the [Cascadia code fonts](https://github.com/microsoft/cascadia-code#installation).
+
+## Task #2 - configure your PowerShell prompt with posh-git v2
 
 Install Posh-Git and Oh-My-Posh
 
@@ -28,7 +126,7 @@ Set-Theme Material
 
 save the file and restart your PowerShell session.
 
-Note, here I use `Material` because I like it, but you feel free to use other theme theme that makes you happy and use that theme's name here. Read more over [here](https://github.com/JanDeDobbeleer/oh-my-posh#themes).
+Note, here I use `Material` because I like it, but you feel free to use other theme theme that makes you happy and use that theme's name here. Read more over [here](https://ohmyposh.dev/docs/themes).
 
 Install a couple of Unix tools using [Chocolatey](https://chocolatey.org/install). We wil use them to parse the Kubernetes config file.
 
@@ -73,7 +171,7 @@ Note that as a free bonus, most of the posh themes show you the status of you gi
 
 For even better experience, you should install the [Cascadia code fonts](https://github.com/microsoft/cascadia-code#installation).
 
-## Task #2 - configure your bash prompt
+## Task #3 - configure your bash prompt
 
 If you are running Linux or mac or [Windows Subsystem for Linux (WSL)](https://docs.microsoft.com/en-us/windows/wsl/install-win10?WT.mc_id=AZ-MVP-5003837), then here is how you can configure your prompt to display the name of the cluster of your current Kubernetes context. 
 
@@ -162,6 +260,7 @@ Your prompt should now show both your git repository status (if you are inside g
 * [How to make a pretty prompt in Windows Terminal with Powerline, Nerd Fonts, Cascadia Code, WSL, and oh-my-posh](https://www.hanselman.com/blog/how-to-make-a-pretty-prompt-in-windows-terminal-with-powerline-nerd-fonts-cascadia-code-wsl-and-ohmyposh)
 * [oh-my-posh themes](https://github.com/JanDeDobbeleer/oh-my-posh#themes)
 * [Powershell prompt: How to display your current Kubernetes context](https://blog.guybarrette.com/powershell-prompt-how-to-display-your-current-kubernetes-context)
+* [Oh my Posh home](https://ohmyposh.dev/)
 
 ## Next: Containerizing your application
 
