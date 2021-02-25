@@ -2,7 +2,7 @@
 
 ## Estimated completion time - 15 min
 
-When you work with several of Kubernetes instances it's important to understand which instance/context you are currently working against. This is especially important when you work with Production. Luckily, it's very easy to configure both bash and PowerShell to display the cluster name of the current context as part of the shell prompt line. 
+When you work with several Kubernetes instances it's important to understand which instance/context you are currently working against. This is especially important when you work with Production cluster. Luckily, it's very easy to configure both bash and PowerShell to display the cluster name of the current context as part of the shell prompt line. 
 
 ## Goals
 
