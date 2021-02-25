@@ -78,18 +78,6 @@ az aks create -g iac-ws2-aks-blue-rg -n aks-ws2-blue \
 # Get AKS credentials
 az aks get-credentials -g iac-ws2-aks-blue-rg -n aks-ws2-blue --overwrite-existing
 
-# Set CriticalAddonsOnly=true:NoSchedule taint
-kubectl taint nodes systempool CriticalAddonsOnly=true:NoSchedule
-
-# Add new node pool
-az aks nodepool add -g iac-ws2-aks-blue-rg --cluster-name aks-ws2-blue \
-    --name workloadpool \
-    --node-count 3 \
-    --max-pods 110 \
-    --node-vm-size Standard_D4_v3 \
-    --kubernetes-version 1.19.7 \
-    --mode User
-
 # Get nodes
 kubectl get nodes
 To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code C9HNNZ8SE to authenticate.

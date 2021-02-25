@@ -30,7 +30,7 @@ spec:
     metadata:
       labels:
         app: api-b
-        # aadpodidbinding: api-b
+        aadpodidbinding: api-b
     spec:
       containers:
       - name: api

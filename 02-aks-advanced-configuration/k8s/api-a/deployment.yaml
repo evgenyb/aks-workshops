@@ -21,7 +21,7 @@ metadata:
   labels:
     app: api-a
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: api-a

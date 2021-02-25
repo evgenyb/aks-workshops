@@ -8,6 +8,18 @@
 ## Task #1 - 
 
 ```bash
+# create new namespace
+kubectl create ns msi
+
+# deploy msi components
+kubectl apply -f .\deployment.yaml
+
+# deploy msi components
+kubectl apply -f .\deployment.yaml
+
+# deploy exceptions
+kubectl apply -f .\mic-exception.yaml
+
 export SUBSCRIPTION_ID="8878beb2-5e5d-4418-81ae-783674eea324"
 export RESOURCE_GROUP="iac-ws2-aks-blue-rg"
 export CLUSTER_NAME="aks-ws2-blue"
@@ -28,10 +40,8 @@ az keyvault secret set --vault-name iac-ws2-api-b-kv -n foobar --value barfoo
 
 # Get KeyVault url 
 az keyvault show -g iac-ws2-base-rg -n iac-ws2-api-b-kv --query properties.vaultUri
-```
 
-```bash
-# Create USer Assigned Managed Identity iac-ws2-api-b-mi
+# Create User Assigned Managed Identity iac-ws2-api-b-mi
 az identity create -g iac-ws2-base-rg -n iac-ws2-api-b-mi
 
 # Get Managed Identity client ID

@@ -10,8 +10,19 @@
 
 ```bash
 
+cd k8s/api-a
+# Deploy configmap with appsettings for api-a
 kubectl create secret generic api-a-secret-appsettings --from-file=./appsettings.secrets.json
+
+# Deploy api-a 
+kubectl apply -f ./deployment.yaml
+
+cd ../k8s/api-b
+# Deploy configmap with appsettings for api-b
 kubectl create secret generic api-b-secret-appsettings --from-file=./appsettings.secrets.json
+
+# Deploy api-b
+kubectl apply -f ./deployment.yaml
 
 ```
 
