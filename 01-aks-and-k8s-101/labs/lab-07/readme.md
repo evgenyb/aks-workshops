@@ -20,7 +20,7 @@ As with `lab-06`, split your terminal in two. At the right-hand window, run `kub
 
 ## Task #2 - deploy Deployment from lab-06
 
-If you completed `lab-06` and deleted Deployment we created during this lab, Deploy it again
+If you completed `lab-06` and deleted Deployment you created during this lab, re-deploy it again
 
 ```bash
 # Deploy lab6-task3-deployment.yaml Deployment
@@ -91,23 +91,25 @@ kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -
 # Test our service using service full DNS name
 [ root@curl:/ ]$ curl http://apia-service-1.default.svc.cluster.local/weatherforecast
 
-# Run test load with watch command. It will run "curl http://apia-service-1/weatherforecast" command every second until we stop it
+# Run "test load" with watch command. It will run "curl http://apia-service-1/weatherforecast" command every second until we stop it
 watch -n 1 curl http://apia-service-1/weatherforecast
 ```
 
 Keep the test running and open|split new terminal and scale Deployment `lab6-task3` down to 0 and see what will happen with our test.
 
 ```bash
+# Scale lab6-task3 deployment to 0 replicas
 kubectl scale deployment lab6-task3 --replicas=0
 deployment.apps/lab6-task3 scaled
 ```
 you should see that `curl: (7) Failed to connect to apia-service-1 port 80: Connection refused`. Now scale it back to 3 replicas
 
 ```bash
+# Scale lab6-task3 deployment to 3 replicas
 kubectl scale deployment lab6-task3 --replicas=3
 deployment.apps/lab6-task3 scaled
 ```
-and our app is back to business.
+and our app should be back to business.
 
 ```bash
 # Stop the watch command with Ctrl+C and leave the shell
@@ -145,7 +147,7 @@ service/apia-service-2 created
 # Get service 
 kubectl get svc apia-service-2 
 
-# Get service apia-service-1 description 
+# Get service apia-service-2 description 
 kubectl describe svc apia-service-2
 
 # Start test shell
