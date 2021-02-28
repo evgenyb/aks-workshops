@@ -109,7 +109,7 @@ Note that as a free bonus, most of the posh themes show you the status of you gi
 
 For even better experience, you should install the [Cascadia code fonts](https://github.com/microsoft/cascadia-code#installation).
 
-## Task #2 - configure your PowerShell prompt with posh-git v2
+## Task #2 - configure your PowerShell prompt with oh-my-posh v2
 
 Install Posh-Git and Oh-My-Posh
 
@@ -127,9 +127,13 @@ Import-Module oh-my-posh
 Set-Theme Material
 ```
 
-save the file and restart your PowerShell session.
+save the file and either restart your PowerShell session or reload your profile
 
-Note, here I use `Material` because I like it, but you feel free to use other theme theme that makes you happy and use that theme's name here. Read more over [here](https://ohmyposh.dev/docs/themes).
+```powershell
+. $PROFILE
+```
+
+Note, here I use `Material` because I like it, but you feel free to use other theme that makes you happy and use that theme's name here. Read more over [here](https://ohmyposh.dev/docs/themes).
 
 Install a couple of Unix tools using [Chocolatey](https://chocolatey.org/install). We wil use them to parse the Kubernetes config file.
 
@@ -139,7 +143,7 @@ choco install sed
 choco install jq
 ```
 
-Restart PowerShell session. Locate the themes settings file by typing:
+Locate the themes settings file by typing:
 
 ```PowerShell
 PS C:\Users\evgen>$ThemeSettings
