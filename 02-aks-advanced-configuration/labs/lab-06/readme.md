@@ -18,15 +18,15 @@ az aks nodepool add -g iac-ws2-aks-blue-rg --cluster-name aks-ws2-blue \
     --kubernetes-version 1.19.6 \
     --mode User
 
-# Set CriticalAddonsOnly=true:NoSchedule taint
-kubectl taint nodes systempool CriticalAddonsOnly=true:NoSchedule
-
+# Set CriticalAddonsOnly=true:NoSchedule taint to nodes from system pool
+kubectl taint node -l agentpool=systempool CriticalAddonsOnly=true:NoSchedule
 ```
 
 
 ## Useful links
 https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools
 https://docs.microsoft.com/en-us/azure/aks/use-system-pools
+https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
 
 
 

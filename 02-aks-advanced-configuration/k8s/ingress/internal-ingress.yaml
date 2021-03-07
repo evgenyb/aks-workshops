@@ -1,4 +1,18 @@
 controller:
+  replicaCount: 2
   service:
     annotations:
       service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+  tolerations:
+    - key: "systempool"
+      operator: "Exists"
+      effect: "NoSchedule"  
+  affinity: 
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: agentpool
+            operator: In
+            values: 
+            - systempool
