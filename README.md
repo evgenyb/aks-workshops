@@ -12,10 +12,11 @@ This is introduction level (101) workshop for those of you who have never worked
  The workshops consists of 11 labs and estimated time is 3 hours.
  
 ## [Workshop #2 - Advanced AKS configuration](02-aks-advanced-configuration/readme.md)
-## Workshop #3 - Use Pulumi to provision and configuring AKS cluster
+## Workshop #3 - Monitoring AKS
 ## Workshop #4 - Service mesh with linkerd
 ## Workshop #5 - AKS application deployment options
 ## Workshop #6 - security
+## Workshop #3 - Use Pulumi to provision and configuring AKS cluster
 
 
 

@@ -1,0 +1,34 @@
+prometheus:
+  prometheusSpec:
+    replicas: 1      # work in High-Availability mode
+    retention: 10h   # we only need a few hours of retention, since the rest is uploaded to blob
+    image:
+      tag: v2.25.0    # use a specific version of Prometheus
+    serviceMonitorNamespaceSelector: {} # allows the operator to find target config from multiple namespaces
+    serviceMonitorSelector: {}
+    serviceMonitorSelectorNilUsesHelmValues: false
+    thanos:         # add Thanos Sidecar
+      tag: v0.17.2   # a specific version of Thanos
+      objectStorageConfig: # blob storage configuration to upload metrics 
+        key: thanos.yaml
+        name: thanos-objstoreconfig
+
+## Using default values from https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
+##
+grafana:
+  enabled: true
+
+## Deploy node exporter as a daemonset to all nodes
+##
+nodeExporter:
+  enabled: false
+
+## Configuration for alertmanager
+## ref: https://prometheus.io/docs/alerting/alertmanager/
+alertmanager:
+  enabled: false
+
+## Component scraping kube state metrics
+##
+kubeStateMetrics:
+  enabled: false
