@@ -2,14 +2,12 @@
 
 ![logo](images/logo.png)
 
-
-
-Here is the agenda for the workshops:
+Here is the preliminary agenda for the workshops (still work in progress):
  
  * Slides - Workshop introduction
- * Slides - Networking (VNet, NSG, peering, AKS capacity planning, Prefix)
+ * Slides - Networking (VNet, NSG, peering, AKS capacity planning, Public IP Prefix)
  * Lab-01 - configure Private Virtual Networks
- * Lab-02 - provision APIM (50 min) -> fire and forget
+ * Lab-02 - provision APIM (50++ min) -> fire and forget
  * Slides - AKS configuration (Network, egress, RBAC, Managed Identity, Network Policy, Node Pools, )  
  * Lab-03 - provision AKS and all prerequisites
  * Slides - guinea pig apps walk through
@@ -24,9 +22,9 @@ Here is the agenda for the workshops:
  * Slides - API Management 101 
  * Lab-09 - deploy api-b API to API Management
  * Lab-10 - AKS egress 
- * Slides AKS upgrade options
- * Lab-11 - upgrade AKS - mutable
- * Lab-12 - upgrade AKS - immutable
+ * Slides - AKS upgrade options
+ * Lab-11 - upgrade AKS - mutable approach
+ * Lab-12 - upgrade AKS - immutable approach
  * Lab-13 - cleaning up resources
 
  
