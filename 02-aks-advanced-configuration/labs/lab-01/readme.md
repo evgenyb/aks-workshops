@@ -18,7 +18,7 @@ We start by provisioning supporting resources such as Log Analytics, Application
 
 We will use the following [naming conventions](../../naming-conventions.md)
 
-Note, because Azure Log Analytics, Azure Container Registry and Azure KeyVault are global resource, they have to be named with unique name. I suggest we prefix them by using your short name.
+Note, because Azure Log Analytics, Azure Container Registry, Azure KeyVault and APIM instance name are global resource and are part of global DNS, they have to be uniquely named. I suggest we prefix them by using your short name.
 
 ```bash
 WS_PREFIX='iac-ws2'
@@ -68,7 +68,9 @@ The cost of using `Developer` tier is `kr0.59/hour`.
 
 We will use [ARM templates](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/overview?WT.mc_id=AZ-MVP-5003837) to provision APIM. 
 
-First, change `publisherEmail` and `userName` properties in `02-aks-advanced-configuration\labs\lab-01\ARM\APIM\parameters.json` file. Since it takes almost an hour to provision APIM, we will not going to wait. Instead you can specify email and APIM will notify you when instance is provisioned and ready to be used. APIM instance name has to be unique, therefore I suggest to use your name to prefix it. Use `userName` property to set your name.
+First, change `publisherEmail` and `userName` properties in `02-aks-advanced-configuration\labs\lab-01\ARM\APIM\parameters.json` file. Since it takes almost an hour to provision APIM, we are not going to wait until it finished. Instead, you can specify email and APIM will notify you when instance is provisioned and ready to be used. 
+
+Note, APIM instance name has to be unique, therefore I suggest to use your name to prefix it. Use `userName` property to set your name.
 
 ```bash
 # Got to ARM folder
