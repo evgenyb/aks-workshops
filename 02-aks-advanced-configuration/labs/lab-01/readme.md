@@ -58,6 +58,8 @@ We will use API Management (further APIM) to expose services running in AKS clus
 
 We will use `external` model.
 
+![model](images/base-rg-with-apim.png)
+
 It takes more than 50 mins to provision APIM with VNet integration, therefore we do it as early as possible, so it will be ready when we start working with labs related to APIM. 
 
 We will use `Developer` tier APIM, which provides all functionality included into `Premium`, but there is no SLA and estimated maximum throughput is `500 requests/sec`. It's a perfect choice for testing, workshops and POCs.
