@@ -6,7 +6,7 @@ Here is the preliminary agenda for the workshops (still work in progress):
  
  * Slides - Workshop introduction
  * Slides - Workshop architecture overview
- * Lab-01 - provision supporting resources
+ * [Lab-01](labs/lab-01/readme.md) - provision supporting resources
  * Lab-02 - provision API Management 
  * Slides - AKS configuration (Network, egress, RBAC, Managed Identity, Network Policy, Node Pools, )  
  * Lab-03 - provision AKS and all prerequisites
