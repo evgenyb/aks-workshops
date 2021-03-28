@@ -5,9 +5,9 @@
 Here is the preliminary agenda for the workshops (still work in progress):
  
  * Slides - Workshop introduction
- * Slides - Networking (VNet, NSG, peering, AKS capacity planning, Public IP Prefix)
- * Lab-01 - configure Private Virtual Networks
- * Lab-02 - provision APIM (50++ min) -> fire and forget
+ * Slides - Workshop architecture overview
+ * Lab-01 - provision supporting resources
+ * Lab-02 - provision API Management 
  * Slides - AKS configuration (Network, egress, RBAC, Managed Identity, Network Policy, Node Pools, )  
  * Lab-03 - provision AKS and all prerequisites
  * Slides - guinea pig apps walk through

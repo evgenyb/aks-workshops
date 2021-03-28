@@ -16,6 +16,9 @@ When you are done, delete both resource groups.
 # Delete aks-blue resource group
 az group delete -n iac-ws2-aks-blue-rg --yes
 
+# Delete aks-green resource group
+az group delete -n iac-ws2-aks-green-rg --yes
+
 # Delete base resource group
 az group delete -n iac-ws2-base-rg --yes
 ```
