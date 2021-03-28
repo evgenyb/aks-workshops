@@ -66,7 +66,7 @@ We will use `Developer` tier APIM, which provides all functionality included int
 
 The cost of using `Developer` tier is `kr0.59/hour`.
 
-We will use ARM template to provision APIM. 
+We will use [ARM templates](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/overview?WT.mc_id=AZ-MVP-5003837) to provision APIM. 
 
 First, change `publisherEmail` and `userName` properties in `02-aks-advanced-configuration\labs\lab-01\ARM\APIM\parameters.json` file. Since it takes almost an hour to provision APIM, we will not going to wait. Instead you can specify email and APIM will notify you when instance is provisioned and ready to be used. APIM instance name has to be unique, therefore I suggest to use your name to prefix it. Use `userName` property to set your name.
 
