@@ -1,6 +1,6 @@
 # lab-01 - provision supporting resources
 
-## Estimated completion time - 10 min
+## Estimated completion time - 15 min
 
 We start by provisioning supporting resources such as Log Analytics, Application Insights, API Management, Container Registry and Public IP Prefix. Because supporting resources and AKS resources use different life cycle, they will be deployed to separate Resource Groups. API Management requires Private Virtual Network, we provision it as well.
 

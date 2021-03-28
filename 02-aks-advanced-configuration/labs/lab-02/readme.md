@@ -1,6 +1,6 @@
-# lab-03 - ....
+# lab-02 - provision AKS cluster
 
-## Estimated completion time - 50 min
+## Estimated completion time - 15 min
 
 ![model](images/apim-agw-front-door.png)
 
