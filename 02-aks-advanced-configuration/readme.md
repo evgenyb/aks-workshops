@@ -8,7 +8,7 @@ Here is the preliminary agenda for the workshops (still work in progress):
  * Slides - Workshop architecture overview
  * [Lab-01](labs/lab-01/readme.md) - provision supporting resources
   * Slides - AKS configuration (Network, egress, RBAC, Managed Identity, Network Policy, Node Pools, )  
- * Lab-02 - provision AKS cluster
+ * [Lab-02](labs/lab-02/readme.md) - provision AKS cluster
  * Slides - guinea pig apps walk through
  * Lab-03 - build and push docker images
  * Lab-04 - deploy applications and services to AKS
