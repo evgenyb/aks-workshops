@@ -101,6 +101,8 @@ If you go to `Overview` tab of the `iac-ws2-base-rg` resource group, you should 
 * [API Management pricing](https://azure.microsoft.com/en-us/pricing/details/api-management/?WT.mc_id=AZ-MVP-5003837)
 * [What are ARM templates?](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/overview?WT.mc_id=AZ-MVP-5003837)
 
+As I said, it takes almost an hour to provision APIM, so we will come back to it hen it's provisioned.
+
 ## Next: provision AKS cluster
 
 [Go to lab-02](../lab-02/readme.md)
