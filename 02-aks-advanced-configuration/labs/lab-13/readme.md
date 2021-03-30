@@ -14,13 +14,13 @@ When you are done, delete both resource groups.
 
 ```bash
 # Delete aks-blue resource group
-az group delete -n iac-ws2-aks-blue-rg --yes
+az group delete -n iac-ws2-blue-rg --yes
 
 # Delete aks-green resource group
-az group delete -n iac-ws2-aks-green-rg --yes
+az group delete -n iac-ws2-green-rg --yes
 
 # Delete base resource group
-az group delete -n iac-ws2-base-rg --yes
+az group delete -n iac-ws2-rg --yes
 ```
 
 ## Useful links

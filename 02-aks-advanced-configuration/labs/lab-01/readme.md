@@ -4,7 +4,7 @@
 
 We start by provisioning supporting resources such as Log Analytics, Application Insights, API Management, Container Registry and Public IP Prefix. Because supporting resources and AKS resources use different life cycle, they will be deployed to separate Resource Groups. API Management requires Private Virtual Network, we provision it as well.
 
-![model](images/base-rg.png)
+![model](images/base-rg-with-apim.png)
 
 ## Goals
 
@@ -23,7 +23,7 @@ Note, because Azure Log Analytics, Azure Container Registry, Azure KeyVault and 
 ```bash
 WS_PREFIX='iac-ws2'
 YOUR_NAME='<USE YOUR NAME>'                 # I am using "evg"
-BASE_RG="$WS_PREFIX-base-rg"                # iac-ws2-base-rg
+BASE_RG="$WS_PREFIX-rg"                     # iac-ws2-rg
 VNET_NAME=$WS_PREFIX-vnet                   # iac-ws2-vnet
 LA_NAME="$WS_PREFIX-$YOUR_NAME-la"          # iac-ws2-evg-la
 APPINSIGHTS_NAME="$WS_PREFIX-appinsights"   # iac-ws2-appinsights
@@ -56,7 +56,7 @@ We will use API Management (further APIM) to expose services running in AKS clus
 * internal - the API Management gateway is accessible only from within the virtual network via an internal load balancer. The gateway can access resources within the virtual network
 * external - the API Management gateway is accessible from the public internet via an external load balancer. The gateway can access resources within the virtual network
 
-We will use `external` model.
+We will use `external` mode.
 
 ![model](images/base-rg-with-apim.png)
 
@@ -77,17 +77,17 @@ Note, APIM instance name has to be unique, therefore I suggest to use your name 
 cd 02-aks-advanced-configuration\labs\lab-01\ARM\APIM\
 
 # Validate APIM ARM template. Run this command from lab-02 folder
-az deployment group validate -g iac-ws2-base-rg --template-file template.json --parameters parameters.json 
+az deployment group validate -g iac-ws2-rg --template-file template.json --parameters parameters.json 
 
-# If no errors, deploy APIM ARM template. APIM deployment takes approx. 50 min
-az deployment group create -g iac-ws2-base-rg --template-file template.json --parameters parameters.json 
+# If no errors, deploy APIM ARM template. APIM deployment takes between 30 and 50 mins
+az deployment group create -g iac-ws2-rg --template-file template.json --parameters parameters.json 
 ```
 
-Check that deployment has started. You can do it by navigating to the `Deployments` tab of the `iac-ws2-base-rg` resource group.
+Check that deployment has started. You can do it by navigating to the `Deployments` tab of the `iac-ws2-rg` resource group.
 
 ![Deployments](images/rg-deployments.png)
 
-If you go to `Overview` tab of the `iac-ws2-base-rg` resource group, you should see APIM instance was already created, but not yet ready to be used.
+If you go to `Overview` tab of the `iac-ws2-rg` resource group, you should see APIM instance was already created, but not yet ready to be used.
 
 ![Deployments](images/apim.png)
 

@@ -1,10 +1,14 @@
+#!/usr/bin/env bash
+# Usage:
+#  ./01-provision-base-resources.sh <USE-YOUR-NAME>
+
+YOUR_NAME=$1                                # I am using "evg"
 WS_PREFIX='iac-ws2'
-YOUR_NAME='<USE YOU NAME>'                  # I am using "evg"
-BASE_RG="$WS_PREFIX-base-rg"                # iac-ws2-base-rg
+BASE_RG="$WS_PREFIX-rg"                     # iac-ws2-rg
 VNET_NAME=$WS_PREFIX-vnet                   # iac-ws2-vnet
 LA_NAME="$WS_PREFIX-$YOUR_NAME-la"          # iac-ws2-evg-la
 APPINSIGHTS_NAME="$WS_PREFIX-appinsights"   # iac-ws2-appinsights
-PREFIX_NAME="$WS_PREFIX-pip-prefix"         # iac-ws2--pip-prefix
+PREFIX_NAME="$WS_PREFIX-pip-prefix"         # iac-ws2-pip-prefix
 ACR_NAME="iacws2${YOUR_NAME}acr"            # iacws2evgacr
 
 # Create base resource group
