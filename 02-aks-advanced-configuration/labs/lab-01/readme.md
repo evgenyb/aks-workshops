@@ -2,7 +2,9 @@
 
 ## Estimated completion time - 15 min
 
-We start by provisioning supporting resources such as Log Analytics, Application Insights, API Management, Container Registry and Public IP Prefix. Because supporting resources and AKS resources use different life cycle, they will be deployed to separate Resource Groups. API Management requires Private Virtual Network, we provision it as well.
+We start by provisioning supporting resources such as Log Analytics, Application Insights, API Management, Container Registry and Public IP Prefix. Because supporting resources and AKS resources use different life cycle, they will be deployed to separate Resource Groups. Since we use API Management and it requires Private Virtual Network, we will provision and configure Vnet as well.
+
+Note, to simplify our setup, I will skip Network Security Groups configuration in this workshop and we will cover it in more details as part of dedicated security workshop. 
 
 ![model](images/base-rg-with-apim.png)
 

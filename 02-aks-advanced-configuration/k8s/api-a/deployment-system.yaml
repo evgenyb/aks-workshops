@@ -30,6 +30,11 @@ spec:
       labels:
         app: api-a
     spec:
+      tolerations:
+      - key: "CriticalAddonsOnly"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
       containers:
       - name: api
         image: iacws2evgacr.azurecr.io/apia:v1

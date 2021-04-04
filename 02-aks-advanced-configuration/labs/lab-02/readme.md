@@ -2,6 +2,14 @@
 
 ## Estimated completion time - 15 min
 
+With supporting resource in place, we will configure and provision AKS. Our AKS cluster needs to fullfil the following requirements:
+
+* Integrate AKS with Azure AD to implement Kubernetes RBAC based on a Azure AD identities
+* Implement [advanced (aka Azure CNI)](https://docs.microsoft.com/en-us/azure/aks/concepts-network?WT.mc_id=AZ-MVP-5003837#azure-cni-advanced-networking) networking model
+* Use [managed identities in AKS](https://docs.microsoft.com/en-us/azure/aks/use-managed-identity?WT.mc_id=AZ-MVP-5003837) to create additional resources like load balancers and managed disks in Azure
+* Integrate AKS with Azure Log Analytics for monitoring
+* Integrate AKS with Azure Container Registry
+
 ![model](images/aks-resources.png)
 
 ## Goals
@@ -12,10 +20,16 @@
 * Provision User Assigned Managed Identity for AKS and Azure AD integration 
 * Create new Azure AD group for AKS administrators
 * Add your user into AKS admin Azure AD group
-* 
-
 
 ## Task #1 - create AKS resources
+
+If you want to learn and provision resources yourself, follow the set of commands described in this lab. If you don't want to copy-paste all commands, feel free to use the script, located at `02-aks-advanced-configuration\scripts\02-provision-aks.sh` (which contains all these commands). 
+
+If you use `PowerShell`, you need to prefix all variables with `$` when you initialize them, for example, instead of `YOUR_NAME="evg"`, use `$YOUR_NAME="evg"`. The line continuation character in `PowerShell` is the [backtick](https://www.computerhope.com/jargon/b/backquot.htm).
+
+````
+Replace \ with ` in "Create AKS cluster" command
+````
 
 ```bash
 # Set your user name for global resources (LogAnalytics, AppInsight, APIM etc...)
@@ -72,7 +86,7 @@ az aks create -g iac-ws2-blue-rg -n iac-ws2-blue-aks \
     --node-count 1 \
     --max-pods 110 \
     --enable-aad --aad-admin-group-object-ids ${ADMIN_GROUP_ID} \
-    --kubernetes-version 1.19.6 \
+    --kubernetes-version 1.19.7 \
     --network-plugin azure \
     --vm-set-type VirtualMachineScaleSets \
     --docker-bridge-address 172.17.0.1/16 \
@@ -82,7 +96,21 @@ az aks create -g iac-ws2-blue-rg -n iac-ws2-blue-aks \
     --no-ssh-key \
     --attach-acr iacws2${YOUR_NAME}acr \
     --enable-addons monitoring --workspace-resource-id ${WORKSPACE_ID}
+```
 
+If you decided to use `02-provision-aks.sh` script, you need to provide an input parameter - your user name that will be used to form unique resource names (Log Analytic Workspace, Azure Container Registry etc...). Please inspect the script to understand what it does.
+
+```bash
+# Got ot the script folder
+cd 02-aks-advanced-configuration\scripts\02-provision-aks.sh
+
+# Use your user name as an input parameter
+./02-provision-aks.sh evg
+```
+
+When cluster is successfully provisioned, connect to it and try run `kubectl nodes` commands. This time, because we configured integration with Azure AD, you will be asked to login to your Azure AD account. 
+
+```bash
 # Get AKS credentials
 az aks get-credentials -g iac-ws2-blue-rg -n iac-ws2-blue-aks --overwrite-existing
 
@@ -96,18 +124,21 @@ aks-system-40523769-vmss000000   Ready    agent   52m   v1.19.6
 
 ## Useful links
 
+* [AKS-managed Azure Active Directory integration](https://docs.microsoft.com/en-us/azure/aks/managed-aad?WT.mc_id=AZ-MVP-5003837)
+* [Network concepts for applications in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/concepts-network?WT.mc_id=AZ-MVP-5003837)
 * [Azure Container Registry documentation](https://docs.microsoft.com/en-us/azure/container-registry/?WT.mc_id=AZ-MVP-5003837)
 * [Configure Azure CNI networking in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/configure-azure-cni?WT.mc_id=AZ-MVP-5003837)
+* [Use managed identities in Azure Kubernetes Service](https://docs.microsoft.com/en-us/azure/aks/use-managed-identity?WT.mc_id=AZ-MVP-5003837)
 * [Best practices for advanced scheduler features in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-advanced-scheduler?WT.mc_id=AZ-MVP-5003837)
 [Create and manage multiple node pools for a cluster in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools?WT.mc_id=AZ-MVP-5003837)
 [Manage system node pools in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/use-system-pools?WT.mc_id=AZ-MVP-5003837)
 [Assigning Pods to Nodes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node)
 
 
-## Next: 
+## Next: build and push docker images to Container Registry
 
-[Go to lab-04](../lab-04/readme.md)
+[Go to lab-03](../lab-03/readme.md)
 
 ## Feedback
 
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/xx) to comment on this lab. 
+* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/16) to comment on this lab. 

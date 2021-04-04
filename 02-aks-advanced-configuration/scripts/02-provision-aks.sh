@@ -81,7 +81,7 @@ az aks create -g $AKS_RG -n $AKS_NAME \
     --node-count 1 \
     --max-pods 110 \
     --enable-aad --aad-admin-group-object-ids ${ADMIN_GROUP_ID} \
-    --kubernetes-version 1.19.6 \
+    --kubernetes-version 1.19.7 \
     --network-plugin azure \
     --vm-set-type VirtualMachineScaleSets \
     --docker-bridge-address 172.17.0.1/16 \
