@@ -166,7 +166,7 @@ deployment.apps "api-a" deleted
 service "api-a-service" deleted
 ```
 
-## Task #3 - configure pod Tolerations
+## Task #3 - configure pod tolerations
 
 Create new file `deployment-system.yaml` and copy/paste the content from the `02-aks-advanced-configuration\k8s\api-a\deployment.yaml` deployment manifest. 
 Add the following Toleration for a pod in the pod `spec` section. Both of the following tolerations "match" the taint created in our previous task, and thus a pod with either toleration would be able to schedule: 
@@ -219,18 +219,100 @@ api-a-7dc498bc57-79zjs   1/1     Running             0          6s
 ...
 ```
 
-## Task #2 - Create new user pool with different Kubernetes version and VM size
+Delete `api-a` application. 
 
 ```bash
-# Add new node pool
+# Delete api-a application
+kubectl delete -f ./deployment-system.yaml
+configmap "api-a-appsettings" deleted
+deployment.apps "api-a" deleted
+service "api-a-service" deleted
+```
+
+## Task #4 - add new user node pool
+
+Let's keep taint configuration for the system nodes the same, that is - `CriticalAddonsOnly=true:NoSchedule` and deploy `api-a` application without toleration configured.
+
+```bash
+# Deploy api-a without toleration
+kubectl apply -f ./deployment.yaml
+```
+
+As expected, `api-a` pods will have `Pending` status
+
+```bash
+api-a-8668f99d4d-x478l   0/1     Pending       0          0s
+api-a-8668f99d4d-jfsww   0/1     Pending       0          0s
+```
+
+Now, let's create new AKS user node pool called `workload`.
+
+```bash
+# Add new user node pool
 az aks nodepool add -g iac-ws2-blue-rg --cluster-name iac-ws2-blue-aks \
-    --name workload2 \
+    --name workload \
+    --mode User     \
     --node-count 1 \
-    --max-pods 110 \
     --node-vm-size Standard_DS2_v2 \
-    --kubernetes-version 1.19.6 \
-    --mode User
+    --kubernetes-version 1.19.6
 ``` 
+
+It may take some minutes to create new pool. While you are waiting, keep the watching session with `kubectl get po -w` command running and observe the output. Eventually you should see that both `api-a` pods are running.
+
+```bash
+api-a-8668f99d4d-jfsww   1/1     Running             0          11m
+api-a-8668f99d4d-x478l   1/1     Running             0          11m
+```
+
+When pool is successfully created, get the list of the node pools
+
+```bash
+# Get list of node pools
+az aks nodepool list  -g iac-ws2-blue-rg --cluster-name iac-ws2-blue-aks --query "[].{name:name, mode:mode, vm_size:vmSize, number_of_nodes:count}"
+```
+
+You should see two node pools now, one `System` and one `User`
+
+```bash
+# Get list of nodes
+kubectl get nodes
+NAME                                 STATUS   ROLES   AGE     VERSION
+aks-systempool-27376456-vmss000000   Ready    agent   3d12h   v1.19.7
+aks-workload-27376456-vmss000000     Ready    agent   12m     v1.19.6
+
+# Get list of nodes and show labels. Check that agentpool label contain the name of the pool.
+kubectl get nodes --show-labels
+
+# Get all nodes from the workload pool
+kubectl get nodes -l agentpool=workload
+
+# Get all nodes from the system pool
+kubectl get nodes -l agentpool=systempool
+
+# Check that api-a pods are scheduled to the node from worlkload pool
+kubectl get po -o wide
+NAME                     READY   STATUS    RESTARTS   AGE   IP            NODE                               NOMINATED NODE   READINESS GATES
+api-a-8668f99d4d-jfsww   1/1     Running   0          12m   10.11.0.119   aks-workload-27376456-vmss000000   <none>           <none>
+api-a-8668f99d4d-x478l   1/1     Running   0          12m   10.11.0.133   aks-workload-27376456-vmss000000   <none>           <none>
+```
+
+## Task #5 - schedule a pod to run on a system node
+
+If you want your pods to only be deployed to the system nodes, you need to add a `nodeSelector` field to your pod configuration.
+
+```yaml
+...
+    spec:
+      tolerations:
+      - key: "CriticalAddonsOnly"
+        operator: "Exists"
+        effect: "NoSchedule"
+      nodeSelector:
+        kubernetes.azure.com/mode: system
+      containers:
+      - name: api
+...
+```
 
 ## Task #3 - add a spot node pool to an AKS cluster
 
