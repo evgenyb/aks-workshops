@@ -1,6 +1,6 @@
 # lab-04 - working with AKS node pools
 
-## Estimated completion time - xx min
+## Estimated completion time - 30 min
 
 In AKS, nodes of the same configuration are grouped together into node pools. By default, when you provision new AKS cluster, there is only one system pool available. 
 To support applications that have different compute or storage demands, AKS allows you to create multiple user node pools. 
@@ -27,16 +27,15 @@ In the right-hand session, run the "watcher" command
 kubectl get pods -w
 ```
 
-Use left-hand session to run all commands from the labs. 
+and use left-hand session to run all commands from the labs. 
 
-## Task #1 - get information about default node pool
+## Task #1 - get information about node pools
 
 ```bash
 # Get list of node pools
 az aks nodepool list  -g iac-ws2-blue-rg --cluster-name iac-ws2-blue-aks
 
-# Get name, mode, VM size and number of nodes in the pool
-
+# Get name, mode, VM size and number of nodes
 az aks nodepool list  -g iac-ws2-blue-rg --cluster-name iac-ws2-blue-aks --query "[].{name:name, mode:mode, vm_size:vmSize, number_of_nodes:count}"
 ```
 
@@ -51,41 +50,60 @@ kubectl get nodes -l kubernetes.azure.com/mode=system
 ```
 
 Since there is only one node pool, it allows to deploy user pods into it. To confirm this, let's deploy our `api-a` application.
+Create `lab4-task1.yaml` file with the following deployment manifest
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab4-task1
+  labels:
+    app: lab4-task1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lab4-task1
+  template:
+    metadata:
+      labels:
+        app: lab4-task1
+    spec:
+      containers:
+      - name: api
+        image: iacws2evgacr.azurecr.io/apia:v1
+        imagePullPolicy: IfNotPresent
+        resources: {}
+```
+
+and deploy it
 
 ```bash
-# Go to 02-aks-advanced-configuration\k8s\api-a folder
-cd 02-aks-advanced-configuration\k8s\api-a
-
-# Deploy api-a application
-kubectl apply -f ./deployment.yaml
-configmap/api-a-appsettings created
-deployment.apps/api-a created
-service/api-a-service created
+# Deploy api-a
+kubectl apply -f ./lab4-task1.yaml
 ```
 
 After a while, in your right-hand watching session, you should see that both pods are in `Running` state
 
 ```bash
-...
-api-a-8668f99d4d-bfbk8          1/1     Running             0          3s
-api-a-8668f99d4d-8lc7l          1/1     Running             0          4s
-...
+lab4-task1-5cc5fc68c6-q4bqf   1/1     Running             0          1s
+lab4-task1-5cc5fc68c6-pb28k   1/1     Running             0          2s
 ```
 
 Let's delete our application for now.
 
 ```bash
 # Delete api-a application
-kubectl delete -f ./deployment.yaml
+kubectl delete -f ./lab4-task1.yaml
 ```
 
-## Task #2 - configure taint to system pool nodes
+## Task #2 - configure system pool nodes taint
 
 As we already know, for a system node pool, AKS automatically assigns the label `kubernetes.azure.com/mode: system` to its nodes. 
 It's a good practice to isolate critical system pods from "regular" application pods to prevent misconfigured. 
 Kubernetes [taints concept](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) allows a node to repel a set of pods. You can enforce this by using the `CriticalAddonsOnly=true:NoSchedule` taint to prevent application pods from being scheduled on system node pools. 
 
-First, lets' check Taints configuration of our system node(s).
+First, let's check `Taints` configuration of our system node(s).
 
 ```bash
 # Get list of system nodes 
@@ -104,7 +122,7 @@ Taints:             <none>
 ...
 ```
 
-Now, let's update the taints on one or more system nodes by using [kubectl taint](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#taint) command.
+Now, let's update the taints on system nodes by using [kubectl taint](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#taint) command.
 
 ```bash
 # Set CriticalAddonsOnly=true:NoSchedule taint to nodes from system pool
@@ -121,30 +139,22 @@ This taint has key `CriticalAddonsOnly`, value `true`, and taint effect `NoSched
 Now, let's try to deploy our `api-a` application again.
 
 ```bash
-# Go to 02-aks-advanced-configuration\k8s\api-a folder
-cd 02-aks-advanced-configuration\k8s\api-a
-
 # Deploy api-a application
-kubectl apply -f ./deployment.yaml
-configmap/api-a-appsettings created
-deployment.apps/api-a created
-service/api-a-service created
+kubectl apply -f ./lab4-task1.yaml
 ```
 
 In your right-hand watching session, you should see that both pods are in `Pending` state. 
 
 ```bash
-...
-api-a-8668f99d4d-5jpcz   0/1     Pending   0          0s
-api-a-8668f99d4d-49pn8   0/1     Pending   0          0s
-...
+lab4-task1-5cc5fc68c6-sxrrw   0/1     Pending             0          0s
+lab4-task1-5cc5fc68c6-6k4x2   0/1     Pending             0          0s
 ```
 
 Let's find out why.
 
 ```bash
 # Get pod description
-kubectl describe po api-a-8668f99d4d-49pn8
+kubectl describe po lab4-task1-5cc5fc68c6-sxrrw
 ```
 
 Under the `Events:` section, you should see the similar message
@@ -156,93 +166,83 @@ Events:
   Warning  FailedScheduling  32s (x4 over 109s)  default-scheduler  0/1 nodes are available: 1 node(s) had taint {CriticalAddonsOnly: true}, that the pod didn't tolerate.
 ```
 
-This message tells that there is no nodes available to get our pods scheduled. To solve this problem we can either configure pod Tolerations or to add more nodes without Taints. Let's try both approaches, but first, delete our broken deployment.
+This message tells that there is no nodes available to get our pods scheduled. To solve this problem we can either configure pod `Tolerations` or add more nodes without `Taints`. Let's try both approaches, but first, delete our broken deployment.
 
 ```bash
 # Delete api-a deployment
-kubectl delete -f ./deployment.yaml
-configmap "api-a-appsettings" deleted
-deployment.apps "api-a" deleted
-service "api-a-service" deleted
+kubectl delete -f ./lab4-task1.yaml
 ```
 
 ## Task #3 - configure pod tolerations
 
-Create new file `deployment-system.yaml` and copy/paste the content from the `02-aks-advanced-configuration\k8s\api-a\deployment.yaml` deployment manifest. 
-Add the following Toleration for a pod in the pod `spec` section. Both of the following tolerations "match" the taint created in our previous task, and thus a pod with either toleration would be able to schedule: 
+Create new `lab4-task2.yaml` file with the following content. 
 
 ```yaml
-...
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab4-task3
+  labels:
+    app: lab4-task3
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lab4-task3
+  template:
+    metadata:
+      labels:
+        app: lab4-task3
     spec:
+      containers:
+      - name: api
+        image: iacws2evgacr.azurecr.io/apia:v1
+        imagePullPolicy: IfNotPresent
+        resources: {}
       tolerations:
       - key: "CriticalAddonsOnly"
         operator: "Equal"
         value: "true"
         effect: "NoSchedule"
-      containers:
-      - name: api
-...
 ```
 
-or
+Note the `tolerations` configuration for a pod in the pod `spec` section. The above example uses `effect` of `NoSchedule`. Alternatively, you can use effect of `PreferNoSchedule`. This is a "preference" or "soft" version of `NoSchedule` - the system will try to avoid placing a pod that does not tolerate the taint on the node, but it is not required. 
 
-```yaml
-...
-    spec:
-      tolerations:
-      - key: "CriticalAddonsOnly"
-        operator: "Exists"
-        effect: "NoSchedule"
-      containers:
-      - name: api
-...
-```
-
-The above example used `effect` of `NoSchedule`. Alternatively, you can use effect of `PreferNoSchedule`. This is a "preference" or "soft" version of `NoSchedule` -- the system will try to avoid placing a pod that does not tolerate the taint on the node, but it is not required. 
-
-Now, let's try to deploy our `api-a` application using `deployment-system.yaml`.
+Now, let's try to deploy our `api-a` application using `lab4-task3.yaml`.
 
 ```bash
 # Deploy api-a application
-kubectl apply -f ./deployment-system.yaml
-configmap/api-a-appsettings created
-deployment.apps/api-a created
-service/api-a-service created
+kubectl apply -f ./lab4-task3.yaml
 ```
 
 This time, your right-hand watching session should show that both pods are in `Running` state. 
 
 ```bash
-...
-api-a-7dc498bc57-6xwzl   1/1     Running             0          6s
-api-a-7dc498bc57-79zjs   1/1     Running             0          6s
-...
+lab4-task3-65fcdf5b79-vxjtn   1/1     Running             0          2s
+lab4-task3-65fcdf5b79-fvhzc   1/1     Running             0          2s
 ```
 
 Delete `api-a` application. 
 
 ```bash
 # Delete api-a application
-kubectl delete -f ./deployment-system.yaml
-configmap "api-a-appsettings" deleted
-deployment.apps "api-a" deleted
-service "api-a-service" deleted
+kubectl delete -f ./lab4-task3.yaml
 ```
 
 ## Task #4 - add new user node pool
 
-Let's keep taint configuration for the system nodes the same, that is - `CriticalAddonsOnly=true:NoSchedule` and deploy `api-a` application without toleration configured.
+Let's keep taint configuration for the system nodes the same, that is - `CriticalAddonsOnly=true:NoSchedule` and deploy `api-a` application without toleration configured using `lab4-task1.yaml`
 
 ```bash
 # Deploy api-a without toleration
-kubectl apply -f ./deployment.yaml
+kubectl apply -f ./lab4-task1.yaml
 ```
 
 As expected, `api-a` pods will have `Pending` status
 
 ```bash
-api-a-8668f99d4d-x478l   0/1     Pending       0          0s
-api-a-8668f99d4d-jfsww   0/1     Pending       0          0s
+lab4-task1-5cc5fc68c6-rkpzm   0/1     Pending             0          0s
+lab4-task1-5cc5fc68c6-mw8mk   0/1     Pending             0          0s
 ```
 
 Now, let's create new AKS user node pool called `workload`.
@@ -257,11 +257,11 @@ az aks nodepool add -g iac-ws2-blue-rg --cluster-name iac-ws2-blue-aks \
     --kubernetes-version 1.19.6
 ``` 
 
-It may take some minutes to create new pool. While you are waiting, keep the watching session with `kubectl get po -w` command running and observe the output. Eventually you should see that both `api-a` pods are running.
+It may take some minutes to create new pool. While you are waiting, keep the watching session with `kubectl get po -w` command running and observe the output. Eventually you should see that both pods are running.
 
 ```bash
-api-a-8668f99d4d-jfsww   1/1     Running             0          11m
-api-a-8668f99d4d-x478l   1/1     Running             0          11m
+lab4-task1-5cc5fc68c6-mw8mk   1/1     Running             0          3m26s
+lab4-task1-5cc5fc68c6-rkpzm   1/1     Running             0          3m26s
 ```
 
 When pool is successfully created, get the list of the node pools
@@ -271,7 +271,7 @@ When pool is successfully created, get the list of the node pools
 az aks nodepool list  -g iac-ws2-blue-rg --cluster-name iac-ws2-blue-aks --query "[].{name:name, mode:mode, vm_size:vmSize, number_of_nodes:count}"
 ```
 
-You should see two node pools now, one `System` and one `User`
+You should see two node pools. One `System` pool and one `User`.
 
 ```bash
 # Get list of nodes
@@ -280,7 +280,7 @@ NAME                                 STATUS   ROLES   AGE     VERSION
 aks-systempool-27376456-vmss000000   Ready    agent   3d12h   v1.19.7
 aks-workload-27376456-vmss000000     Ready    agent   12m     v1.19.6
 
-# Get list of nodes and show labels. Check that agentpool label contain the name of the pool.
+# Get list of nodes and show labels. Note that agentpool label contains the name of the pool.
 kubectl get nodes --show-labels
 
 # Get all nodes from the workload pool
@@ -289,29 +289,123 @@ kubectl get nodes -l agentpool=workload
 # Get all nodes from the system pool
 kubectl get nodes -l agentpool=systempool
 
-# Check that api-a pods are scheduled to the node from worlkload pool
+# Check that api-a pods are scheduled to the node from workload pool
 kubectl get po -o wide
-NAME                     READY   STATUS    RESTARTS   AGE   IP            NODE                               NOMINATED NODE   READINESS GATES
-api-a-8668f99d4d-jfsww   1/1     Running   0          12m   10.11.0.119   aks-workload-27376456-vmss000000   <none>           <none>
-api-a-8668f99d4d-x478l   1/1     Running   0          12m   10.11.0.133   aks-workload-27376456-vmss000000   <none>           <none>
+lab4-task1-5cc5fc68c6-mw8mk   1/1     Running   0          4m42s   10.11.0.120   aks-workload-27376456-vmss000000   <none>           <none>
+lab4-task1-5cc5fc68c6-rkpzm   1/1     Running   0          4m42s   10.11.0.119   aks-workload-27376456-vmss000000   <none>           <none>
 ```
 
 ## Task #5 - schedule a pod to run on a system node
 
-If you want your pods to only be deployed to the system nodes, you need to add a `nodeSelector` field to your pod configuration.
+Create new `lab4-task5.yaml` file with the following deployment.
 
 ```yaml
-...
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab4-task5
+  labels:
+    app: lab4-task5
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lab4-task5
+  template:
+    metadata:
+      labels:
+        app: lab4-task5
     spec:
-      tolerations:
-      - key: "CriticalAddonsOnly"
-        operator: "Exists"
-        effect: "NoSchedule"
-      nodeSelector:
-        kubernetes.azure.com/mode: system
       containers:
       - name: api
-...
+        image: iacws2evgacr.azurecr.io/apia:v1
+        imagePullPolicy: IfNotPresent
+        resources: {}
+      nodeSelector:
+        kubernetes.azure.com/mode: system
+```
+
+If you want your pods to be scheduled to the system nodes, you need to add a `nodeSelector` filed to your pod `spec` that specifies a map of key-value pairs. 
+For the pod to be eligible to run on a node, the node must have each of the indicated key-value pairs as labels. 
+
+In our example above, pod will only be deployed to nodes with `kubernetes.azure.com/mode: system` label, that is - to the nodes from the system node pool.
+
+```bash
+# Deploy api-a application
+kubectl apply -f ./lab4-task5.yaml
+```
+
+As you can see at the watch terminal session, both pods are in `Pending` state
+
+```bash
+lab4-task5-67dbccb6b8-xnk66    0/1     Pending             0          0s
+lab4-task5-67dbccb6b8-lsv7d    0/1     Pending             0          0s
+```
+
+Let's check pod description
+
+```bash
+kubectl describe pod lab4-task5-67dbccb6b8-lsv7d
+
+Warning  FailedScheduling  77s (x2 over 77s)  default-scheduler  0/2 nodes are available: 1 node(s) didn't match node selector, 1 node(s) had taint {CriticalAddonsOnly: true}, that the pod didn't tolerate
+```
+
+Kubernetes can't schedule pod to the system nodes, because pod doesn't tolerate node tain. To fix this, we need to configure  `tolerations` for our pods.
+
+Change `lab4-task5.yaml` file to the following content.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab4-task5
+  labels:
+    app: lab4-task5
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lab4-task5
+  template:
+    metadata:
+      labels:
+        app: lab4-task5
+    spec:
+      containers:
+      - name: api
+        image: iacws2evgacr.azurecr.io/apia:v1
+        imagePullPolicy: IfNotPresent
+        resources: {}
+      nodeSelector:
+        kubernetes.azure.com/mode: system
+      tolerations:
+      - key: "CriticalAddonsOnly"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+```
+
+and re-deploy it 
+
+```bash
+# Deploy api-a application
+kubectl apply -f ./lab4-task5.yaml
+```
+
+This time, both pods are in `Running` state
+
+```bash
+lab4-task5-5dbdbb46c7-2x6sq   1/1     Running   0          6s
+lab4-task5-5dbdbb46c7-cm6f2   1/1     Running   0          5s
+```
+
+Check that `lab4-task5` pods are scheduled to system nodes
+
+```bash
+# Check that api-a pods are scheduled to the system nodes
+kubectl get po -o wide
+lab4-task5-5dbdbb46c7-2x6sq   1/1     Running   0          76s   10.11.0.17    aks-systempool-27376456-vmss000000   <none>           <none>
+lab4-task5-5dbdbb46c7-cm6f2   1/1     Running   0          75s   10.11.0.75    aks-systempool-27376456-vmss000000   <none>           <none>
 ```
 
 ## Task #3 - add a spot node pool to an AKS cluster
@@ -332,46 +426,22 @@ az aks nodepool add -g iac-ws2-blue-rg --cluster-name iac-ws2-blue-aks \
 
 To schedule a pod to run on a spot node, add a toleration that corresponds to the taint applied to your spot node. The following example shows a portion of a yaml file that defines a toleration that corresponds to a `kubernetes.azure.com/scalesetpriority=spot:NoSchedule` taint used in the previous step.
 
+## Task - untain nodes
 
-
-## Task - untain 
+To remove the taint added by the `kubectl taint node` command, you can run:
 
 ```bash
 # Untain system nodes
 kubectl taint node -l kubernetes.azure.com/mode=system CriticalAddonsOnly=true:NoSchedule-
 ```
 
-```bash
-# Add new node pool
-az aks nodepool add -g iac-ws2-blue-rg --cluster-name iac-ws2-blue-aks \
-    --name workloadpool \
-    --node-count 1 \
-    --mode User
+## Task - delete node pool
 
-# Get list of node pools
-az aks nodepool list  -g iac-ws2-blue-rg --cluster-name iac-ws2-blue-aks
-
-# Get nodes
-kubectl get nodes
-NAME                                   STATUS   ROLES   AGE     VERSION
-aks-systempool-27376456-vmss000000     Ready    agent   48m     v1.19.6
-aks-workloadpool-27376456-vmss000000   Ready    agent   5m25s   v1.19.6
-```
-
-As you can see the name of the node is prefixed with the name of the pool. 
-
-```bash
-# Get nodes and show labels
-kubectl get nodes --show-labels
-```
-
-The `agentpool` label contains the name of the pool to which node is assigned to.
-
-## Task - delete pool
+To delete the agent pool in the AKS, use [az aks nodepool delete](https://docs.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az_aks_nodepool_delete) command:
 
 ```bash
 # Delete workload pool
-az aks nodepool delete -n workload2 -g iac-ws2-blue-rg --cluster-name iac-ws2-blue-aks 
+az aks nodepool delete -n workload -g iac-ws2-blue-rg --cluster-name iac-ws2-blue-aks 
 ```
 
 ## Useful links
@@ -381,7 +451,7 @@ az aks nodepool delete -n workload2 -g iac-ws2-blue-rg --cluster-name iac-ws2-bl
 [Assigning Pods to Nodes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
 [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
-## Next: 
+## Next: add aad-pod-identity support into AKS 
 
 [Go to lab-05](../lab-05/readme.md)
 

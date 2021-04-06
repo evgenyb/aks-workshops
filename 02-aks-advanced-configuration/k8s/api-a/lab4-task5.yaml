@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab4-task5
+  labels:
+    app: lab4-task5
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lab4-task5
+  template:
+    metadata:
+      labels:
+        app: lab4-task5
+    spec:
+      containers:
+      - name: api
+        image: iacws2evgacr.azurecr.io/apia:v1
+        imagePullPolicy: IfNotPresent
+        resources: {}
+      nodeSelector:
+        kubernetes.azure.com/mode: system
+      tolerations:
+      - key: "CriticalAddonsOnly"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"

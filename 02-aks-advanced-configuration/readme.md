@@ -13,18 +13,17 @@ Here is the preliminary agenda for the workshops (still work in progress):
  * [Lab-03](../lab-03/readme.md) - build and push docker images to Container Registry
  * Slides - AKS node pools
  * [Lab-04](../lab-04/readme.md) - working with AKS node pools
- * [Lab-05](../lab-05/readme.md) - deploy workload to AKS
  * Slides - AAD Pod Identity
- * Lab-06 - add aad-pod-identity support into AKS 
+ * [Lab-05](../lab-05/readme.md) - add aad-pod-identity support into AKS
  * Slides - Kubernetes Ingress Controller
- * Lab-07 - deploy nginx ingress controller
+ * Lab-06 - deploy nginx ingress controller
  * Slides - API Management 101 
- * Lab-08 - deploy api-b API to API Management
- * Lab-09 - AKS egress 
+ * Lab-07 - deploy api-b API to API Management
+ * Lab-08 - AKS egress 
  * Slides - AKS upgrade options
- * Lab-10 - upgrade AKS - mutable approach
- * Lab-11 - upgrade AKS - immutable approach
- * Lab-12 - cleaning up resources
+ * Lab-09 - upgrade AKS - mutable approach
+ * Lab-10 - upgrade AKS - immutable approach
+ * Lab-11 - cleaning up resources
 
  
  * Slides - AAD Pod Identity
