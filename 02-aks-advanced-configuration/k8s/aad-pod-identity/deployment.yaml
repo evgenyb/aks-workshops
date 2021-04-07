@@ -123,9 +123,10 @@ spec:
       - name: kubelet-config
         hostPath:
           path: /etc/default/kubelet
+          type: FileOrCreate
       containers:
       - name: nmi
-        image: "mcr.microsoft.com/oss/azure/aad-pod-identity/nmi:v1.7.4"
+        image: "mcr.microsoft.com/oss/azure/aad-pod-identity/nmi:v1.7.5"
         imagePullPolicy: Always
         args:
           - "--node=$(NODE_NAME)"
@@ -169,6 +170,15 @@ spec:
           periodSeconds: 5
       nodeSelector:
         kubernetes.io/os: linux
+      tolerations:
+      - key: "CriticalAddonsOnly"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+      - key: "kubernetes.azure.com/scalesetpriority"
+        operator: "Equal"
+        value: "spot"
+        effect: "NoSchedule"
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -244,7 +254,7 @@ spec:
       serviceAccountName: aad-pod-id-mic-service-account
       containers:
       - name: mic
-        image: "mcr.microsoft.com/oss/azure/aad-pod-identity/mic:v1.7.4"
+        image: "mcr.microsoft.com/oss/azure/aad-pod-identity/mic:v1.7.5"
         imagePullPolicy: Always
         args:
           - "--cloudconfig=/etc/kubernetes/azure.json"
@@ -279,3 +289,12 @@ spec:
           path: /etc/kubernetes/azure.json
       nodeSelector:
         kubernetes.io/os: linux
+      tolerations:
+      - key: "CriticalAddonsOnly"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+      - key: "kubernetes.azure.com/scalesetpriority"
+        operator: "Equal"
+        value: "spot"
+        effect: "NoSchedule"

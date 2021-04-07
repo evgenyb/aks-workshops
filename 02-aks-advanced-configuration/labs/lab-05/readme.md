@@ -4,31 +4,38 @@
 
 ## Goals
 
-## Task #1 - 
+* Learn how to install and configure aad-pod-identity component
+* Learn how to create a user-assigned managed identity and deploy AzureIdentity and AzureIdentityBinding resources
+* Learn how to configure your AKS pod to use Managed Identity
+
+## Task #1 - install and configure aad-pod-identity component
 
 ```bash
-# create new namespace
-kubectl create ns msi
-
-# deploy msi components
-kubectl apply -f .\deployment.yaml
-
-# deploy msi components
-kubectl apply -f .\deployment.yaml
-
-# deploy exceptions
-kubectl apply -f .\mic-exception.yaml
+# Go to 02-aks-advanced-configuration\k8s\aad-pod-identity folder
+cd 02-aks-advanced-configuration\k8s\aad-pod-identity
 
 export SUBSCRIPTION_ID="8878beb2-5e5d-4418-81ae-783674eea324"
-export RESOURCE_GROUP="iac-ws2-aks-blue-rg"
-export CLUSTER_NAME="aks-ws2-blue"
+export RESOURCE_GROUP="iac-ws2-blue-rg"
+export CLUSTER_NAME="iac-ws2-blue-aks"
 
 # Optional: if you are planning to deploy your user-assigned identities
 # in a separate resource group instead of your node resource group
-export IDENTITY_RESOURCE_GROUP="iac-ws2-base-rg"
+export IDENTITY_RESOURCE_GROUP="iac-ws2-rg"
 
+# Configure role assignments
 ./role-assignment.sh 
+
+# Create msi namespace
+kubectl create ns msi
+
+# Deploy msi components into msi namespace
+kubectl apply -f .\deployment.yaml
+
+# Deploy msi exceptions
+kubectl apply -f .\mic-exception.yaml
 ```
+
+## Task #2 - create KeyVault and create new secret
 
 ```bash
 # Ccreate api-b KeyVault 
@@ -39,7 +46,11 @@ az keyvault secret set --vault-name iac-ws2-api-b-kv -n foobar --value barfoo
 
 # Get KeyVault url 
 az keyvault show -g iac-ws2-base-rg -n iac-ws2-api-b-kv --query properties.vaultUri
+```
 
+## Task #3 - create User Assigned Managed Identity 
+
+```bash
 # Create User Assigned Managed Identity iac-ws2-api-b-mi
 az identity create -g iac-ws2-base-rg -n iac-ws2-api-b-mi
 
@@ -75,11 +86,14 @@ spec:
 
 ## Useful links
 
-https://docs.microsoft.com/en-us/samples/azure-samples/app-service-msi-keyvault-dotnet/keyvault-msi-appservice-sample/
-https://azure.github.io/aad-pod-identity/docs/
-https://azure.github.io/aad-pod-identity/docs/demo/standard_walkthrough/
-https://azure.github.io/aad-pod-identity/docs/demo/tutorial/
-
+* [What are managed identities for Azure resources?](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/overview)
+* [Services that support managed identities for Azure resources](https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/services-support-managed-identities)
+* [Use Key Vault from App Service with Azure Managed Identity](https://docs.microsoft.com/en-us/samples/azure-samples/app-service-msi-keyvault-dotnet/keyvault-msi-appservice-sample/?WT.mc_id=AZ-MVP-5003837)
+* [Azure Active Directory Pod Identity for Kubernetes](https://azure.github.io/aad-pod-identity/docs/)
+* [Standard Walkthrough](https://azure.github.io/aad-pod-identity/docs/demo/standard_walkthrough/)
+* [AAD Pod Identity Tutorial](https://azure.github.io/aad-pod-identity/docs/demo/tutorial/)
+* [Role Assignment](https://azure.github.io/aad-pod-identity/docs/getting-started/role-assignment/)
+* [aad-pod-identity releases](https://github.com/Azure/aad-pod-identity/releases)
 
 ## Next: 
 

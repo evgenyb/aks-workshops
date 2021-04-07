@@ -408,36 +408,90 @@ lab4-task5-5dbdbb46c7-2x6sq   1/1     Running   0          76s   10.11.0.17    a
 lab4-task5-5dbdbb46c7-cm6f2   1/1     Running   0          75s   10.11.0.75    aks-systempool-27376456-vmss000000   <none>           <none>
 ```
 
-## Task #3 - add a spot node pool to an AKS cluster
+## Task #6 - add a spot node pool 
+
+A spot node pool is a node pool backed by a [spot virtual machine scale set](https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/use-spot). Using spot VMs for nodes with your AKS cluster allows you to take advantage of unutilized capacity in Azure at a significant cost savings. 
 
 ```bash
 # Add a spot node pool
 az aks nodepool add -g iac-ws2-blue-rg --cluster-name iac-ws2-blue-aks \
-    --name spotnodepool \
+    --name spotnodes \
     --priority Spot \
     --eviction-policy Delete \
     --spot-max-price -1 \
     --enable-cluster-autoscaler \
     --min-count 1 \
     --max-count 3 
+
+# Get nodes (you may have different names)
+kubectl get nodes --show-labels
+aks-spotnodes-27376456-vmss000000    Ready    agent   19m    v1.19.7
+aks-systempool-27376456-vmss000000   Ready    agent   5d7h   v1.19.7
+
+# Describe aks-spotnodes-27376456-vmss000000 node 
+kubectl describe node aks-spotnodes-27376456-vmss000000
+```
+Note that node has `Taints` configured
+
+```yaml
+Taints:             kubernetes.azure.com/scalesetpriority=spot:NoSchedule
 ```
 
-## Task #4 - schedule a pod to run on a spot node
+Since nodes have taint of `kubernetes.azure.com/scalesetpriority=spot:NoSchedule`, only pods with a corresponding toleration are scheduled on this node.
 
-To schedule a pod to run on a spot node, add a toleration that corresponds to the taint applied to your spot node. The following example shows a portion of a yaml file that defines a toleration that corresponds to a `kubernetes.azure.com/scalesetpriority=spot:NoSchedule` taint used in the previous step.
+## Task #7 - schedule a pod to run on a spot node
 
-## Task - untain nodes
+To schedule a pod to run on a spot node, we need to add toleration that corresponds to the taint applied to spot node. 
+Create new `lab4-task7.yaml` file with the following deployment manifest:
 
-To remove the taint added by the `kubectl taint node` command, you can run:
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab4-task7
+  labels:
+    app: lab4-task7
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lab4-task7
+  template:
+    metadata:
+      labels:
+        app: lab4-task7
+    spec:
+      containers:
+      - name: api
+        image: iacws2evgacr.azurecr.io/apia:v1
+        imagePullPolicy: IfNotPresent
+        resources: {}
+      tolerations:
+      - key: "kubernetes.azure.com/scalesetpriority"
+        operator: "Equal"
+        value: "spot"
+        effect: "NoSchedule"
+```
+
+Note the `tolerations` section of the `PodSpec`.
+
+Now, deploy it:
 
 ```bash
-# Untain system nodes
-kubectl taint node -l kubernetes.azure.com/mode=system CriticalAddonsOnly=true:NoSchedule-
+# Deploy api-a to the spot nodes
+kubectl apply -f lab4-task7.yaml
+
+# Check where pods were scheduled
+kubectl get po -l app=lab4-task7 -owide 
+lab4-task7-65d79fc55d-5kj6f   1/1     Running   0          4m8s    10.11.0.118   aks-spotnodes-27376456-vmss000000   <none>           <none>
+lab4-task7-65d79fc55d-mh7gg   1/1     Running   0          3m57s   10.11.0.129   aks-spotnodes-27376456-vmss000000   <none>           <none>
 ```
 
-## Task - delete node pool
+As expected, both pods are running at `spotnodes` node.
 
-To delete the agent pool in the AKS, use [az aks nodepool delete](https://docs.microsoft.com/en-us/cli/azure/aks/nodepool?view=azure-cli-latest#az_aks_nodepool_delete) command:
+## Task #8 - delete node pool
+
+Let's keep the `spotnodes` node pool and delete the `workload` pool:
 
 ```bash
 # Delete workload pool
@@ -445,11 +499,12 @@ az aks nodepool delete -n workload -g iac-ws2-blue-rg --cluster-name iac-ws2-blu
 ```
 
 ## Useful links
-[Create and manage multiple node pools for a cluster in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools?WT.mc_id=AZ-MVP-5003837)
-[Manage system node pools in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/use-system-pools?WT.mc_id=AZ-MVP-5003837)
-[Add a spot node pool to an Azure Kubernetes Service (AKS) cluster](https://docs.microsoft.com/en-us/azure/aks/spot-node-pool?WT.mc_id=AZ-MVP-5003837)
-[Assigning Pods to Nodes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
-[Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
+* [Create and manage multiple node pools for a cluster in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools?WT.mc_id=AZ-MVP-5003837)
+* [Manage system node pools in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/use-system-pools?WT.mc_id=AZ-MVP-5003837)
+* [Add a spot node pool to an Azure Kubernetes Service (AKS) cluster](https://docs.microsoft.com/en-us/azure/aks/spot-node-pool?WT.mc_id=AZ-MVP-5003837)
+* [Azure Spot Virtual Machines for virtual machine scale sets](https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/use-spot?WT.mc_id=AZ-MVP-5003837)
+* [Assigning Pods to Nodes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/)
+* [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 
 ## Next: add aad-pod-identity support into AKS 
 
