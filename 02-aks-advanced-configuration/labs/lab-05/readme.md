@@ -41,10 +41,10 @@ export IDENTITY_RESOURCE_GROUP="iac-ws2-rg"
 kubectl create ns msi
 
 # Deploy msi components into msi namespace
-kubectl apply -f .\deployment.yaml
+kubectl apply -f ./deployment.yaml
 
 # Deploy msi exceptions
-kubectl apply -f .\mic-exception.yaml
+kubectl apply -f ./mic-exception.yaml
 
 # Check what is deployed to msi namespace
 kubectl get po -n msi
