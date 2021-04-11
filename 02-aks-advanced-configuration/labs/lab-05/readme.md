@@ -1,4 +1,4 @@
-# lab-07 - add aad-pod-identity support into AKS
+# lab-05 - add aad-pod-identity support into AKS
 
 ## Estimated completion time - xx min
 
@@ -10,13 +10,11 @@
 
 ## Task #1 - install and configure aad-pod-identity component
 
-For `aad-pod-identity` to function, our cluster will need the correct role assignment configuration to perform Azure-related operations such as assigning and un-assigning the identity on the underlying VM/VMSS. 
+For `aad-pod-identity` to function, our cluster needs the correct role assignment configuration to perform Azure-related operations such as assigning and un-assigning the identity on the underlying VM/VMSS. 
 
-We configured AKS cluster with user-assigned managed identity to communicate with Azure. The following role assignments need to be configured:
+We configured AKS cluster with user-assigned managed identity to communicate with Azure. The roles `Managed Identity Operator` and `Virtual Machine Contributor` must be assigned to the cluster managed identity so that it can assign and un-assign identities from the underlying VMSS. If application managed identities are not within the node resource group (this is our case, because we will provision them under `iac-ws2-rg` resource group), additional `Managed Identity Operator` role needs to be assigned to the identity resource group scope.
 
-The roles `Managed Identity Operator` and `Virtual Machine Contributor` must be assigned to the cluster managed identity so that it can assign and un-assign identities from the underlying VMSS. If application managed identities are not within the node resource group, additional `Managed Identity Operator` role need to be assigned to the identity resource group scope.
-
-`aad-pod-identity` provides bash [script](https://raw.githubusercontent.com/Azure/aad-pod-identity/master/hack/role-assignment.sh) that does all necessary roles assignment. You can find this script under `02-aks-advanced-configuration\k8s\aad-pod-identity` folder. 
+`aad-pod-identity` provides [bash script](https://raw.githubusercontent.com/Azure/aad-pod-identity/master/hack/role-assignment.sh) that does all necessary roles assignment. You can find this script under `02-aks-advanced-configuration\k8s\aad-pod-identity` folder. 
 Let's use this script to configure our cluster:
 
 ```bash
