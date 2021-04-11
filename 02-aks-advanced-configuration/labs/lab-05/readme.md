@@ -2,11 +2,16 @@
 
 ## Estimated completion time - xx min
 
+A `managed identity` for Azure resources lets a pod authenticate itself against Azure services that support it, such as KeyVault or SQL. The pod is assigned an `Azure Identity` that lets them authenticate to Azure Active Directory and receive a digital token. This digital token can be presented to other Azure services that check if the pod is authorized to access the service and perform the required actions. This approach means that no secrets are required for database connection strings, for example. The simplified workflow for pod managed identity is shown in the following diagram:
+
+![pod-identity](images/pod-identity.png)
+
 ## Goals
 
 * Learn how to install and configure aad-pod-identity component
-* Learn how to create a user-assigned managed identity and deploy AzureIdentity and AzureIdentityBinding resources
+* Learn how to create a user-assigned managed identity and deploy `AzureIdentity` and `AzureIdentityBinding` resources
 * Learn how to configure your AKS pod to use Managed Identity
+* Use dotnet api application to test this functionality
 
 ## Task #1 - install and configure aad-pod-identity component
 
@@ -49,7 +54,7 @@ nmi-j9dzw              1/1     Running   0          74m
 nmi-v6d7q              1/1     Running   0          74m
 ```
 
-You should have two `mic` pods and one `nmi` daemon set at each node. IN my case, I have two nodes, therefore I have two `nmi` pods.
+You should have two `mic` pods and one `nmi` daemon set at each node. 
 
 ## Task #2 - create KeyVault and create new secret
 
