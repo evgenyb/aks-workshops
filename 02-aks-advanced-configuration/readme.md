@@ -16,7 +16,7 @@ Here is the preliminary agenda for the workshops (still work in progress):
  * Slides - AAD Pod Identity
  * [Lab-05](../lab-05/readme.md) - add aad-pod-identity support into AKS
  * Slides - Kubernetes Ingress Controller
- * Lab-06 - deploy nginx ingress controller
+ * [Lab-06](../lab-06/readme.md) - deploy nginx ingress controller
  * Slides - API Management 101 
  * Lab-07 - deploy api-b API to API Management
  * Lab-08 - AKS egress 

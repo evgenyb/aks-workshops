@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: iacws2evgacr.azurecr.io/apib:v11
+        image: iacws2evgacr.azurecr.io/apib:v1
         imagePullPolicy: IfNotPresent
         resources: {}
         livenessProbe:
