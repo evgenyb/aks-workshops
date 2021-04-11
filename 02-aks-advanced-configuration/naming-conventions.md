@@ -15,4 +15,4 @@ Application Insights | iac-ws2-appinsights | iac-ws2-appinsights
 API Management | iac-ws2-{apim name}-apim | iac-ws2-evg-apim
 Public IP | iac-ws2-{public ip name}-pip | iac-ws2-aks-blue-egress2-pip
 AKS | iac-ws2-{slot name}-aks | iac-ws2-blue-aks, iac-ws2-green-aks
-User Assigned Managed Identity | iac-ws2-{slot name}-{mi name}-mi | iac-ws2-blue-aks-mi, iac-ws2-green-aks-mi
+User-Assigned Managed Identity | iac-ws2-{mi name}-mi or iac-ws2-{slot name}-{mi name}-mi | iac-ws2-api-b-mi, iac-ws2-api-a-mi, iac-ws2-blue-aks-mi, iac-ws2-green-aks-mi

@@ -1,6 +1,6 @@
 # lab-05 - add aad-pod-identity support into AKS
 
-## Estimated completion time - xx min
+## Estimated completion time - 20 min
 
 A `managed identity` for Azure resources lets a pod authenticate itself against Azure services that support it, such as KeyVault or SQL. The pod is assigned an `Azure Identity` that lets them authenticate to Azure Active Directory and receive a digital token. This digital token can be presented to other Azure services that check if the pod is authorized to access the service and perform the required actions. This approach means that no secrets are required for database connection strings, for example. The simplified workflow for pod managed identity is shown in the following diagram:
 
@@ -69,7 +69,49 @@ az keyvault create -g iac-ws2-rg -n iac-ws2-<YOUR-NAME>-api-b-kv -l westeurope
 az keyvault secret set --vault-name iac-ws2-<YOUR-NAME>-api-b-kv -n foobar --value barfoo
 ```
 
-## Task #3 - create User-Assigned Managed Identity 
+## Task #3 - deploy app and verify functionality
+
+Open `aks-workshops\01-aks-and-k8s-101\app\apps.sln` solution in Visual Studio and check `aks-workshops\02-aks-advanced-configuration\src\api-b\Controllers\KeyVaultTestController.cs` file. This is a test controller that we will use to test access to keyvault with managed identities. 
+
+```c#
+var uri = _configuration["KeyVaultUrl"];
+_logger.LogInformation($"Trying to get secret foobar from {uri} key-vault.");
+var options = new SecretClientOptions()
+{
+    Retry =
+    {
+        Delay= TimeSpan.FromSeconds(2),
+        MaxDelay = TimeSpan.FromSeconds(16),
+        MaxRetries = 5,
+        Mode = RetryMode.Exponential
+    }
+};
+var client = new SecretClient(new Uri(uri), new DefaultAzureCredential(), options);
+```
+
+This code reads keyvault URL from app settings, then uses `DefaultAzureCredential()` to authenticate to Key Vault, which uses a token from managed identity to authenticate. For more information about authenticating to Key Vault, see the [Developer's Guide](https://docs.microsoft.com/en-us/azure/key-vault/general/developers-guide?WT.mc_id=AZ-MVP-5003837#authenticate-to-key-vault-in-code). The code also uses exponential backoff for retries in case Key Vault is being throttled. For more information about Key Vault transaction limits, see [Azure Key Vault throttling guidance](https://docs.microsoft.com/en-us/azure/key-vault/general/overview-throttling?WT.mc_id=AZ-MVP-5003837). 
+
+Then it retrieves secret `foobar` from the keyvault and logs it. 
+
+```c#
+var secret = await client.GetSecretAsync("foobar");
+_logger.LogInformation($"foobar: {secret.Value.Value}");
+```
+
+Let's publish `api-b` image to the Azure Container Registry.
+
+```bash
+# Go to aks-workshops\02-aks-advanced-configuration\src\api-b folder
+cd aks-workshops\02-aks-advanced-configuration\src\api-b folder
+
+# Build and publish apib:v1 image into your ACR
+az acr build --registry iacws2<YOUR-NAME>acr --image apib:v1 --file Dockerfile ..
+```
+
+## Task #4 - create User-Assigned Managed Identity 
+
+We need to create managed identity for our `api-b` application. 
+Based on our [naming convention](../../naming-conventions.md), we call it `iac-ws2-api-b-mi`.
 
 Create an identity on Azure and store the client ID and resource ID of the identity as environment variables:
 
@@ -85,7 +127,7 @@ export OBJECT_ID="$(az identity show -n iac-ws2-api-b-mi -g iac-ws2-rg --query p
 # Grant iac-ws2-api-b-mi managed identity with get secret permission at iac-ws2-<YOUR-NAME>-api-b-kv keyvault
 az keyvault set-policy -g iac-ws2-rg -n iac-ws2-<YOUR-NAME>-api-b-kv --secret-permissions get --object-id ${OBJECT_ID}
 ```
-## Task #4 - create an AzureIdentity and AzureIdentityBinding
+For Azure managed identity, we need to create a corresponding kubernetes `AzureIdentity` and `AzureIdentityBinding` resources.
 
 ```bash
 # Create an AzureIdentity in your cluster that references the identity you created above:
@@ -129,48 +171,11 @@ api-b-binding   2m
 kubectl describe azureidentitybinding api-b-binding
 ```
 
-## Task #5 - deploy app and verify functionality
-
-Open `aks-workshops\01-aks-and-k8s-101\app\apps.sln` solution in Visual Studio and check `aks-workshops\02-aks-advanced-configuration\src\api-b\Controllers\KeyVaultTestController.cs` file. This is a test controller that we will use to test access to keyvault with managed identities. 
-
-```c#
-var uri = _configuration["KeyVaultUrl"];
-_logger.LogInformation($"Trying to get secret foobar from {uri} key-vault.");
-var options = new SecretClientOptions()
-{
-    Retry =
-    {
-        Delay= TimeSpan.FromSeconds(2),
-        MaxDelay = TimeSpan.FromSeconds(16),
-        MaxRetries = 5,
-        Mode = RetryMode.Exponential
-    }
-};
-var client = new SecretClient(new Uri(uri), new DefaultAzureCredential(), options);
-```
-
-This code reads keyvault URL from app settings, then uses `DefaultAzureCredential()` to authenticate to Key Vault, which uses a token from managed identity to authenticate. For more information about authenticating to Key Vault, see the [Developer's Guide](https://docs.microsoft.com/en-us/azure/key-vault/general/developers-guide?WT.mc_id=AZ-MVP-5003837#authenticate-to-key-vault-in-code). The code also uses exponential backoff for retries in case Key Vault is being throttled. For more information about Key Vault transaction limits, see [Azure Key Vault throttling guidance](https://docs.microsoft.com/en-us/azure/key-vault/general/overview-throttling?WT.mc_id=AZ-MVP-5003837). 
-
-Then it retrieves secret `foobar` from the keyvault and logs it. 
-
-```c#
-var secret = await client.GetSecretAsync("foobar");
-_logger.LogInformation($"foobar: {secret.Value.Value}");
-```
-
-Let's publish `api-b` image to the Azure Container Registry.
-
-```bash
-# Go to aks-workshops\02-aks-advanced-configuration\src\api-b folder
-cd aks-workshops\02-aks-advanced-configuration\src\api-b folder
-
-# Build and publish apib:v1 image into your ACR
-az acr build --registry iacws2<YOUR-NAME>acr --image apib:v1 --file Dockerfile ..
-```
+## Task #5 - deploy api-b application and test functionality
 
 For a pod to match an identity binding, it needs a label with the key `aadpodidbinding` whose value is that of the `selector:` field in the `AzureIdentityBinding`. In our case, `selector:` field of `api-b-binding` is `api-b`, therefore we need to add additional label `aadpodidbinding: api-b` to the pod manifest.
 
-We also need to add `KeyVaultUrl` setting into `appsettings`, pointing to our Azure KeyVault.
+We also need to add `KeyVaultUrl` setting into `appsettings`, pointing to our Azure KeyVault url.
 
 ```bash
 # Get KeyVault url 
