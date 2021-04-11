@@ -11,7 +11,8 @@ data:
           "Microsoft": "Warning",
           "Microsoft.Hosting.Lifetime": "Information"
         }
-      }
+      },
+      "KeyVaultUrl": "https://iac-ws2-evg-api-b-kv.vault.azure.net/"
     }
 ---    
 apiVersion: apps/v1

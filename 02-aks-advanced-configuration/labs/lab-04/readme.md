@@ -71,7 +71,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: iacws2evgacr.azurecr.io/apia:v1
+        image: iacws2<YOUR-NAME>acr.azurecr.io/apia:v1
         imagePullPolicy: IfNotPresent
         resources: {}
 ```
@@ -196,7 +196,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: iacws2evgacr.azurecr.io/apia:v1
+        image: iacws2<YOUR-NAME>acr.azurecr.io/apia:v1
         imagePullPolicy: IfNotPresent
         resources: {}
       tolerations:
@@ -318,7 +318,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: iacws2evgacr.azurecr.io/apia:v1
+        image: iacws2<YOUR-NAME>acr.azurecr.io/apia:v1
         imagePullPolicy: IfNotPresent
         resources: {}
       nodeSelector:
@@ -373,7 +373,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: iacws2evgacr.azurecr.io/apia:v1
+        image: iacws2<YOUR-NAME>acr.azurecr.io/apia:v1
         imagePullPolicy: IfNotPresent
         resources: {}
       nodeSelector:
@@ -463,7 +463,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: iacws2evgacr.azurecr.io/apia:v1
+        image: iacws2<YOUR-NAME>acr.azurecr.io/apia:v1
         imagePullPolicy: IfNotPresent
         resources: {}
       tolerations:
@@ -491,11 +491,11 @@ As expected, both pods are running at `spotnodes` node.
 
 ## Task #8 - delete node pool
 
-Let's keep the `spotnodes` node pool and delete the `workload` pool:
+Let's keep the `workload` node pool and delete the `spotnodes` pool:
 
 ```bash
 # Delete workload pool
-az aks nodepool delete -n workload -g iac-ws2-blue-rg --cluster-name iac-ws2-blue-aks 
+az aks nodepool delete -n spotnodes -g iac-ws2-blue-rg --cluster-name iac-ws2-blue-aks 
 ```
 
 ## Useful links
