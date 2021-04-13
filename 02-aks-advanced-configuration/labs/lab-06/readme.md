@@ -452,4 +452,4 @@ kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -
 
 ## Feedback
 
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/xx) to comment on this lab. 
+* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/20) to comment on this lab. 

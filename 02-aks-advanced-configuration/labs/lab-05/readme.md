@@ -284,4 +284,4 @@ In the logs stream session, you should see thr following traces:
 
 ## Feedback
 
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/xx) to comment on this lab. 
+* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/19) to comment on this lab. 
