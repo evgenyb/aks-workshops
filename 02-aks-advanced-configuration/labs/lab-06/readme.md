@@ -446,7 +446,7 @@ kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -
 * [Rewrite Target](https://kubernetes.github.io/ingress-nginx/examples/rewrite/)
 
 
-## Next: 
+## Next: deploy api-b API to API Management
 
 [Go to lab-07](../lab-07/readme.md)
 

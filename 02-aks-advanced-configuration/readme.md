@@ -18,7 +18,7 @@ Here is the preliminary agenda for the workshops (still work in progress):
  * Slides - Kubernetes Ingress Controller
  * [Lab-06](../lab-06/readme.md) - deploy nginx ingress controller
  * Slides - API Management 101 
- * Lab-07 - deploy api-b API to API Management
+ * Lab-07 - deploy API to API Management
  * Lab-08 - AKS egress 
  * Slides - AKS upgrade options
  * Lab-09 - upgrade AKS - mutable approach
