@@ -24,13 +24,11 @@ Here is the preliminary agenda for the workshops (still work in progress):
  * Lab-09 - upgrade AKS - mutable approach
  * Lab-10 - upgrade AKS - immutable approach
  * Lab-11 - cleaning up resources
-
  
- * Slides - AAD Pod Identity
-
 ## Links
 
 * [Prerequisites](prerequisites.md)
+* [Naming conventions](naming-conventions.md)
 
 ## Feedback
 
