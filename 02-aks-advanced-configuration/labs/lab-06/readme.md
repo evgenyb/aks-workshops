@@ -11,6 +11,7 @@ An ingress controller is a piece of software that provides reverse proxy, config
 This lab shows you how to deploy the NGINX ingress controller in an AKS cluster. The ingress controller is configured on an internal, private virtual network and IP address. No external access is allowed. Two applications are then run in the AKS cluster, each of which is accessible over the single IP address.
 
 You will learn how to:
+
 * Install and configure NGINX ingress controller
 * Implement `ingress` routes to expose kubernetes services 
 
