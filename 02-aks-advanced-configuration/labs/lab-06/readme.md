@@ -2,10 +2,17 @@
 
 ## Estimated completion time - xx min
 
+An ingress controller is a piece of software that provides reverse proxy, configurable traffic routing, and TLS termination for Kubernetes services. Kubernetes ingress resources are used to configure the ingress rules and routes for individual Kubernetes services. Using an ingress controller and ingress rules, a single IP address can be used to route traffic to multiple services in a Kubernetes cluster.
+
+![https://www.nginx.com/blog/wait-which-nginx-ingress-controller-kubernetes-am-i-using/](images/NGINX-Ingress-Controller-4-services.png)
+
 ## Goals
 
-* To learn how to install and configure NGINX ingress controller
-* To learn how to configure `ingress` resource to expose service 
+This lab shows you how to deploy the NGINX ingress controller in an AKS cluster. The ingress controller is configured on an internal, private virtual network and IP address. No external access is allowed. Two applications are then run in the AKS cluster, each of which is accessible over the single IP address.
+
+You will learn how to:
+* Install and configure NGINX ingress controller
+* Implement `ingress` routes to expose kubernetes services 
 
 ## Task #1 - deploy NGINX ingress controller
 
@@ -376,11 +383,12 @@ spec:
               number: 8081
 ```
 
-In this ingress definition, any characters captured by (.*) will be assigned to the placeholder `$2`, which is then used as a parameter in the `rewrite-target` annotation. The ingress definition above will result in the following rewrites:
+In this ingress definition, any characters captured by (.*) will be assigned to the placeholder `$2`, which is then used as a parameter in the [rewrite-target](https://kubernetes.github.io/ingress-nginx/examples/rewrite/) annotation. The ingress definition above will result in the following rewrites:
 
 * `10.11.0.146/apia` rewrites to `10.11.0.146/`
 * `10.11.0.146/apia/` rewrites to `10.11.0.146/`
 * `10.11.0.146/apia/api` rewrites to `10.11.0.146/api`
+* `10.11.0.146/apib/api` rewrites to `10.11.0.146/api`
 
 ```bash
 # Deploy api-a-b-ingress ingress  
@@ -433,6 +441,7 @@ kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -
 * [About Ingress in Azure Kubernetes Service (AKS)](https://vincentlauzon.com/2018/10/10/about-ingress-in-azure-kubernetes-service-aks/)
 * [nginx: Default backend](https://kubernetes.github.io/ingress-nginx/user-guide/default-backend/)
 * [nginx: Installation with Helm](https://docs.nginx.com/nginx-ingress-controller/installation/installation-with-helm/)
+* [Wait, Which NGINX Ingress Controller for Kubernetes Am I Using?](https://www.nginx.com/blog/wait-which-nginx-ingress-controller-kubernetes-am-i-using/)
 * [Taints and Tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/)
 * [Rewrite Target](https://kubernetes.github.io/ingress-nginx/examples/rewrite/)
 
