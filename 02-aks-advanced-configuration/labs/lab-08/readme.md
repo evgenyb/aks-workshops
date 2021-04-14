@@ -1,6 +1,6 @@
 # lab-08 - AKS egress
 
-## Estimated completion time - xx min
+## Estimated completion time - 15 min
 
 When you use a `Standard SKU` load balancer (default option when you provision AKS cluster), by default the AKS cluster automatically creates a public IP in the AKS-managed infrastructure resource group and assigns it to the load balancer outbound pool.
 
@@ -16,7 +16,7 @@ You will learn how to:
 * Update your cluster with your own outbound public IP
 * Update your cluster with your own outbound public IP prefix
 * Configure the allocated outbound ports
-* How to detect a SNAT port exhaustion
+* How to check SNAT port usage and allocation
 
 ## Task #1 - Scale the number of managed outbound public IPs
 
@@ -154,13 +154,57 @@ AllocatedOutboundPorts    EnableTcpReset    IdleTimeoutInMinutes    Name
 4000                      True              30                      aksOutboundRule  
 ```
 
-## Task #5 - How to detect a SNAT port exhaustion
+## Task #5 - How to check SNAT port usage and allocation
 
+You should check the following metrics of your load balancer of the AKS cluster:
+
+### SNAT Connection Count
+
+The `SNAT Connection Count` metric filtered by failed `connection state` shows when a SNAT port exhaustion happened. 
+
+In the Azure portal, go to your AKS managed resource group. To get AKS managed resource group, use the following command:
+
+```bash
+# Get AKS managed resource group
+az aks show -g iac-ws2-blue-rg -n iac-ws2-blue-aks --query nodeResourceGroup -otsv
+```
+
+![SNAT-metrics-1](images/SNAT-metrics-1.png)
+
+Click `Add filter`, select `Connection state` at the `Property` drop-down lits, use `=` as `Operator` and select `Failed` from the `VAlues` list.
+
+![SNAT-metrics-1](images/SNAT-metrics-2.png)
+
+You can split metrics by `Backend IP Address`
+
+![SNAT-metrics-1](images/SNAT-metrics-3.png)
+
+And you can filter on particular `Backend IP Address`.
+
+![SNAT-metrics-1](images/SNAT-metrics-4.png)
+
+### `Allocated SNAT Ports` and `Used SNAT Ports` metrics
+
+The `Used SNAT Ports` metric tracks how many SNAT ports are being consumed to maintain outbound flows. This indicates how many unique flows are established between an internet source and a backend VM or virtual machine scale set that is behind a load balancer and does not have a public IP address. By comparing the number of SNAT ports you are using with the `Allocated SNAT Ports` metric, you can determine if your service is experiencing or at risk of SNAT exhaustion and resulting outbound flow failure.
+
+Select `Used SNAT Ports` and `Allocated SNAT Ports` as the metric type and `Average` as the aggregation.
+
+![SNAT-metrics-1](images/SNAT-metrics-5.png)
+
+Add `Protocol Type` and ``BAckend IP Address` filters, otherwise otherwise we get an aggregated value which led to false assumptions. 
+
+![SNAT-metrics-1](images/SNAT-metrics-6.png)
+
+For all metrics, set the time aggregation of the graph to 1 minute to ensure desired data is displayed.
+
+You can then group different metrics into the dashboard.
 
 ## Useful links
 
 * [Use a public Standard Load Balancer in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/load-balancer-standard?WT.mc_id=AZ-MVP-5003837)
 * [Control egress traffic for cluster nodes in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic?WT.mc_id=AZ-MVP-5003837)
+* [How do I check my SNAT port usage and allocation?](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-standard-diagnostics?WT.mc_id=AZ-MVP-5003837#how-do-i-check-my-snat-port-usage-and-allocation)
+* [Using Source Network Address Translation (SNAT) for outbound connections](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-outbound-connections?WT.mc_id=AZ-MVP-5003837)
 * [az aks update](https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest?WT.mc_id=AZ-MVP-5003837#az_aks_update)
 * [Public IP address prefix](https://docs.microsoft.com/en-us/azure/virtual-network/public-ip-address-prefix?WT.mc_id=AZ-MVP-5003837)
 * [Detecting SNAT port exhaustion on Azure Kubernetes Service](https://www.danielstechblog.io/detecting-snat-port-exhaustion-on-azure-kubernetes-service/)
