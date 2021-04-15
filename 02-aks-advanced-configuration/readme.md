@@ -20,9 +20,7 @@ Here is the preliminary agenda for the workshops (still work in progress):
  * Slides - API Management 101 
  * Lab-07 - deploy API to API Management
  * [Lab-08](../lab-08/readme.md) - AKS egress 
- * Slides - AKS upgrade options
- * Lab-09 - upgrade AKS - mutable approach
- * Lab-10 - upgrade AKS - immutable approach
+ * [Lab-09](../lab-09/readme.md) - Resource Management
  * Lab-11 - cleaning up resources
  
 ## Links

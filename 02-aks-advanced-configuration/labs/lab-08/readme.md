@@ -209,7 +209,7 @@ You can then group different metrics into the dashboard.
 * [Public IP address prefix](https://docs.microsoft.com/en-us/azure/virtual-network/public-ip-address-prefix?WT.mc_id=AZ-MVP-5003837)
 * [Detecting SNAT port exhaustion on Azure Kubernetes Service](https://www.danielstechblog.io/detecting-snat-port-exhaustion-on-azure-kubernetes-service/)
 
-## Next: 
+## Next: Resource Management
 
 [Go to lab-09](../lab-09/readme.md)
 

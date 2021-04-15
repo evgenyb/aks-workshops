@@ -13,7 +13,7 @@ If you wish to only have one pool in your AKS cluster, application pods can be s
 ## Goals
 
 * To learn how to assigning Pods to Nodes
-* To understand concept of Taints and Tolerations
+* To understand concept of `Taints` and `Tolerations`
 * To understand the concept of AKS node pools
 * To learn how to create new User node pool
 * To learn how to create spot node pool
