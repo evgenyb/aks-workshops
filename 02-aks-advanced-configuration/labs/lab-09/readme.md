@@ -28,7 +28,7 @@ Limits and requests for memory are measured in bytes. You can express memory as 
 kubectl create namespace mem-example
 ```
 
-To get a better insights what kubernetes does behind the scene, I recommend you to use Windows Terminal with two sessions (use `Shift+Alt+D` to split the current window). In the right-hand session, run watcher command for `mem-example` namespace `kubectl get po -w -n mem-example`. In the left-hand session run labs commands.
+To get a better insights what Kubernetes does behind the scene, I recommend you to use Windows Terminal with two sessions (use `Shift+Alt+D` to split the current window). In the right-hand session, run watcher command for `mem-example` namespace `kubectl get po -w -n mem-example`. In the left-hand session run labs commands.
 
 ## Task #2 - specify a memory request and a memory limit
 
