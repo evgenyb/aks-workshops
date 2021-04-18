@@ -21,7 +21,7 @@ Here is the preliminary agenda for the workshops (still work in progress):
  * [Lab-07](labs/lab-07/readme.md) - deploy API to API Management
  * [Lab-08](labs/lab-08/readme.md) - AKS egress
  * [Lab-09](labs/lab-09/readme.md) - Resource Management
- * Lab-11 - cleaning up resources
+ * Lab-10 - cleaning up resources
  
 ## Links
 

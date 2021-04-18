@@ -175,4 +175,4 @@ In the test window, you can remove line requesting `{{azure-api-management-subsc
 
 ## Feedback
 
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/22) to comment on this lab. 
+* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/21) to comment on this lab. 

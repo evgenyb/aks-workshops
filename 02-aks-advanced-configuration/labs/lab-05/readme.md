@@ -98,16 +98,6 @@ var secret = await client.GetSecretAsync("foobar");
 _logger.LogInformation($"foobar: {secret.Value.Value}");
 ```
 
-Let's publish `api-b` image to the Azure Container Registry.
-
-```bash
-# Go to aks-workshops\02-aks-advanced-configuration\src\api-b folder
-cd aks-workshops\02-aks-advanced-configuration\src\api-b folder
-
-# Build and publish apib:v1 image into your ACR
-az acr build --registry iacws2<YOUR-NAME>acr --image apib:v1 --file Dockerfile ..
-```
-
 ## Task #4 - create User-Assigned Managed Identity 
 
 In order for code from  `KeyVaultTestController` to work, we need to create managed identity for our `api-b` application. 

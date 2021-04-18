@@ -111,10 +111,10 @@ Follow the instructions described at the [Configure Default Memory Requests and 
 * [Limit Ranges](https://kubernetes.io/docs/concepts/policy/limit-range/)
 * [AKS managed Resource reservations](https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#resource-reservations)
 
-## Next: 
+## Next: cleaning up
 
 [Go to lab-10](../lab-10/readme.md)
 
 ## Feedback
 
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/xx) to comment on this lab. 
+* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/23) to comment on this lab. 
