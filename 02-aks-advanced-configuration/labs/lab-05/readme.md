@@ -58,7 +58,7 @@ You should have two `mic` pods and one `nmi` daemon set at each node.
 
 ## Task #2 - create KeyVault and create new secret
 
-As described at tha application use-case, our `api-b` application needs to get access to the secrets fromm the key-vault.
+As described at tha application use-case, our `api-b` application needs to get access to the secrets from the key-vault.
 Let's create new `iac-ws2-<YOUR-NAME>-api-b-kv` key-vault in `iac-ws2-rg` resource group.
 
 ```bash
@@ -89,7 +89,7 @@ var options = new SecretClientOptions()
 var client = new SecretClient(new Uri(uri), new DefaultAzureCredential(), options);
 ```
 
-This code reads keyvault URL from app settings, then uses `DefaultAzureCredential()` to authenticate to Key Vault, which uses a token from managed identity to authenticate. For more information about authenticating to Key Vault, see the [Developer's Guide](https://docs.microsoft.com/en-us/azure/key-vault/general/developers-guide?WT.mc_id=AZ-MVP-5003837#authenticate-to-key-vault-in-code). The code also uses exponential backoff for retries in case Key Vault is being throttled. For more information about Key Vault transaction limits, see [Azure Key Vault throttling guidance](https://docs.microsoft.com/en-us/azure/key-vault/general/overview-throttling?WT.mc_id=AZ-MVP-5003837). 
+This code first reads keyvault URL from app settings, then uses `DefaultAzureCredential()` to authenticate to Key Vault, which uses a token from managed identity to authenticate. For more information about authenticating to Key Vault, see the [Developer's Guide](https://docs.microsoft.com/en-us/azure/key-vault/general/developers-guide?WT.mc_id=AZ-MVP-5003837#authenticate-to-key-vault-in-code). The code also uses exponential back-off for retries in case Key Vault is being throttled. For more information about Key Vault transaction limits, see [Azure Key Vault throttling guidance](https://docs.microsoft.com/en-us/azure/key-vault/general/overview-throttling?WT.mc_id=AZ-MVP-5003837). 
 
 Then it retrieves secret `foobar` from the keyvault and logs it. 
 
@@ -110,7 +110,7 @@ az acr build --registry iacws2<YOUR-NAME>acr --image apib:v1 --file Dockerfile .
 
 ## Task #4 - create User-Assigned Managed Identity 
 
-We need to create managed identity for our `api-b` application. 
+In order for code from  `KeyVaultTestController` to work, we need to create managed identity for our `api-b` application. 
 Based on our [naming convention](../../naming-conventions.md), we call it `iac-ws2-api-b-mi`.
 
 Create an identity on Azure and store the client ID and resource ID of the identity as environment variables:
@@ -122,12 +122,20 @@ az identity create -g iac-ws2-rg -n iac-ws2-api-b-mi
 # Get Managed Identity client ID
 export IDENTITY_CLIENT_ID="$(az identity show -n iac-ws2-api-b-mi -g iac-ws2-rg --query clientId -o tsv)"
 export IDENTITY_RESOURCE_ID="$(az identity show -n iac-ws2-api-b-mi -g iac-ws2-rg --query id -o tsv)"
+```
 
+We need to grant managed identity with `secret get` permissions at the KeyVault.
+
+```bash
+# Get managed identity AAD object ID
 export OBJECT_ID="$(az identity show -n iac-ws2-api-b-mi -g iac-ws2-rg --query principalId -o tsv)"
+
 # Grant iac-ws2-api-b-mi managed identity with get secret permission at iac-ws2-<YOUR-NAME>-api-b-kv keyvault
 az keyvault set-policy -g iac-ws2-rg -n iac-ws2-<YOUR-NAME>-api-b-kv --secret-permissions get --object-id ${OBJECT_ID}
+
 ```
-For Azure managed identity, we need to create a corresponding kubernetes `AzureIdentity` and `AzureIdentityBinding` resources.
+
+For Azure managed identity, we need to create a corresponding kubernetes `AzureIdentity` and `AzureIdentityBinding` Kubernetes resources.
 
 ```bash
 # Create an AzureIdentity in your cluster that references the identity you created above:
@@ -248,7 +256,7 @@ kubectl logs lab5-task5-75fb8c5b75-nfqrc -f
 Test and verify functionality:
 
 ```bash
-# Create ans attach to curl pod with interactive shell
+# Create and attach to curl pod with interactive shell
 kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -- sh
 
 # Test keyvaulttest endpoint. Use pod IP from  "kubectl get po -o wide" command
