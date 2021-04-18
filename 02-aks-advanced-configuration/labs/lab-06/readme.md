@@ -52,6 +52,31 @@ defaultBackend:
 
 Since ingress controller is business critical component, I want to deploy it to the system nodes, therefore I need to configure `tolerations`. I also want to specify more than one replica count, in our case it's two.
 
+Deploy NGINX ingress controller using helm. If you don't have `helm` installed, install it:
+
+### For Windows, use `Chocolatey`
+```powershell
+# For Windows, use Chocolatey
+choco install kubernetes-helm
+```
+
+### For Ubuntu, use Apt
+
+```bash
+# For Ubuntu, use Apt
+curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+sudo apt-get install apt-transport-https --yes
+echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm
+```
+
+### For Mac, use brew
+
+```bash
+brew install helm
+```
+
 ```bash
 # Add the ingress-nginx repository
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
