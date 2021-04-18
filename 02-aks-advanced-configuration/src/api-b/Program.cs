@@ -34,7 +34,6 @@ namespace api_b
                 {
                     config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
                     config.AddJsonFile("config/appsettings.json", optional: true, reloadOnChange: true);
-                    config.AddJsonFile("secrets/appsettings.secrets.json", optional: true);
                 })                
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

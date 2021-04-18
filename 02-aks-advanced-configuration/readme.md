@@ -19,7 +19,7 @@ Here is the preliminary agenda for the workshops (still work in progress):
  * [Lab-06](../lab-06/readme.md) - deploy nginx ingress controller
  * Slides - API Management 101 
  * Lab-07 - deploy API to API Management
- * [Lab-08](../lab-08/readme.md) - AKS egress 
+ * [Lab-08](../lab-08/readme.md) - AKS egress
  * [Lab-09](../lab-09/readme.md) - Resource Management
  * Lab-11 - cleaning up resources
  
