@@ -10,17 +10,17 @@ Here is the preliminary agenda for the workshops (still work in progress):
  * Slides - AKS configuration (Network, egress, RBAC, Managed Identity, Network Policy, Node Pools, )  
  * [Lab-02](labs/lab-02/readme.md) - provision AKS cluster
  * Slides - guinea pig apps walk through
- * [Lab-03](lab-03/readme.md) - build and push docker images to Container Registry
+ * [Lab-03](labs/lab-03/readme.md) - build and push docker images to Container Registry
  * Slides - AKS node pools
- * [Lab-04](lab-04/readme.md) - working with AKS node pools
+ * [Lab-04](labs/lab-04/readme.md) - working with AKS node pools
  * Slides - AAD Pod Identity
- * [Lab-05](lab-05/readme.md) - add aad-pod-identity support into AKS
+ * [Lab-05](labs/lab-05/readme.md) - add aad-pod-identity support into AKS
  * Slides - Kubernetes Ingress Controller
- * [Lab-06](lab-06/readme.md) - deploy nginx ingress controller
+ * [Lab-06](labs/lab-06/readme.md) - deploy nginx ingress controller
  * Slides - API Management 101 
- * [Lab-07](lab-07/readme.md) - deploy API to API Management
- * [Lab-08](lab-08/readme.md) - AKS egress
- * [Lab-09](lab-09/readme.md) - Resource Management
+ * [Lab-07](labs/lab-07/readme.md) - deploy API to API Management
+ * [Lab-08](labs/lab-08/readme.md) - AKS egress
+ * [Lab-09](labs/lab-09/readme.md) - Resource Management
  * Lab-11 - cleaning up resources
  
 ## Links
