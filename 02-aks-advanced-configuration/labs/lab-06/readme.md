@@ -197,19 +197,14 @@ kubectl apply -f api-a-deployment.yaml
 deployment.apps/api-a created
 service/api-a-service created
 ```
-As you can see, here we deployed two replicas of api-a and service exposed at port 8081. Now, let's test it:
+As you can see, here we deployed two replicas of api-a and service exposed at port `8081`. Now, let's test it:
 
 ```bash
-# Get api-a-service IP
-kubectl get svc
-NAME            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
-api-a-service   ClusterIP   10.0.135.159   <none>        8081/TCP   4m15s
-
 # Start test pod with interactive shell
 kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -- sh
 
 # Test api
-[ root@curl:/ ]$ curl http://10.0.135.159:8081/api
+[ root@curl:/ ]$ curl http://api-a-service:8081/api
 [api-a] - OK.
 [ root@curl:/ ]$ exit
 ```
@@ -294,20 +289,14 @@ configmap/api-b-appsettings created
 deployment.apps/api-b created
 service/api-b-service created
 ```
-As you can see, here we deployed configmap with configuration, two replicas of api-b and service exposed at port 8081. Now, let's test it:
+As you can see, here we've deployed `api-b-appsettings` configmap with configuration pointing to the `api-a-service` service endpoint, one replica of `api-b` and `api-b-service` service exposed at port `8081`. Now, let's test it:
 
 ```bash
-# Get api-b-service IP
-kubectl get svc
-NAME            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
-api-a-service   ClusterIP   10.0.135.159   <none>        8081/TCP   9m34s
-api-b-service   ClusterIP   10.0.132.187   <none>        8081/TCP   46s
-
 # Start test pod with interactive shell
 kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -- sh
 
 # Test api
-[ root@curl:/ ]$ curl http://10.0.132.187:8081/api
+[ root@curl:/ ]$ curl http://api-b-service:8081/api
 [api-b] - OK.
 [ root@curl:/ ]$ exit
 ```
