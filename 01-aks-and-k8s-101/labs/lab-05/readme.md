@@ -54,7 +54,6 @@ Now, deploy it
 ```bash
 # Deploying lab-05-healthy.yaml
 kubectl apply -f lab-05-healthy.yaml
-
 ```
 
 Check the `lab-05-healthy` logs
@@ -78,14 +77,16 @@ info: api_a.Controllers.HealthController[0]
 
 As you can see, the `/health` endpoint is now called every 3 seconds (`periodSeconds` field).
 
-The `periodSeconds` field specifies that the kubelet should perform a liveness probe every 3 seconds. The `initialDelaySeconds` field tells the kubelet that it should wait 3 seconds before performing the first probe. To perform a probe, the kubelet sends an HTTP GET request to the server that is running in the container and listening on port 80. If the handler for the server's `/health` path returns a success code, the kubelet considers the container to be alive and healthy. If the handler returns a failure code, the kubelet kills the container and restarts it. 
+The `periodSeconds` field specifies that the kubelet should perform a liveness probe every 3 seconds. The `initialDelaySeconds` field tells the kubelet that it should wait 3 seconds before performing the first probe. To perform a probe, the `kubelet` sends an HTTP GET request to the server that is running in the container and listening on port 80. If the handler for the server's `/health` path returns a success code, the `kubelet` considers the container to be alive and healthy. If the handler returns a failure code, the `kubelet` kills the container and restarts it. 
 
 Let's try to simulate such a situation.
 
 ## Task #3 - add Liveness probe with unhealthy endpoint
 
 For this task let's use `/health/almost_healthy` endpoint for `livenessProbe` get request. Check implementation of `AlmostHealthy` method at `01-aks-and-k8s-101\app\api-a\Controllers\HealthController.cs` file. 
-It contains extra logic that for the first 10 seconds that the app is alive, the `/health/almost_healthy` handler returns a status of 200. After that, the handler returns a status of 500.
+It contains extra logic:
+* for the first 10 seconds the app is alive and the `/health/almost_healthy` handler returns a status of 200
+* after 10 sec, the handler returns a status of 500
 
 ```c#
 var secondsFromStart = Timekeeper.GetSecondsFromStart();
@@ -103,8 +104,7 @@ else
 }
 ```
 
-Create new yaml pod definition file `lab-05-almost-healthy.yaml` with the following content. 
-Note that you should use your ACR url for `image` field and that `path:` now points to `/health/almost_healthy`
+Create new yaml pod definition file `lab-05-almost-healthy.yaml` with the following content. Note that you should use your ACR url for `image` field and that `path:` now points to `/health/almost_healthy`
 
 ```yaml
 apiVersion: v1
@@ -132,7 +132,7 @@ Deploy it
 kubectl apply -f .\lab-05-almost-healthy.yaml
 ```
 
-The kubelet starts performing health checks 3 seconds after the container starts. So the first couple of health checks will succeed. But after 10 seconds, the health checks will fail, and the kubelet will kill and restart the container. After several attempts, pod will go into `CrashLoopBackOff` state.
+The `kubelet` starts performing health checks 3 seconds after the container starts. So the first couple of health checks will succeed. But after 10 seconds, the health checks will fail, and the kubelet will kill and restart the container. After several attempts, pod will go into `CrashLoopBackOff` state.
 
 Your "watching" log should show something similar to 
 
@@ -149,7 +149,7 @@ lab-05-almost-healthy   1/1     Running             4          54s
 lab-05-almost-healthy   0/1     CrashLoopBackOff    4          63s
 ```
 
-and if you get pod description, under the `Events:` section you should see that pod was `Unhealthy` because `Liveness probe failed: HTTP probe failed with statuscode: 500` and then pod was killed because `Container api failed liveness probe, will be restarted`.
+If you get pod description, under the `Events:` section you should see that pod was `Unhealthy` because `Liveness probe failed: HTTP probe failed with statuscode: 500` and then pod was killed because `Container api failed liveness probe, will be restarted`.
 
 ```bash
 # Get pod description
@@ -165,7 +165,7 @@ Events:
 
 ## Task #4 - add Readiness probe
 
-Readiness probes are configured similarly to liveness probes. The only difference is that you use the readinessProbe field instead of the livenessProbe field.
+Readiness probes are configured similarly to liveness probes. The only difference is that you use the `readinessProbe` field instead of the `livenessProbe` field.
 
 Create new yaml pod definition file `lab-05-ready.yaml` with the following content. 
 Note that you should use your ACR url for `image` field and there is additional `readinessProbe` section 
@@ -221,8 +221,8 @@ As you can see, both  `/health` and `/readiness` endpoints are called every 3 se
 
 ## Task #5 - add Readiness probe with unstable endpoint
 
-For this task we will use `/readiness/unstable` endpoint for `livenessProbe` get request. Check implementation of `Unstable` method at `01-aks-and-k8s-101\app\api-a\Controllers\ReadinessController.cs` Controller. 
-It contains extra logic that response status changes every minute. That is - first minute - 200 and next minute - 500.
+For this task we will use `/readiness/unstable` endpoint for `livenessProbe` get request. Check implementation of `Unstable` method at `01-aks-and-k8s-101\app\api-a\Controllers\ReadinessController.cs` controller. 
+It contains extra logic that response status changes every minute. That is - first minute - 200 and next minute - 500, next minute - 200 etc...
 
 
 Create new yaml pod definition file `lab-05-ready-unstable.yaml` with the following content. 
@@ -270,7 +270,7 @@ lab-05-ready-unstable   0/1     Running             0          2m8s
 lab-05-ready-unstable   1/1     Running             0          3m2s
 lab-05-ready-unstable   0/1     Running             0          4m8s
 ```
-as you can see, it changes status from `Running` to not running, but it never goes into the `CrashLoopBackOff` status.
+as you can see, it periodically changes `Ready` field from `1/1` to `0/1`, the `Status` always shows `Running` and it never goes into the `CrashLoopBackOff` status.
 
 Check the pod description 
 

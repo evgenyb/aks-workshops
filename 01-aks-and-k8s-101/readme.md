@@ -13,7 +13,7 @@ Here is the agenda for the workshops:
  
  * Slides - Kubernetes and AKS introduction
  * [Lab-01](labs/lab-01/readme.md) - AKS setup (15 min)
- * [Lab-02](labs/lab-02/readme.md) - setting up you shell for better AKS/kubectl experience (15 min)
+ * [Lab-02](labs/lab-02/readme.md) - setting up your shell for better AKS/kubectl experience (15 min)
  * Slides - Introduce our "guinea pig" app
  * [Lab-03](labs/lab-03/readme.md) - Containerizing your application (15 min)
  * Slides - Pods, Namespaces
