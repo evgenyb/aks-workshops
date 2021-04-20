@@ -254,7 +254,7 @@ az aks nodepool add -g iac-ws2-blue-rg --cluster-name iac-ws2-blue-aks \
     --mode User     \
     --node-count 1 \
     --node-vm-size Standard_DS2_v2 \
-    --kubernetes-version 1.19.6
+    --kubernetes-version 1.19.7
 ``` 
 
 It may take some minutes to create new pool. While you are waiting, keep the watching session with `kubectl get po -w` command running and observe the output. Eventually you should see that both pods are running.
