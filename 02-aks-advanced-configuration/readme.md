@@ -2,46 +2,34 @@
 
 ![logo](images/logo.png)
 
-Welcome to the second workshop in the series of AKS related workshops! 
-This time, we will focus on advanced configuration aspects of AKS cluster and you will learn:
-
-* how to deploy AKS into your Private Virtual Network 
-* how to configure multiple node pools for system and user workloads
-* how to deploy aad-pod-identity and how to enable pod identity for your applications
-* how to deploy and configure nginx ingress controller and how to configure ingress for your services
-* how to configure egress traffic
-* how to expose your AKS publicly with Azure API Management 
-* how to upgrade your AKS cluster
-
-Workshop is organized as a combination of theoretical blocks and labs and here is the preliminary agenda for this workshops (still work in progress):
+Here is the preliminary agenda for the workshops (still work in progress):
  
  * Slides - Workshop introduction
- * Slides - Networking (VNet, NSG, peering, AKS capacity planning, Public IP Prefix)
- * Lab-01 - configure Private Virtual Networks
- * Lab-02 - provision APIM (50++ min) -> fire and forget
+ * Slides - Workshop architecture overview
+ * [Lab-01](labs/lab-01/readme.md) - provision supporting resources
  * Slides - AKS configuration (Network, egress, RBAC, Managed Identity, Network Policy, Node Pools, )  
- * Lab-03 - provision AKS and all prerequisites
+ * [Lab-02](labs/lab-02/readme.md) - provision AKS cluster
  * Slides - guinea pig apps walk through
- * Lab-04 - build and push docker images
- * Lab-05 - deploy applications and services to AKS
+ * [Lab-03](labs/lab-03/readme.md) - build and push docker images to Container Registry
  * Slides - AKS node pools
- * Lab-06 - add new node pool for our workload
+ * [Lab-04](labs/lab-04/readme.md) - working with AKS node pools
  * Slides - AAD Pod Identity
- * Lab-07 - add aad-pod-identity support into AKS 
+ * [Lab-05](labs/lab-05/readme.md) - add aad-pod-identity support into AKS
  * Slides - Kubernetes Ingress Controller
- * Lab-08 - deploy nginx ingress controller
+ * [Lab-06](labs/lab-06/readme.md) - deploy nginx ingress controller
  * Slides - API Management 101 
- * Lab-09 - deploy api-b API to API Management
- * Lab-10 - AKS egress 
- * Slides - AKS upgrade options
- * Lab-11 - upgrade AKS - mutable approach
- * Lab-12 - upgrade AKS - immutable approach
- * Lab-13 - cleaning up resources
-
+ * [Lab-07](labs/lab-07/readme.md) - deploy API to API Management
+ * Slides - AKS egress options
+ * [Lab-08](labs/lab-08/readme.md) - AKS egress
+ * Slides - Resource Management
+ * [Lab-09](labs/lab-09/readme.md) - Resource Management
+ * [Lab-10](labs/lab-10/readme.md) - cleaning up resources
+ 
 ## Links
 
 * [Prerequisites](prerequisites.md)
+* [Naming conventions](naming-conventions.md)
 
 ## Feedback
 
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/14) to comment on this workshop. 
+* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/11) to comment on this workshop. 

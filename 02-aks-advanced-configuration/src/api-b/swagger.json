@@ -1,0 +1,27 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "api-b",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5300"
+    }
+  ],
+  "paths": {
+    "/Api": {
+      "get": {
+        "tags": [
+          "Api"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "components": {}
+}

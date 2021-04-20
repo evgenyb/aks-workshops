@@ -23,7 +23,7 @@ The focus for this workshop is advanced configuration aspects of AKS cluster and
 * how to expose your AKS publicly with Azure API Management 
 * how to upgrade your AKS cluster
 
-Workshop is organized as a combination of theoretical blocks and 13 labs.
+Workshop is organized as a combination of theoretical blocks and 10 labs.
 
 ## Workshop #3 - Use Pulumi to provision and configuring AKS cluster
 ## Workshop #4 - Service mesh with linkerd
