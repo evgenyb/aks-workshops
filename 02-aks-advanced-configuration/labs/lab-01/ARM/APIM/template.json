@@ -1,0 +1,38 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "publisherEmail": {
+        "type": "string"
+      },
+      "userName": {
+        "type": "string"
+      }
+    },
+    "variables": {
+      "prefix": "iac-ws2",
+      "vnetName": "[concat(variables('prefix'), '-vnet')]",
+      "apimServiceName": "[concat(variables('prefix'), '-', parameters('userName'), '-apim')]",
+      "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), 'apim-net')]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2019-12-01",
+        "name": "[variables('apimServiceName')]",
+        "type": "Microsoft.ApiManagement/service",
+        "location": "[resourceGroup().location]",        
+        "sku": {
+          "name": "Developer",
+          "capacity": 1
+        },
+        "properties": {
+          "publisherEmail": "[parameters('publisherEmail')]",
+          "publisherName": "[parameters('userName')]",
+          "virtualNetworkType": "External",
+          "virtualNetworkConfiguration": {
+            "subnetResourceId": "[variables('subnetRef')]"
+          }
+        }
+      }
+    ]
+  }
