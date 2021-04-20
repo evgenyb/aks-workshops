@@ -2,19 +2,19 @@
 
 # Usage:
 #  Use default values for slot, vnet and subnet address ranges
-#  ./02-provision-aks.sh <USE-YOUR-NAME>
+#  ./02-provision-aks.sh <USE-YOUR-NAME> <YOUR-AAD-USER-NAME>
 #  Provide all three parameters
-#  ./02-provision-aks.sh <USE-YOUR-NAME> blue "10.11.0.0/16" "10.11.0.0/20"
-#  ./02-provision-aks.sh <USE-YOUR-NAME> green "10.12.0.0/16" "10.12.0.0/20"
+#  ./02-provision-aks.sh <USE-YOUR-NAME> <YOUR-AAD-USER-NAME> blue "10.11.0.0/16" "10.11.0.0/20"
+#  ./02-provision-aks.sh <USE-YOUR-NAME> <YOUR-AAD-USER-NAME> green "10.12.0.0/16" "10.12.0.0/20"
 
 YOUR_NAME=$1                                    # I am using "evg"
-SLOT=${2:-"blue"}                               # AKS deployment slot name (available values blue and green)
-AKS_VNET_ADDRESS=${3:-"10.11.0.0/16"}           # AKS VNet address prefix
-AKS_SUBNET_ADDRESS=${4:-"10.11.0.0/20"}         # aks-net subnet address prefix
+YOUR_AAD_NAME=$2                                # Your Azure AD user name
+SLOT=${3:-"blue"}                               # AKS deployment slot name (available values blue and green)
+AKS_VNET_ADDRESS=${4:-"10.11.0.0/16"}           # AKS VNet address prefix
+AKS_SUBNET_ADDRESS=${5:-"10.11.0.0/20"}         # aks-net subnet address prefix
 
 # Set your user name for global resources (LogAnalytics, AppInsight, APIM etc...)
 WS_PREFIX='iac-ws2'
-YOUR_AAD_NAME="evg@iac-labs.com"
 AKS_RG="$WS_PREFIX-$SLOT-rg"                    # iac-ws2-blue-rg
 AKS_NAME="$WS_PREFIX-$SLOT-aks"                 # iac-ws2-blue-aks
 AKS_VNET_NAME=$WS_PREFIX-$SLOT-vnet             # iac-ws2-blue-vnet
