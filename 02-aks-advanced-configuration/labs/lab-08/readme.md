@@ -69,7 +69,20 @@ and 3 IP assigned to the Load Balancer.
 
 ![alb-3-ips](images/alb-3-ip.png)
 
-## Task #2 - Update your cluster with your own outbound public IP
+## Task #2 - verify egress address
+
+To verify that the static public IP address is being used, you can use DNS look-up service such as checkip.dyndns.org.
+
+```bash
+# Start curl test pod with interactive shell
+run curl -i .\.azure\--tty --rm --restart=Never --image=radial/busyboxplus:curl -- sh
+
+# Use curl to access the checkip.dyndns.org site
+curl -s checkip.dyndns.org
+<html><head><title>Current IP Check</title></head><body>Current IP Address: 20.50.181.65</body></html>
+```
+
+## Task #3 - Update your cluster with your own outbound public IP
 
 You can assign your own custom public IPs. 
 
@@ -104,7 +117,7 @@ If you check AKS Azure Load Balancer at the portal, you can see that new IP are 
 
 ![alb-own-ips](images/alb-own-ips.png)
 
-## Task #3 - Update your cluster with your own outbound public IP prefix
+## Task #4 - Update your cluster with your own outbound public IP prefix
 
 You can also use public IP prefixes for egress with your Standard SKU load balancer. 
 
@@ -125,7 +138,7 @@ az aks update \
     --load-balancer-outbound-ip-prefixes $PUBLIC_IP_PREFIX_ID
 ```
 
-## Task #4 - Configure the allocated outbound ports
+## Task #5 - Configure the allocated outbound ports
 
 Unless otherwise specified, AKS will use the default value of `Allocated Outbound Ports` that Standard Load Balancer defines when configuring it. This value is null on the AKS API or 0 on the SLB API as shown by the below command:
 
@@ -154,7 +167,7 @@ AllocatedOutboundPorts    EnableTcpReset    IdleTimeoutInMinutes    Name
 4000                      True              30                      aksOutboundRule  
 ```
 
-## Task #5 - How to check SNAT port usage and allocation
+## Task #6 - How to check SNAT port usage and allocation
 
 You should check the following metrics of your load balancer of the AKS cluster:
 
