@@ -175,7 +175,7 @@ kubectl delete -f ./lab4-task1.yaml
 
 ## Task #3 - configure pod tolerations
 
-Create new `lab4-task2.yaml` file with the following content. 
+Create new `lab4-task3.yaml` file with the following content. 
 
 ```yaml
 apiVersion: apps/v1
