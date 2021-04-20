@@ -104,8 +104,8 @@ If you decided to use `02-provision-aks.sh` script, you need to provide an input
 # Go to the scripts folder
 cd 02-aks-advanced-configuration\scripts\
 
-# Use your user name as an input parameter
-./02-provision-aks.sh evg
+# Use your user name and your Azure AD user name as an input parameters
+./02-provision-aks.sh evg evgeny.borzenin
 ```
 
 When cluster is successfully provisioned, connect to it and try run `kubectl nodes` commands. This time, because we configured integration with Azure AD, you will be asked to login to your Azure AD account. 
