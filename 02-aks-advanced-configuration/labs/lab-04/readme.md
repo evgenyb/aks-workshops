@@ -494,7 +494,7 @@ As expected, both pods are running at `spotnodes` node.
 Let's keep the `workload` node pool and delete the `spotnodes` pool:
 
 ```bash
-# Delete workload pool
+# Delete spotnodes pool
 az aks nodepool delete -n spotnodes -g iac-ws2-blue-rg --cluster-name iac-ws2-blue-aks 
 ```
 
