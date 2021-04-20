@@ -22,6 +22,8 @@ We will use the following [naming conventions](../../naming-conventions.md)
 
 Note, because Azure Log Analytics, Azure Container Registry, Azure KeyVault and APIM instance name are global resource and are part of global DNS, they have to be uniquely named. I suggest we prefix them by using your short name.
 
+If you want to learn and provision resources yourself, follow the set of commands described in this task. If you don't want to copy-paste all commands, feel free to use the script, located at `02-aks-advanced-configuration\scripts\01-provision-base-resources.sh` (which contains all below commands). 
+
 ```bash
 WS_PREFIX='iac-ws2'
 YOUR_NAME='<USE YOUR NAME>'                 # I am using "evg"
@@ -51,6 +53,16 @@ az monitor log-analytics workspace create -g $BASE_RG -n $LA_NAME
 az acr create -g $BASE_RG -n $ACR_NAME --sku Basic
 ```
 
+If you decided to use `01-provision-base-resources.sh` script, you need to provide an input parameter - your user name that will be used to make unique resource names (Log Analytic Workspace, Azure Container Registry etc...). Please inspect the script to understand what it actually does.
+
+```bash
+# Go to the scripts folder
+cd 02-aks-advanced-configuration\scripts\
+
+# Use your user name as an input parameter
+./01-provision-base-resources.sh <YOUR-USER-NAME>
+```
+
 ## Task #2 - provision API Management
 
 We will use API Management (further APIM) to expose services running in AKS cluster. Since AKS cluster is deployed into private virtual network and will not be publicly accessible, we need to deploy APIM into private virtual network as well. APIM supports 2 ways to deploy to private Vnet:
@@ -70,20 +82,20 @@ The cost of using `Developer` tier is `kr0.59/hour`.
 
 We will use [ARM templates](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/overview?WT.mc_id=AZ-MVP-5003837) to provision APIM. 
 
-First, change `publisherEmail` and `userName` properties in `02-aks-advanced-configuration\labs\lab-01\ARM\APIM\parameters.json` file. Since it takes almost an hour to provision APIM, we are not going to wait until it finished. Instead, you can specify email and APIM will notify you when instance is provisioned and ready to be used. 
-
-Note, APIM instance name has to be unique, therefore I suggest to use your name to prefix it. Use `userName` property to set your name.
-
 ```bash
 # Got to ARM folder
 cd 02-aks-advanced-configuration\labs\lab-01\ARM\APIM\
 
 # Validate APIM ARM template. Run this command from lab-02 folder
-az deployment group validate -g iac-ws2-rg --template-file template.json --parameters parameters.json 
+az deployment group validate -g iac-ws2-rg --template-file template.json --parameters publisherEmail=<YOUR-EMAIL> userName=<YOUR-USERNAME>
 
 # If no errors, deploy APIM ARM template. APIM deployment takes between 30 and 50 mins
-az deployment group create -g iac-ws2-rg --template-file template.json --parameters parameters.json 
+az deployment group create -g iac-ws2-rg --template-file template.json --parameters publisherEmail=<YOUR-EMAIL> userName=<YOUR-USERNAME>
 ```
+
+APIM instance name has to be unique, therefore I suggest to use your short username to prefix it. Use `userName` property to set your name. Based on our [naming conventions](../../naming-conventions.md), APIM instance will be called `iac-ws2-{YOUR-NAME}-apim`.
+
+Use your email for `publisherEmail` property and your short username for `userName` property. It takes almost an hour to provision APIM and we are not going to wait until it finished. Instead, when instance is provisioned and ready to be used, APIM will notify you with by email sent to your email specified at `publisherEmail` parameter. 
 
 Check that deployment has started. You can do it by navigating to the `Deployments` tab of the `iac-ws2-rg` resource group.
 

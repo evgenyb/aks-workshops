@@ -3,11 +3,12 @@
 ## Estimated completion time - 10 min
 
 To test different use-cases during our workshop, I have made two simple dotnet core api applications. They are located under `02-aks-advanced-configuration\src\` folder. If you are using Visual Studio, open them by using `apps.sln` file. 
-Both applications have two controllers called `HealthController` and `ReadinessController` that are used to configure liveness and readiness probes for Kubernetes pods. 
-`api-a` `ApiController` controller does absolutely nothing, just trace a message to the output.
-`api-b` `ApiController` controller calls endpoint configured at `ApiAServiceUrl` app setting key.
-`api-b` `KeyVaultTestController` controller is used at `lab-05` when we work with Managed Identities. It reads secret from KeyVault using Managed Identity, assigned to the pod. 
+* Both `api-a` and `api-b` have two controllers called `HealthController` and `ReadinessController` that are used to configure liveness and readiness probes for Kubernetes pods. 
+* `api-a` `ApiController` controller traces a message to the output.
+* `api-b` `ApiController` controller calls endpoint configured at `ApiAServiceUrl` app setting key.
+* `api-b` `KeyVaultTestController` controller is used at `lab-05` when we work with `Managed Identities`. It reads secret from KeyVault using Managed Identity, assigned to the pod. 
 
+Let's push these applications to our Azure Container Registry.
 
 ## Task #1 - build and push `api-a` application
 

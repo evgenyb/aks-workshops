@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 # Usage:
+#  Use default values for slot, vnet and subnet address ranges
 #  ./02-provision-aks.sh <USE-YOUR-NAME>
+#  Provide all three parameters
 #  ./02-provision-aks.sh <USE-YOUR-NAME> blue "10.11.0.0/16" "10.11.0.0/20"
 #  ./02-provision-aks.sh <USE-YOUR-NAME> green "10.12.0.0/16" "10.12.0.0/20"
 

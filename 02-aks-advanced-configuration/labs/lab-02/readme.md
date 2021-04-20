@@ -90,7 +90,7 @@ az aks create -g iac-ws2-blue-rg -n iac-ws2-blue-aks \
     --network-plugin azure \
     --vm-set-type VirtualMachineScaleSets \
     --docker-bridge-address 172.17.0.1/16 \
-	--enable-managed-identity \
+    --enable-managed-identity \
     --assign-identity ${MANAGED_IDENTITY_ID} \
     --vnet-subnet-id ${SUBNET_ID} \
     --no-ssh-key \
@@ -101,8 +101,8 @@ az aks create -g iac-ws2-blue-rg -n iac-ws2-blue-aks \
 If you decided to use `02-provision-aks.sh` script, you need to provide an input parameter - your user name that will be used to form unique resource names (Log Analytic Workspace, Azure Container Registry etc...). Please inspect the script to understand what it does.
 
 ```bash
-# Got ot the script folder
-cd 02-aks-advanced-configuration\scripts\02-provision-aks.sh
+# Go to the scripts folder
+cd 02-aks-advanced-configuration\scripts\
 
 # Use your user name as an input parameter
 ./02-provision-aks.sh evg
@@ -133,7 +133,6 @@ aks-system-40523769-vmss000000   Ready    agent   52m   v1.19.6
 [Create and manage multiple node pools for a cluster in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools?WT.mc_id=AZ-MVP-5003837)
 [Manage system node pools in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/use-system-pools?WT.mc_id=AZ-MVP-5003837)
 [Assigning Pods to Nodes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node)
-
 
 ## Next: build and push docker images to Container Registry
 
