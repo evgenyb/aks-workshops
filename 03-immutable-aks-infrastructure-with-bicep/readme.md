@@ -1,4 +1,4 @@
-# Workshop #3 - Monitoring AKS
+# Workshop #3 - Implement Immutable AKS Infrastructure on Azure with Bicep
 
 ![logo](images/logo.png)
 
@@ -21,7 +21,6 @@ Here is the agenda for the workshops:
  * Lab-10 - Implement AKS infrastructure
  * Slides - CI/CD with github actions
  
-
 ## Links
 
 * [Prerequisites](prerequisites.md)
