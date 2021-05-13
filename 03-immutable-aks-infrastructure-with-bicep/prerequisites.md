@@ -8,28 +8,23 @@ Of course you need an laptop. OS installed at this laptop doesn't really matter.
 
 Download and install [Microsoft Teams](https://products.office.com/en-US/microsoft-teams/group-chat-software)
 
-## Visual Studio Community Edition
 
-Please download and install Visual Studio Community edition. 
-[Download Visual Studio Code](https://visualstudio.microsoft.com/downloads/) and make sure that `ASP.NET and web development` and `.NET Core cross-platform development` workloads are installed. If you have already installed Visual Studio, you can modify workload set from `Visual Studio Installer`.
+## Visual Studio Code
 
-![vs-workloads](images/vs-workloads.png)
+Please download and install VS Code. It's available for all platforms.
+[Download Visual Studio Code](https://code.visualstudio.com/download)
 
-## Install PowerShell core
+## Azure Resource Manager (ARM) Tools plugin for VS Code
 
-If you are planning to use PowerShell as your shell, Download and install [PowerShell Core](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-windows?WT.mc_id=AZ-MVP-5003837&view=powershell-7.1)  
+Install plugin from [marketplace](https://marketplace.visualstudio.com/items?itemName=msazurermtools.azurerm-vscode-tools) 
 
+## Bicep plugin
+
+Install Bicep plugin from [marketplace](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep) 
+ 
 ## Windows Terminal
 
 Download and install [Windows Terminal](https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701?activetab=pivot:overviewtab&atc=true)
-
-## Download and Install .NET 5.0
-
-Download and install [.NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0)
-
-## Docker
-
-Download and install [Docker for Windows](https://docs.docker.com/docker-for-windows/install/)
 
 ## Active Azure account
 
@@ -78,3 +73,23 @@ If you are deploying an AKS service for the first time in your subscription, you
 # Register Microsoft.ContainerService provider
 az provider register --namespace 'Microsoft.ContainerService'
 ```
+
+## Create your Azure DevOps account
+
+If you don't have an Azure DevOps, please create one before the workshop.
+[Azure DevOps - start for free](https://azure.microsoft.com/en-gb/services/devops/)
+
+## Create a new Project at Azure DevOps
+
+Follow this [how-to guide](https://docs.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=preview-page) and create a new project called `iac-aks-ws3`. Feel free to use existing project, if you already have one.
+
+## Create a new git repository
+
+Create new git repository under your Azure DevOps project. Follow this [how-to guide](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?toc=%2Fazure%2Fdevops%2Forganizations%2Ftoc.json&bc=%2Fazure%2Fdevops%2Forganizations%2Fbreadcrumb%2Ftoc.json&view=azure-devops) and create a new repository called `immutable-aks`.
+
+## Check that you have access to Azure DevOps
+
+Try to login to your Azure DevOps Account. Use some time and get yourself familiar with this product. During the workshop we will use the following features of this product:
+
+* [Repositories](https://docs.microsoft.com/en-gb/azure/devops/repos/get-started/what-is-repos?view=azure-devops) - here we will keep our source code
+* [Pipelines](https://docs.microsoft.com/en-gb/azure/devops/pipelines/get-started/what-is-azure-pipelines?view=azure-devops) - all our build and release pipelines will be implemented here
