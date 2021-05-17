@@ -7,13 +7,12 @@ Here is the agenda for the workshops:
  * Slides - Workshop introduction
  * Slides - Bicep intro
  * [Lab-01](labs/lab-01/readme.md) - create and deploy your first Bicep template
- * Slides - Variables, Parameters, Modules, Scopes, Output
- * Lab-02 - working with variables 
- * Lab-03 - Parameters
+ * Slides - Variables, Parameters, Modules, Scopes, Output, Child resources
+ * [Lab-02](labs/lab-02/readme.md) - working with variables and parameters
  * Lab-04 - Modules
  * Lab-05 - Outputs
  * Lab-06 - Scopes
- * Slides - Loos, Conditions and Converting existing ARM templates to Bicep
+ * Slides - Loops, Conditions and Converting existing ARM templates to Bicep
  * Lab-07 - Loops
  * Lab-08 - Conditions
  * Lab-09 - Convert an existing ARM to Bicep
@@ -24,8 +23,9 @@ Here is the agenda for the workshops:
 ## Links
 
 * [Prerequisites](prerequisites.md)
-* [Introduction to infrastructure as code using Bicep](https://docs.microsoft.com/en-us/learn/modules/introduction-to-infrastructure-as-code-using-bicep/)
-* [Deploy Azure resources by using Bicep templates](https://docs.microsoft.com/en-us/learn/modules/deploy-azure-resources-by-using-bicep-templates/)
+* [Introduction to infrastructure as code using Bicep](https://docs.microsoft.com/en-us/learn/modules/introduction-to-infrastructure-as-code-using-bicep/?WT.mc_id=AZ-MVP-5003837)
+* [Deploy Azure resources by using Bicep templates](https://docs.microsoft.com/en-us/learn/modules/deploy-azure-resources-by-using-bicep-templates/?WT.mc_id=AZ-MVP-5003837)
+* [Deploy child and extension resources by using Bicep](https://docs.microsoft.com/en-us/learn/modules/child-extension-bicep-templates/?WT.mc_id=AZ-MVP-5003837)
 * [Bicep playground](https://bicepdemo.z22.web.core.windows.net/)
 
 ## Feedback

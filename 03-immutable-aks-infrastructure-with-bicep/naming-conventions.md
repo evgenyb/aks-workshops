@@ -7,7 +7,7 @@ Resource | Name | Example
 Base resource Group | iac-ws3-rg | iac-ws3-rg
 SLot resource Group | iac-ws3-{slot name}-rg | iac-ws3-blue-rg, iac-ws3-green-rg
 Storage Account | iacws3{storage account name}sa | iacws3evgsa
-Private Virtual Network | iac-ws3-{vnet name}-vnet | iac-ws3-vnet, iac-ws3-blue-vnet, iac-ws3-green-vnet
+Private Virtual Network | iac-ws3-{vnet name}-vnet, iac-ws3-{env}-{slot}-vnet | iac-ws3-vnet, iac-ws3-blue-vnet, iac-ws3-green-vnet
 Subnet | {subnet name}-net | aks-net, apim-net
 Log Analytics Workspace | iac-ws3-{la name}-la | iac-ws3-evg-la
 Public IP Prefix | iac-ws3-{prefix name}-la | iac-ws3-pip-prefix

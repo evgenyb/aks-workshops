@@ -14,11 +14,11 @@ In this lab you will learn:
 
 ## Task #1 - create resource group
 
-As always, we start by creating new resource group. Let's name it `iac-ws3-rg`.
+As always, we start by creating new resource group. Let's name it `iac-ws3-blue-rg`.
 
 ```bash
 # Create new resource group
-az group create -n iac-ws3-rg -l westeurope
+az group create -n iac-ws3-blue-rg -l westeurope
 ```
 
 ## Task #2 - create Bicep template
@@ -64,10 +64,10 @@ Bicep files can be directly deployed via the `az cli` or PowerShell Az module, s
 
 ```bash
 # Deploy Bicep template to a resource group
-az deployment group create -g iac-ws3-rg -f ./sa.bicep
+az deployment group create -g iac-ws3-blue-rg -f ./sa.bicep
 ```
 
-If you go to to `Deployment` tab of the `iac-ws3-rg` resource group you should see new deployment running. Open it and check `Template` section and you will see that it contains standard ARM templates. 
+If you go to to `Deployment` tab of the `iac-ws3-blue-rg` resource group you should see new deployment running. Open it and check `Template` section and you will see that it contains standard ARM templates. 
 
 ![arm](images/deployments-arm.png)
 
