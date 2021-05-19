@@ -9,8 +9,8 @@ Here is the agenda for the workshops:
  * [Lab-01](labs/lab-01/readme.md) - create and deploy your first Bicep template
  * Slides - Variables, Parameters, Modules, Scopes, Output, Child resources
  * [Lab-02](labs/lab-02/readme.md) - working with variables and parameters
- * Lab-04 - Modules
- * Lab-05 - Outputs
+ * [Lab-03](labs/lab-03/readme.md) - Outputs
+ * Lab-04 - refactoring: group resources by using modules
  * Lab-06 - Scopes
  * Slides - Loops, Conditions and Converting existing ARM templates to Bicep
  * Lab-07 - Loops
