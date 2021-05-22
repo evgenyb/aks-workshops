@@ -16,58 +16,13 @@ In this lab you will learn:
 
 ## Task #1 - trace variables values as template outputs
 
-Let's keep working with Bicep file from [lab-02](../lab-02/readme.md). If you didn't manage to finish it, use this template as an example.
+Let's keep working with Bicep file from [lab-02](../lab-02/readme.md). If you didn't manage to finish it, use [vnet.bicep](../../completed-labs/lab-02/vnet.bicep) file from the completed labs folder.
 
-```yaml
-param environment string
-param slot string
-param vnetAddressPrefixBase string
-
-var vnetAddressPrefix = '${vnetAddressPrefixBase}.0.0/16'
-var aksSubnetAddressPrefix = '${vnetAddressPrefixBase}.0.0/20'
-var agwSubnetAddressPrefix = '${vnetAddressPrefixBase}.16.0/25'
-var vnetName = '${environment}-${slot}-vnet' 
-
-resource vnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
-  location: resourceGroup().location
-  name: vnetName
-  properties: {
-    addressSpace: {
-      addressPrefixes: [
-        vnetAddressPrefix
-      ]
-    }
-  }
-}
-
-resource aksSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
-  name: 'aks'    
-  dependsOn: [
-    vnet
-  ]
-  parent: vnet
-  properties: {
-    addressPrefix: aksSubnetAddressPrefix
-  }
-}
-
-resource agwSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
-  name: 'agw'  
-  dependsOn: [
-    vnet
-  ]
-  parent: vnet
-  properties: {
-    addressPrefix: agwSubnetAddressPrefix
-  }
-}
-```
-
-Let's imagine that we want to trace the value of `vnetName` and `vnetAddressPrefix` variables to verify if we compose these values correctly in our template. To do so, add two new `outputs` to the end of the file like this:
+Let's imagine that we want to trace the value of `vnetName` and `vnetAddressPrefix` variables to verify if we implemented these values correctly in our template. To do so, add two new `outputs` to the end of the file like this:
 
 ```yaml
 ...
-output agwSubnetAddressPrefix string = agwSubnetAddressPrefix
+output aksSubnetAddressPrefix string = aksSubnetAddressPrefix
 output vnetName string = vnetName
 ```
 
@@ -75,7 +30,7 @@ output vnetName string = vnetName
 
 ```bash
 # Deploy Bicep template
-az deployment group create -g iac-ws3-blue-rg -f ./vnet.bicep -p iac-ws3-blue.json
+az deployment group create -g iac-dev-blue-rg -f ./vnet.bicep -p dev-blue.json
 ```
 
 Check the `outputs` section of the script output. You should see something similar to: 
@@ -83,14 +38,14 @@ Check the `outputs` section of the script output. You should see something simil
 ```json
 ...
 "outputs": {
-    "agwSubnetAddressPrefix": {
+  "aksSubnetAddressPrefix": {
     "type": "String",
-    "value": "10.10.16.0/25"
-    },
-    "vnetName": {
+    "value": "10.11.0.0/20"
+  },
+  "vnetName": {
     "type": "String",
-    "value": "iac-ws3-blue-vnet"
-    }
+    "value": "iac-dev-blue-vnet"
+  }
 },
 ...
 ```
@@ -99,7 +54,7 @@ Check the `outputs` section of the script output. You should see something simil
 
 Quite often you need to use one resource id as a reference inside other resource template. For instance, when you deploy your AKS cluster into your own VNet, you need to provide subnet id as a reference. Let's expose `aks` subnet id as an Bicep `output`.
 
-In our Bicep template `aks` subnet is implemented as an individual resource called `aksSubnet` type of `subnets`. [subnets](https://docs.microsoft.com/en-us/azure/templates/microsoft.network/virtualnetworks/subnets?tabs=bicep&WT.mc_id=AZ-MVP-5003837) is a Bicep resource, containing several properties, including `id`. 
+In our Bicep template `aks` subnet is implemented as an individual child resource called `aksSubnet` type of `subnets`. [subnets](https://docs.microsoft.com/en-us/azure/templates/microsoft.network/virtualnetworks/subnets?tabs=bicep&WT.mc_id=AZ-MVP-5003837) is a Bicep resource, containing several properties, including `id`. 
 
 To expose `aks` subnet id, add the following code to the end of the Bicep file:
 
@@ -114,7 +69,7 @@ output aksSubnetId string = aksSubnet.id
 
 ```bash
 # Deploy Bicep template
-az deployment group create -g iac-ws3-blue-rg -f ./vnet.bicep -p iac-ws3-blue.json
+az deployment group create -g iac-dev-blue-rg -f ./vnet.bicep -p dev-blue.json
 ```
 
 and check the `outputs` section of the script output. You should now see new output item called `aksSubnetId`:
@@ -125,7 +80,7 @@ and check the `outputs` section of the script output. You should now see new out
 ...    
     "aksSubnetId": {
       "type": "String",
-      "value": "/subscriptions/8878beb2-xxxx-xxxx-xxxx-783674eea324/resourceGroups/iac-ws3-blue-rg/providers/Microsoft.Network/virtualNetworks/iac-ws3-blue-vnet/subnets/aks"   
+      "value": "/subscriptions/8878beb2-xxxx-xxxx-xxxx-783674eea324/resourceGroups/iac-dev-blue-rg/providers/Microsoft.Network/virtualNetworks/iac-dev-blue-vnet/subnets/aks"   
       },
 ...      
 }
