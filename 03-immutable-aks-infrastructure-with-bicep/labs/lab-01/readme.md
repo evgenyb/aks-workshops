@@ -14,21 +14,61 @@ In this lab you will learn:
 
 ## Task #1 - create resource group
 
-As always, we start by creating new resource group and we start with "base" resource group called `iac-dev-rg`.
+As always, we start by creating new resource group `iac-dev-blue-rg`.
 
 ```bash
 # Create new resource group
-az group create -n iac-dev-rg -l westeurope
+az group create -n iac-dev-blue-rg -l westeurope
 ```
 
 ## Task #2 - create and review Bicep template
 
-Create `infra.bicep` file in Visual Studio Code with Bicep templates for vnet and API Management resources as shown below. 
+Create `infra.bicep` file in Visual Studio Code with Bicep templates for Private Virtual Network and Network Security Group resources as shown below. 
 
 ```yaml
+resource aksNsg 'Microsoft.Network/networkSecurityGroups@2020-11-01' = {
+  name: 'iac-dev-blue-aks-nsg'
+  location: resourceGroup().location
+  properties: {
+    securityRules: [
+      {
+        name: 'deny-connection-from-agw'
+        properties: {
+          priority: 110
+          direction: 'Inbound'
+          access: 'Deny'
+          description: 'Deny any connectivity from any VNets'
+          protocol: '*'
+          sourceAddressPrefix: 'VirtualNetwork'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '10.10.0.0/20'
+          destinationPortRange: '*'
+        }
+      }
+      {
+        name: 'allow-connection-from-agw'
+        properties: {
+          priority: 100
+          direction: 'Inbound'
+          access: 'Allow'
+          description: 'Allow connectivity from agw subnet into aks subnet'
+          protocol: 'Tcp'
+          sourceAddressPrefix: '10.10.16.0/25'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '10.10.0.0/20'
+          destinationPortRange: '80'
+        }
+      }
+    ]
+  }  
+}
+
 resource vnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
-  location: 'westeurope'
-  name: 'iac-dev-vnet'
+  location: resourceGroup().location
+  name: 'iac-dev-blue-vnet'
+  dependsOn: [
+    aksNsg
+  ]
   properties: {
     addressSpace: {
       addressPrefixes: [
@@ -36,48 +76,48 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
       ]
     }
     subnets: [
-      {        
-        name: 'apim'    
+      {
+        name: 'aks'    
         properties: {
-          addressPrefix: '10.10.0.0/27'
-        }
+          addressPrefix: '10.10.0.0/20'
+          networkSecurityGroup: {
+            id: aksNsg.id
+          }
+        }      
+      }
+      {
+        name: 'agw'  
+        properties: {
+          addressPrefix: '10.10.16.0/25'
+        }      
       }
     ]
   }
 }
 
-resource apimSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
-  name: 'apim'    
+resource aksSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
+  name: 'aks'    
   dependsOn: [
     vnet
   ]
   parent: vnet
   properties: {
-    addressPrefix: '10.10.0.0/27'
+    addressPrefix: '10.10.0.0/20'
+    networkSecurityGroup: {
+      id: aksNsg.id
+    }
   }
 }
 
-resource apim 'Microsoft.ApiManagement/service@2020-12-01' = {
-  name: 'iac-dev-${uniqueString(resourceGroup().id)}-apim'
-  location: resourceGroup().location
-  sku: {
-    name: 'Developer'
-    capacity: 1
-  }
-  identity: {
-    type: 'SystemAssigned'
-  }
+resource agwSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
+  name: 'agw'  
   dependsOn: [
     vnet
   ]
+  parent: vnet
   properties: {
-    virtualNetworkType: 'External'
-    publisherEmail: '<YOUR EMAIL ADDRESS>'
-    publisherName: '<YOUR NAME>'
-    virtualNetworkConfiguration: {
-      subnetResourceId: apimSubnet.id
-    }    
-  }  
+    addressPrefix: '10.10.16.0/25'
+  }
 }
 ```
 
@@ -88,27 +128,27 @@ Let's review this Bicep template.
 Each Bicep resource declaration has four components:
 
 * `resource` keyword
-* `symbolic name` - a name that is is used as an identifier for referencing the resource throughout your bicep file. In our template, these are `vnet`, `apim` and `apimSubnet`. `symbolic names` are not a resource name and used only within the Bicep template and don't appear in Azure.
+* `symbolic name` - a name that is is used as an identifier for referencing the resource throughout your bicep file. In our template, these are `vnet`, `aksNsg`, `aksSubnet` and `agwSubnet`. `symbolic names` are not a resource name and used only within the Bicep template and don't appear in Azure.
 * `resource type` -  It is composed of the resource provider (`Microsoft.Network`), resource type (`virtualNetworks`), and apiVersion (`2020-11-01`)
 * `properties` - these are the specific properties you would like to specify for the given resource type. In most of the cases, you have to provide the resource `name` and `location` 
 
 ### Resource dependencies
 
-When you provision several resources you may have dependencies between them. In our example, we can't provision API Management until Private Virtual Network is ready. That means that APIM resource depends on VNet resource. To define dependencies between resources, use `dependsOn` field to define resource dependencies. Resource Manager then evaluates the dependencies between resources and deploys them in the correct order. 
+When you provision several resources you may have dependencies between them. In our example, we can't provision Private Virtual Network (VNet) until Network Security Group (NSG) is ready. That means that VNet resource depends on NSG resource. To define dependencies between resources, use `dependsOn` field to define resource dependencies. Resource Manager then evaluates the dependencies between resources and deploys them in the correct order. 
 
-In our example, `apim` resource has a dependency to `vnet` resource and it's implemented using this code snippet:
+In our example, `vnet` resource has a dependency to `aksNsg` resource and it's implemented using this code snippet:
 
 ```yaml
-resource apim 'Microsoft.ApiManagement/service@2020-12-01' = {
+resource vnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
 ...
   dependsOn: [
-    vnet
+    aksNsg
   ]
 ...
 }
 ```
 
-where `vnet` is a symbolic name of the Private Virtual Network resource described within Bicep template.
+where `aksNsg` is a symbolic name of the NSG resource described within Bicep template.
 
 ### Child resources 
 
@@ -117,46 +157,33 @@ Each parent resource accepts only certain resource types as child resources. The
 
 There are several ways you can define child resources with Bicep. There is a [dedicated module](https://docs.microsoft.com/en-us/learn/modules/child-extension-bicep-templates?WT.mc_id=AZ-MVP-5003837) on that subject under Microsoft Learning.
 
-In our case, we use `parent` property to assign child resource `apimSubnet` to the parent resource `vnet`
+In our case, we use `parent` property to assign child resource `aksSubnet` and `agwSubnet` to the parent resource `vnet`
 
 ```yaml
-resource apimSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
+resource aksSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
 ...
   parent: vnet
 ...
 }
 ```
+
 where `vnet` is a symbolic name of the Private Virtual Network resource described within Bicep template.
 
-### Use resource id to refer to another resource
+### Use resource id to reference to other resource
 
-Quite often one resource uses some information about other resource. In most of the cases it's either resource name of resource id (including subscription id, resource group name, resource type and resource name). When you define resource in Bicep template, you can use the `symbolic` name of the resource from other resource. For example, if you deploy your API Management to the private vnet, you need to specify subnet id. With Bicep we can easily do it by referencing `apimSubnet` id from `apim` resource.
+Quite often, one resource requires some information about other resource. In most of the cases it's either resource name of resource id (including subscription id, resource group name, resource type and resource name). When you define resource in Bicep template, you can reference other resource using the `symbolic` name. For example, if you attach NSG to one of the subnets, you need to specify NSG id. With Bicep we can easily do it by referencing `aksNsg` id from `vnet` or `aksSubnet` resources.
 
 
 ```yaml
 ...
-virtualNetworkConfiguration: {
-  subnetResourceId: apimSubnet.id
-}    
+networkSecurityGroup: {
+  id: aksNsg.id
+}
 ...
 ```
 
-where `apimSubnet` is a symbolic name of the Private Virtual Network subnet resource described within Bicep template.
+where `aksNsg` is a symbolic name of the NSG resource described within Bicep template.
 
-
-### String Interpolation
-
-API Management is global resource, therefore it should have unique name. At the same time, we still want to follow our [naming convention](../../naming-conventions.md). One possible technique is to use [uniqueString](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-functions-string?tabs=bicep#uniquestring) function and generate unique id based on resource group id and use it as part of the apim instance name. 
-
-Azure Bicep supports a simpler syntax for performing string concatenation like this with a programming feature called string interpolation. String interpolation allows to use a syntax to embed the name of a variable, parameter of function within a string value that will get replaced at deploy time to perform the string concatenation necessary.
-
-```yaml
-resource apim 'Microsoft.ApiManagement/service@2020-12-01' = {
-  name: 'iac-dev-${uniqueString(resourceGroup().id)}-apim'
-...
-```
-
-In our example, we combine a result of `uniqueString(resourceGroup().id)` function with a name followed our naming convention.
 
 ## Task #3 - generate ARM templates from bicep file
 
@@ -178,10 +205,10 @@ Bicep files can be directly deployed via the `az cli` or PowerShell Az module, s
 
 ```bash
 # Deploy Bicep template to a resource group
-az deployment group create -g iac-dev-rg -f ./infra.bicep
+az deployment group create -g iac-dev-blue-rg -f ./infra.bicep
 ```
 
-If you go to to `Deployment` tab of the `iac-dev-rg` resource group you should see new deployment running. Open it and check `Template` section and you will see that it contains standard ARM templates. 
+If you go to to `Deployment` tab of the `iac-dev-blue-rg` resource group you should see new deployment running. Open it and check `Template` section and you will see that it contains standard ARM templates. 
 
 ![arm](images/deployments-arm.png)
 

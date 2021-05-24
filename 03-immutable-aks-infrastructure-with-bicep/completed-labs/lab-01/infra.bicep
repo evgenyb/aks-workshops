@@ -1,6 +1,46 @@
+resource aksNsg 'Microsoft.Network/networkSecurityGroups@2020-11-01' = {
+  name: 'iac-dev-blue-aks-nsg'
+  location: resourceGroup().location
+  properties: {
+    securityRules: [
+      {
+        name: 'deny-connection-from-agw'
+        properties: {
+          priority: 110
+          direction: 'Inbound'
+          access: 'Deny'
+          description: 'Deny any connectivity from any vnets'
+          protocol: '*'
+          sourceAddressPrefix: 'VirtualNetwork'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '10.10.0.0/20'
+          destinationPortRange: '*'
+        }
+      }
+      {
+        name: 'allow-connection-from-agw'
+        properties: {
+          priority: 100
+          direction: 'Inbound'
+          access: 'Allow'
+          description: 'Allow connectivity from agw subnet into aks subnet'
+          protocol: 'Tcp'
+          sourceAddressPrefix: '10.10.16.0/25'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '10.10.0.0/20'
+          destinationPortRange: '80'
+        }
+      }
+    ]
+  }  
+}
+
 resource vnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
-  location: 'westeurope'
-  name: 'iac-dev-vnet'
+  location: resourceGroup().location
+  name: 'iac-dev-blue-vnet'
+  dependsOn: [
+    aksNsg
+  ]
   properties: {
     addressSpace: {
       addressPrefixes: [
@@ -8,43 +48,46 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
       ]
     }
     subnets: [
-      {        
-        name: 'apim'    
+      {
+        name: 'aks'    
         properties: {
-          addressPrefix: '10.10.0.0/27'
-        }
+          addressPrefix: '10.10.0.0/20'
+          networkSecurityGroup: {
+            id: aksNsg.id
+          }
+        }      
+      }
+      {
+        name: 'agw'  
+        properties: {
+          addressPrefix: '10.10.16.0/25'
+        }      
       }
     ]
   }
 }
 
-resource apimSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
-  name: 'apim'    
-  parent: vnet
-  properties: {
-    addressPrefix: '10.10.0.0/27'
-  }
-}
-
-resource apim 'Microsoft.ApiManagement/service@2020-12-01' = {
-  name: 'iac-dev-${uniqueString(resourceGroup().id)}-apim'
-  location: resourceGroup().location
-  sku: {
-    name: 'Developer'
-    capacity: 1
-  }
-  identity: {
-    type: 'SystemAssigned'
-  }
+resource aksSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
+  name: 'aks'    
   dependsOn: [
     vnet
   ]
+  parent: vnet
   properties: {
-    virtualNetworkType: 'External'
-    publisherEmail: 'Your Email Address'
-    publisherName: 'Your name'
-    virtualNetworkConfiguration: {
-      subnetResourceId: apimSubnet.id
-    }    
-  }  
+    addressPrefix: '10.10.0.0/20'
+    networkSecurityGroup: {
+      id: aksNsg.id
+    }
+  }
+}
+
+resource agwSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
+  name: 'agw'  
+  dependsOn: [
+    vnet
+  ]
+  parent: vnet
+  properties: {
+    addressPrefix: '10.10.16.0/25'
+  }
 }

@@ -17,92 +17,17 @@ In this lab you will learn:
  * How to define and use parameters
  * How to work with parameters file
 
-## Task #1 - create resource group
+Let's continue with template we started at [lab-01](../lab-01/readme.md). As you can see, the vnet and subnet address ranges are repeated several times within template. We can easily fix it if we use variables instead.
 
-For the next labs we will use "slot" resource group called `iac-dev-blue-rg`. Let's create it first.
-
-```bash
-# Create new resource group
-az group create -n iac-dev-blue-rg -l westeurope
-```
-
-## Task #2 - implement Bicep template for Private Virtual Network resource
-
-For this exercise we will use Private Virtual Network with three subnets with the following properties:
-
-Subnet name  | Address Prefix 
-------|------
-aks | 10.11.0.0/20 (4094)
-testVm | 10.11.16.0/25 (126)
-
-Create `vnet.bicep` file with the following content:
-
-```yaml
-resource vnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
-  location: resourceGroup().location
-  name: 'iac-dev-blue-vnet'
-  properties: {
-    addressSpace: {
-      addressPrefixes: [
-        '10.11.0.0/16'
-      ]
-    }
-    subnets: [
-      {
-        name: 'aks'    
-        properties: {
-          addressPrefix: '10.11.0.0/20'
-        }      
-      }
-      {
-        name: 'testVm'  
-        properties: {
-          addressPrefix: '10.11.16.0/25'
-        }      
-      }
-    ]
-  }
-}
-
-resource aksSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
-  name: 'aks'    
-  dependsOn: [
-    vnet
-  ]
-  parent: vnet
-  properties: {
-    addressPrefix: '10.11.0.0/20'
-  }
-}
-
-resource testvmSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
-  name: 'testVm'  
-  dependsOn: [
-    vnet
-  ]
-  parent: vnet
-  properties: {
-    addressPrefix: '10.11.16.0/25'
-  }
-}
-```
-
-Now, let's deploy it
-
-```bash
-# Deploy Bicep template to a resource group
-az deployment group create -g iac-dev-blue-rg -f ./vnet.bicep
-```
-
-## Task #3 - introduce address prefix variables
+## Task #1 - introduce address prefix variables
 
 Let's introduce variables for vnet and subnet address prefix values.
 You can define variables like this:
 
 ```yaml
-var vnetAddressPrefix = '10.11.0.0/16'
-var aksSubnetAddressPrefix = '10.11.0.0/20'
-var testvmSubnetAddressPrefix = '10.11.16.0/25'
+var vnetAddressPrefix = '10.10.0.0/16'
+var aksSubnetAddressPrefix = '10.10.0.0/20'
+var agwSubnetAddressPrefix = '10.10.16.0/25'
 ```
 
 > Note! Variables don't need types. Bicep can work out the type based on the value that you set.
@@ -113,7 +38,7 @@ Let's test that we haven't introduced any changes with our refactoring. To previ
 
 ```bash
 # Preview changes before deploying
-az deployment group what-if -g iac-dev-blue-rg -f ./vnet.bicep
+az deployment group what-if -g iac-dev-blue-rg -f ./infra.bicep
 ...
 Resource and property changes are indicated with this symbol:
   = Nochange
@@ -121,28 +46,28 @@ Resource and property changes are indicated with this symbol:
 ```
 You should see no changes.
 
-## Task #4 - introduce base vnet address prefix variable
+## Task #2 - introduce base vnet address prefix variable
 
-Now, let's extract the base address prefix `10.11` as a individual variable:
+Now, let's extract the base address prefix `10.10` as a individual variable:
 
 ```yaml
-var vnetAddressPrefixBase = '10.11'
+var vnetAddressPrefixBase = '10.10'
 ```
 
 Now we can refactor the remaining variables using base address and string interpolation:
 
 ```yaml
-var vnetAddressPrefixBase = '10.11'
+var vnetAddressPrefixBase = '10.10'
 var vnetAddressPrefix = '${vnetAddressPrefixBase}.0.0/16'
 var aksSubnetAddressPrefix = '${vnetAddressPrefixBase}.0.0/20'
-var testvmSubnetAddressPrefix = '${vnetAddressPrefixBase}.16.0/25'
+var agwSubnetAddressPrefix = '${vnetAddressPrefixBase}.16.0/25'
 ```
 
 > Notice the string interpolation uses the syntax of `${<expression>}` to define the expression that defines the value to place in that location within the string. The expression within can be as simple as a variable or parameter name, or even the use of a built-in function to retrieve another value.
 
 ```bash
 # Preview changes before deploying
-az deployment group what-if -g iac-dev-blue-rg -f ./vnet.bicep
+az deployment group what-if -g iac-dev-blue-rg -f ./infra.bicep
 ...
 Resource and property changes are indicated with this symbol:
   = Nochange
@@ -150,30 +75,25 @@ Resource and property changes are indicated with this symbol:
 ```
 You should see no changes.
 
-## Task #5 - use variable to implement naming convention for resource names
+## Task #3 - use variable to implement naming convention for resource names
 
-We use the following [naming convention](../../naming-convention.md) for our resource. Let's introduce two new variables:
-
-```yaml
-var environment = 'dev'
-var slot = 'blue'
-```
-
-and now we can combine the name of the vnet using our naming convention  `iac-{env}-{slot}-vnet`
+Let's introduce two new variables `environment` and `slot` and use string interpolation to build resource names followed our [naming conventions](../../naming-convention.md). For VNet that would be - `iac-{env}-{slot}-vnet` and for NSG - `iac-{env}-{slot}-{nsgName}-nsg`
 
 ```yaml
 var environment = 'dev'
 var slot = 'blue'
+
+var aksNsgName = 'iac-${environment}-${slot}-aks-nsg' 
 var vnetName = 'iac-${environment}-${slot}-vnet' 
 ```
 
-and replace hard-coded vnet name with `vnetName` variable.
+and replace hard-coded VNet and NSG names with `vnetName` and `aksNsgName` variables.
 
 Now, let's review our changes.
 
 ```bash
 # Preview changes before deploying
-az deployment group what-if -g iac-dev-blue-rg -f ./vnet.bicep
+az deployment group what-if -g iac-dev-blue-rg -f ./infra.bicep
 ...
 Resource and property changes are indicated with this symbol:
   = Nochange
@@ -181,7 +101,7 @@ Resource and property changes are indicated with this symbol:
 ```
 You should see no changes.
 
-## Task #6 - refactor `environment`, `slot` and `vnetAddressPrefixBase` variables to parameters
+## Task #4 - refactoring: replace `environment`, `slot` and `vnetAddressPrefixBase` variables with parameters
 
 We can re-use this template and deploy it to different environments. We can do so by changing `environment`, `slot` and `vnetAddressPrefixBase` variables into parameters and send environment specific values in from outside the template file. 
 
@@ -193,14 +113,14 @@ param slot string
 param vnetAddressPrefixBase string
 ```
 
-If you try to review the changes, you will be prompted to provide all three parameters:
+If you try to review the changes, you will be prompted to provide all three parameters. Use `dev`, `blue` and `10.10` values.
 
 ```bash
 # No parameters specified
-az deployment group what-if -g iac-dev-blue-rg -f ./vnet.bicep
+az deployment group what-if -g iac-dev-blue-rg -f ./infra.bicep
 Please provide string value for 'environment' (? for help): dev
 Please provide string value for 'slot' (? for help): blue
-Please provide string value for 'vnetAddressPrefixBase' (? for help): 10.11
+Please provide string value for 'vnetAddressPrefixBase' (? for help): 10.10
 ...
 Resource and property changes are indicated with this symbol:
   = Nochange
@@ -211,14 +131,14 @@ You can specify default values for the parameter like this:
 ```yaml
 param environment string = 'dev'
 param slot string = 'blue'
-param vnetAddressPrefixBase string = '10.11'
+param vnetAddressPrefixBase string = '10.10'
 ```
 
 If review the changes now, you will not be prompted to provide all three parameters:
 
 ```bash
 # No parameters specified
-az deployment group what-if -g iac-dev-blue-rg -f ./vnet.bicep
+az deployment group what-if -g iac-dev-blue-rg -f ./infra.bicep
 ...
 Resource and property changes are indicated with this symbol:
   = Nochange
@@ -229,13 +149,13 @@ You can provide parameters from `az cli` command line by specifying a set of `-p
 
 ```bash
 # Specify parameters from command line
-az deployment group what-if -g iac-dev-blue-rg -f ./vnet.bicep -p environment=dev -p slot=blue -p vnetAddressPrefixBase=10.11
+az deployment group what-if -g iac-dev-blue-rg -f ./infra.bicep -p environment=dev -p slot=blue -p vnetAddressPrefixBase=10.10
 ...
 Resource and property changes are indicated with this symbol:
   = Nochange
 ```
 
-## Task #7 - use parameters file
+## Task #5 - use parameters file
 
  In the previous lab, we used inline parameters with our deployment command. This approach works for testing, but when automating deployments it can be easier to pass a set of values for our environment. Parameter files make it easier to package parameter values for a specific environment. 
 
@@ -265,7 +185,7 @@ You specify parameters file by using `-p parameter.json` flag of `az deployment 
 
 ```bash
 # Preview changes before deploying
-az deployment group what-if -g iac-dev-blue-rg -f ./vnet.bicep -p dev-blue.json
+az deployment group what-if -g iac-dev-blue-rg -f ./infra.bicep -p dev-blue.json
 ...
 Resource and property changes are indicated with this symbol:
   = Nochange
