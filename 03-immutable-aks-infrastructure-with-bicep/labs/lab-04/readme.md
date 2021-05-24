@@ -2,7 +2,6 @@
 
 ## Estimated completion time - 15 min
 
-
 Bicep modules enable you to organize and reuse your Bicep code by creating smaller units that can be composed into a template. Any Bicep template can be used as a module by another template. Throughout this workshop, you've been creating Bicep templates and that means you've already created files that can be used as Bicep modules :)
 
 Imagine you have a Bicep template that deploys NSG, VNET, AKS and AGW. You might split up this template into four modules, each of which is focused on its own set of resources. As a bonus, you can now reuse the modules in other templates for other solutions too. So when you develop a template for another solution, which has similar requirements to your solution, you can reuse some of the modules.
