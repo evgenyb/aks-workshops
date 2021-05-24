@@ -197,7 +197,7 @@ Finally, let's deploy our template.
 
 ```bash
 # Deploy Bicep template
-az deployment group create -g iac-dev-blue-rg -f ./vnet.bicep -p dev-blue.json
+az deployment group create -g iac-dev-blue-rg -f ./infra.bicep -p dev-blue.json
 ```
 
 ## Useful links
