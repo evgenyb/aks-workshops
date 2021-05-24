@@ -1,11 +1,29 @@
-# lab-04 - refactoring: group resources using modules
+# lab-05 - refactoring: group resources using modules
 
 ## Estimated completion time - 15 min
 
 
-If we will keep define all resources inside one Bicep template, you can imagine that your Bicep code will become more complex and hard to read, navigate and understand. Bicep has a concept called Modules that allows to make Bicep code more modularized. You can create individual Bicep files, called modules, for different parts of your deployment. The main Bicep template then can reference these modules. Modules are also a way to make Bicep code even more reusable. You can have a single Bicep module that lots of Bicep templates use.
+Bicep modules enable you to organize and reuse your Bicep code by creating smaller units that can be composed into a template. Any Bicep template can be used as a module by another template. Throughout this workshop, you've been creating Bicep templates and that means you've already created files that can be used as Bicep modules :)
 
-You also will often need to emit outputs from the Bicep modules and templates. 
+Imagine you have a Bicep template that deploys NSG, VNET, AKS and AGW. You might split up this template into four modules, each of which is focused on its own set of resources. As a bonus, you can now reuse the modules in other templates for other solutions too. So when you develop a template for another solution, which has similar requirements to your solution, you can reuse some of the modules.
+
+When you want the template to include a reference to a module file, use the module keyword. A module definition looks similar to a resource declaration, but instead of including a resource type and API version, you use the module's file name:
+
+```yaml
+module myModule 'path/to/my/module.bicep' = {
+  name: 'MyModule'
+  dependsOn: [
+    otherModule
+  ]
+  params: {
+    environment: environment
+  }
+}
+```
+
+The `name` property is mandatory. Azure uses the name of the module as a separate deployment for each module within the template file. 
+
+Just like templates, Bicep modules can define outputs. It's common to chain modules together within a template. In that case, the output from one module can be a parameter for another module. By using modules and outputs together, you can create powerful and reusable Bicep files.
 
 ## Goals
 
@@ -160,6 +178,7 @@ output agwSubnetId string = agwSubnet.id
 
 Now that we have implemented two modules, we can use them and implement our infra template.
 
+
 Create new `infra.bicep` file with the following content:
 
 ```yaml
@@ -188,6 +207,40 @@ module vnet 'vnet.bicep' = {
     aksNsgid: nsg.outputs.aksNsgId
   }
 }
+```
+
+Let's review this Bicep template. 
+
+### Module dependencies
+
+Similar to resources, you may have dependencies between modules. We can't provision VNet until NGS is ready. That means that VNet module depends on NSG module. To define dependencies between modules, use `dependsOn` field. 
+In our example, `vnet` module has a dependency to `nsg` module and it's implemented using this code snippet:
+
+```yaml
+module vnet 'vnet.bicep' = {
+...
+  dependsOn: [
+    nsg
+  ]
+...
+}
+```
+
+where `nsg` is a symbolic name of the NSG module described within the template.
+
+### Modules and outputs
+
+The `vnet` module uses the `aksNsgId` output of `nsg` module as a input of the `aksNsgid` parameter. 
+
+```yaml
+module vnet 'vnet.bicep' = {
+  ...
+  params: {
+    ...
+    aksNsgid: nsg.outputs.aksNsgId
+    ...
+  }
+  ...
 ```
 
 ## Task #4 - verify refactoring
@@ -228,7 +281,7 @@ You need to refactor code and move this code to the `infra.bicep` file and do al
 * [Tutorial: Add modules to Azure Resource Manager Bicep file](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/bicep-tutorial-add-modules?tabs=azure-cli&WT.mc_id=AZ-MVP-5003837)
 * [Bicep playground](https://bicepdemo.z22.web.core.windows.net/)
 
-## Next: 
+## Next: Scopes
 
 [Go to lab-05](../lab-05/readme.md)
 

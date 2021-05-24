@@ -10,14 +10,14 @@ Here is the agenda for the workshops:
  * Slides - Variables, Parameters, Modules, Scopes, Output, Child resources
  * [Lab-02](labs/lab-02/readme.md) - working with variables and parameters
  * [Lab-03](labs/lab-03/readme.md) - Outputs
- * Lab-04 - refactoring: group resources using modules
- * Lab-06 - Scopes
+ * [Lab-04](labs/lab-04/readme.md) - refactoring: group resources using modules
+ * Lab-05 - Scopes
  * Slides - Loops, Conditions and Converting existing ARM templates to Bicep
- * Lab-07 - Loops
- * Lab-08 - Conditions
- * Lab-09 - Convert an existing ARM to Bicep
- * Slides - Implement AKS infrastructure
- * Lab-10 - Implement AKS infrastructure
+ * Lab-06 - Loops
+ * Lab-07 - Conditions
+ * Lab-08 - Convert an existing ARM to Bicep
+ * Slide - Implement AKS infrastructure
+ * Lab-09 - Implement AKS infrastructure
  * Slides - CI/CD with github actions
  
 ## Links
