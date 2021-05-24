@@ -4,7 +4,7 @@ param vnetAddressPrefixBase string = '10.11'
 
 var vnetAddressPrefix = '${vnetAddressPrefixBase}.0.0/16'
 var aksSubnetAddressPrefix = '${vnetAddressPrefixBase}.0.0/20'
-var testvmSubnetAddressPrefix = '${vnetAddressPrefixBase}.16.0/25'
+var agwSubnetAddressPrefix = '${vnetAddressPrefixBase}.16.0/25'
 var vnetName = 'iac-${environment}-${slot}-vnet' 
 
 resource vnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
@@ -24,9 +24,9 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-11-01' = {
         }      
       }
       {
-        name: 'testVm'  
+        name: 'agw'  
         properties: {
-          addressPrefix: testvmSubnetAddressPrefix
+          addressPrefix: agwSubnetAddressPrefix
         }      
       }
     ]
@@ -44,13 +44,13 @@ resource aksSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
   }
 }
 
-resource testvmSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
-  name: 'testVm'  
+resource agwSubnet 'Microsoft.Network/virtualNetworks/subnets@2020-11-01' = {
+  name: 'agw'  
   dependsOn: [
     vnet
   ]
   parent: vnet
   properties: {
-    addressPrefix: testvmSubnetAddressPrefix
+    addressPrefix: agwSubnetAddressPrefix
   }
 }
