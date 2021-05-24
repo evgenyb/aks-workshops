@@ -4,7 +4,7 @@
 
 There are (at least) two use-cases where Bicep `outputs` can be useful:
 
-* You can use `outputs` to return values from the template. You might need to capture properties from a newly created resource so they're available later for reference. For example, it might be helpful to get the endpoints for your new storage account, or to get subnet id and use it later as a reference at AKS cluster template. This is especially useful when you compose your resources using `Modules`.
+* You can use `outputs` to return values from the template. You might need to capture properties from a newly created resource so they're available later for reference. For example, it might be helpful to get the endpoints for your new storage account, or to get subnet id and use it later as a reference at AKS cluster template. This is especially useful when you group your resources using `Modules`.
 * You can use `outputs` to debug your Bicep template.
 
 ## Goals
@@ -16,7 +16,7 @@ In this lab you will learn:
 
 ## Task #1 - trace variables values as template outputs
 
-Let's keep working with Bicep file from [lab-02](../lab-02/readme.md). If you didn't manage to finish it, use [vnet.bicep](../../completed-labs/lab-02/vnet.bicep) file from the completed labs folder.
+Let's keep working with Bicep file from [lab-02](../lab-02/readme.md). If you didn't manage to finish it, use [infra.bicep](../../completed-labs/lab-02/infra.bicep) file from the completed labs folder.
 
 Let's imagine that we want to trace the value of `vnetName` and `vnetAddressPrefix` variables to verify if we implemented these values correctly in our template. To do so, add two new `outputs` to the end of the file like this:
 
@@ -30,7 +30,7 @@ output vnetName string = vnetName
 
 ```bash
 # Deploy Bicep template
-az deployment group create -g iac-dev-blue-rg -f ./vnet.bicep -p dev-blue.json
+az deployment group create -g iac-dev-blue-rg -f ./infra.bicep -p dev-blue.json
 ```
 
 Check the `outputs` section of the script output. You should see something similar to: 
@@ -40,7 +40,7 @@ Check the `outputs` section of the script output. You should see something simil
 "outputs": {
   "aksSubnetAddressPrefix": {
     "type": "String",
-    "value": "10.11.0.0/20"
+    "value": "10.10.0.0/20"
   },
   "vnetName": {
     "type": "String",
@@ -49,6 +49,19 @@ Check the `outputs` section of the script output. You should see something simil
 },
 ...
 ```
+
+You can always find ARM or Bicep templates output at the Azure portal. Navigate to the `Deployments` tab of the `iac-dev-blue-rg` resource group, open `infra` deployment and go to `Output` section.
+
+![output-portal](images/output-at-the-portal.png)
+
+Alternatively, you can get deployment information using `az cli`
+
+```bash
+# Get deployment info
+az deployment group show -g iac-dev-blue-rg -n infra
+```
+
+The you can analyse the `outputs` section to check the output values.
 
 ## Task #2 - use output to return subnet id
 
@@ -69,7 +82,7 @@ output aksSubnetId string = aksSubnet.id
 
 ```bash
 # Deploy Bicep template
-az deployment group create -g iac-dev-blue-rg -f ./vnet.bicep -p dev-blue.json
+az deployment group create -g iac-dev-blue-rg -f ./infra.bicep -p dev-blue.json
 ```
 
 and check the `outputs` section of the script output. You should now see new output item called `aksSubnetId`:
