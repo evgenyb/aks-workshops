@@ -4,16 +4,16 @@
 
 A deployment in ARM has an associated scope, which dictates the scope that resources within that deployment are created in. There are various ways to deploy resources across multiple scopes today in ARM templates; this spec describes how similar functionality can be achieved in Bicep.
 
-Unless otherwise specified, Bicep will assume that a given `.bicep` file is to be deployed at a resource group scope, and will validate resources accordingly. If you wish to change this scope, or define a file that can be deployed at multiple scopes, you must use the `targetScope` keyword with either a string or array value as follows:
+Unless otherwise specified, Bicep will assume that a given `.bicep` file is to be deployed at a resource group scope, and will validate resources accordingly. If you wish to change this scope, or define a file that can be deployed at multiple scopes, you must use the `targetScope` keyword.
 
 ## Goals
 
 In this lab you will learn:
 
-* How to configure module scopes
 * How to create a resource group and deploy a module to the resource group
+* How to configure module scopes
 
-## Task #1 - create template file to create resource groups
+## Task #1 - create Bicep file to create resource groups
 
 Create new `infra.bicep` file with the following content:
 
@@ -44,7 +44,7 @@ Let's deploy this template
 
 ```bash
 # Deploy BIcep template to subscription
- az deployment sub create -l westeurope -f ./infra.bicep  
+az deployment sub create -l westeurope -f ./infra.bicep  
 ```
 
 Note, because the scope of the template is set to `subscription`, we need to use `az deployment sub` command.
@@ -112,6 +112,7 @@ Let's review this Bicep template:
 Let's deploy this template
 
 ```bash
+# Deploy Bicep template
 az deployment sub create -l westeurope -f ./infra.bicep  -p dev-blue.json
 ```
 
@@ -128,7 +129,7 @@ If you navigate to the `Deployments` tab of the  `iac-dev-blue-rg` resource grou
 * [Resource Scopes](https://github.com/Azure/bicep/blob/main/docs/spec/resource-scopes.md)
 * [Bicep playground](https://bicepdemo.z22.web.core.windows.net/)
 
-## Next: 
+## Next: Convert an existing ARM to Bicep
 
 [Go to lab-06](../lab-06/readme.md)
 
