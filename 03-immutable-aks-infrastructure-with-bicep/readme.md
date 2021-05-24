@@ -13,8 +13,8 @@ Here is the agenda for the workshops:
  * [Lab-04](labs/lab-04/readme.md) - refactoring: group resources using modules
  * [Lab-05](labs/lab-05/readme.md) - Scopes
  * Slides - Loops, Conditions and Converting existing ARM templates to Bicep
- * Lab-06 - Convert an existing ARM to Bicep
- * Lab-07 - Loops and Conditions
+ * [Lab-06](labs/lab-06/readme.md) - Convert an existing ARM to Bicep
+ * [Lab-07](labs/lab-07/readme.md) - Loops
  * Slide - Implement AKS infrastructure
  * Lab-08 - Implement AKS infrastructure
  * Slides - CI/CD with github actions

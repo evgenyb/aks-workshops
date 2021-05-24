@@ -42,7 +42,7 @@ You should now see `vnet.bicep` file with Bicep version of ARM templates.
 * [Bicep playground](https://bicepdemo.z22.web.core.windows.net/)
 * [az bicep decompile](https://docs.microsoft.com/en-us/cli/azure/bicep?WT.mc_id=AZ-MVP-5003837&view=azure-cli-latest#az_bicep_decompile)
 
-## Next: 
+## Next: Loops
 
 [Go to lab-06](../lab-07/readme.md)
 
