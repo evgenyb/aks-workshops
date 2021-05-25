@@ -4,16 +4,16 @@ We will use the following naming convention during this workshop.
 
 Resource | Name | Example
 ------------ | ------------- | -------------
-Base resource Group | iac-ws3-rg | iac-ws3-rg
-SLot resource Group | iac-ws3-{slot name}-rg | iac-ws3-blue-rg, iac-ws3-green-rg
-Storage Account | iacws3{storage account name}sa | iacws3evgsa
-Private Virtual Network | iac-ws3-{vnet name}-vnet, iac-ws3-{env}-{slot}-vnet | iac-ws3-vnet, iac-ws3-blue-vnet, iac-ws3-green-vnet
+Base resource Group | iac-dev-rg | iac-dev-rg
+SLot resource Group | iac-dev-{slot name}-rg | iac-dev-blue-rg, iac-dev-green-rg
+Storage Account | iacdev{storage account name}sa | iacdevevgsa
+Private Virtual Network | iac-dev-{vnet name}-vnet, iac-dev-{env}-{slot}-vnet | iac-dev-vnet, iac-dev-blue-vnet, iac-dev-green-vnet
 Subnet | {subnet name}-net | aks-net, apim-net
-Log Analytics Workspace | iac-ws3-{la name}-la | iac-ws3-evg-la
-Public IP Prefix | iac-ws3-{prefix name}-la | iac-ws3-pip-prefix
-Azure Container Registry | iacws3{acr name}acr | iacws3evgacr
-Application Insights | iac-ws3-appinsights | iac-ws3-appinsights
-API Management | iac-ws3-{apim name}-apim | iac-ws3-evg-apim
-Public IP | iac-ws3-{public ip name}-pip | iac-ws3-aks-blue-egress2-pip
-AKS | iac-ws3-{slot name}-aks | iac-ws3-blue-aks, iac-ws3-green-aks
-User-Assigned Managed Identity | iac-ws3-{mi name}-mi or iac-ws3-{slot name}-{mi name}-mi | iac-ws3-api-b-mi, iac-ws3-api-a-mi, iac-ws3-blue-aks-mi, iac-ws3-green-aks-mi
+Log Analytics Workspace | iac-dev-{la name}-la | iac-dev-evg-la
+Public IP Prefix | iac-dev-{prefix name}-la | iac-dev-pip-prefix
+Azure Container Registry | iacdev{acr name}acr | iacdevevgacr
+Application Insights | iac-dev-appinsights | iac-dev-appinsights
+API Management | iac-dev-{apim name}-apim | iac-dev-evg-apim
+Public IP | iac-dev-{public ip name}-pip | iac-dev-aks-blue-egress2-pip
+AKS | iac-dev-{slot name}-aks | iac-dev-blue-aks, iac-dev-green-aks
+User-Assigned Managed Identity | iac-dev-{mi name}-mi or iac-dev-{slot name}-{mi name}-mi | iac-dev-api-b-mi, iac-dev-api-a-mi, iac-dev-blue-aks-mi, iac-dev-green-aks-mi
