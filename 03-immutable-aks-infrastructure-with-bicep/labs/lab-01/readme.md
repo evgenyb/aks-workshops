@@ -212,8 +212,6 @@ If you go to to `Deployment` tab of the `iac-dev-blue-rg` resource group you sho
 
 ![arm](images/deployments-arm.png)
 
-> Note! It may take up to 60 min to provision 
-
 ## Useful links
 
 * [What is Bicep](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/bicep-overview/?WT.mc_id=AZ-MVP-5003837)
