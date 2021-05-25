@@ -2,7 +2,6 @@
 
 ![logo](images/logo.png)
 
-<<<<<<< HEAD
 Here is the agenda for the workshops:
 
  * Slides - Workshop introduction
@@ -31,14 +30,3 @@ Here is the agenda for the workshops:
 ## Feedback
 
 * Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/11) to comment on this workshop. 
-=======
-Agenda is coming soon
- 
-## Links
-
-* [Prerequisites](prerequisites.md)
-
-## Feedback
-
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/25) to comment on this workshop. 
->>>>>>> main
