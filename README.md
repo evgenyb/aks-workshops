@@ -25,7 +25,17 @@ The focus for this workshop is advanced configuration aspects of AKS cluster and
 
 Workshop is organized as a combination of theoretical blocks and 10 labs.
 
-## Workshop #3 - Use Pulumi to provision and configuring AKS cluster
+## [Workshop #3 - Implement Immutable AKS Infrastructure on Azure with Bicep](03-immutable-aks-infrastructure-with-bicep/readme.md)
+
+This time we will work with Azure Bicep - a Domain Specific Language (DSL) for deploying Azure resources declaratively.
+Since this year is all about AKS, we will use Bicep to implement immutable AKS infrastructure on Azure.
+
+Workshop goals:
+* get a hands-on experience working with Bicep
+* design and implement a simple immutable AKS infrastructure using Bicep
+
+Workshop is organized as a combination of theoretical blocks and 9 labs.
+
 ## Workshop #4 - Service mesh with linkerd
 ## Workshop #5 - AKS application deployment options
 ## Workshop #6 - security
