@@ -20,7 +20,7 @@ In this lab you will learn how to:
 
 ## Task #0 - (only for Windows users) - setting up Windows Terminal
 
-For the most of the labs, I recommend you to use Windows Terminal, because it allows to split Terminal windows in two (and more) sessions. One will be be used to run all commands included into the labs. In the second window you will run `kubectl get ... -w` command in watching mode and you will get a realtime feedback about what kubernetes does behind the scene.
+For the most of the labs, I recommend you to use Windows Terminal, because it allows to split Terminal windows in two (and more) sessions. One will be used to run all commands included into the labs. In the second window you will run `kubectl get ... -w` command in watching mode to get a realtime feedback about what kubernetes does behind the scene.
 
 You can install Windows Terminal from the [Microsoft Store](https://aka.ms/terminal). When installed, start it, maximize it (so you have enough space) and select shell of your choice.
 
@@ -30,7 +30,7 @@ To split current window, enter `Shift+Alt+D` and it will split your current wind
 
 ![Windows Terminal](images/wt-split.png)
 
-In the right session run the "watcher" command:
+In the right-hand session, run the "watcher" command:
 
 ```bash
 # Watch what happens with pods
@@ -39,7 +39,7 @@ kubectl get pods -w
 
 This command will be running and watching all state changes inside the cluster in regards to pods. 
 
-At the left session you run all commands from the labs. 
+At the left-hand session, run all commands from the labs. 
 
 ![Windows Terminal](images/wt-demo.gif)
 
@@ -59,8 +59,7 @@ Now, let's run another version of application (tagged with `:1.0.0`), this time 
 
 ```bash
 # Run pod app-b
-kubectl run app-b --image iacaksws1<YOU-NAME>acr.azurecr.io/apia:1.0.0
-pod/app-b created
+kubectl run app-b --image iacaksws1<YOU-NAME>acr.azurecr.io/apia:1.0.0 pod/app-b created
 ```
 
 ## Task #2 - get information about pods
@@ -112,15 +111,12 @@ kubectl get po app-a -o json
 
 ## Task #4 - testing within cluster with interactive shell. Option #1
 
-Quite often you need to test application from within your cluster. Because cluster is running inside it's own Virtual Network, nothing is accessible from your PC. 
-Let's try to ping of the running `app-a|b` pods IP.
+Quite often you need to test application from within your cluster. Because cluster is running inside it's own Private Virtual Network, it's not accessible from your PC.  Let's try to ping of the running `app-a|b` pods IP.
 
 ```bash
-# Get pods IP addresses
-kubectl get po -o wide
-NAME    READY   STATUS    RESTARTS   AGE     IP            NODE                                NOMINATED NODE   READINESS GATES
-app-a   1/1     Running   0          27h     10.244.0.9    aks-nodepool1-95835493-vmss000000   <none>           <none>
-app-b   1/1     Running   0          21h     10.244.0.10   aks-nodepool1-95835493-vmss000000   <none>           <none>
+# Get api-a pod IP addresses
+kubectl get po app-a -o jsonpath='{.status.podIP}'
+10.244.0.9
 
 # try to ping `app-a`
 ping 10.244.0.9
@@ -188,16 +184,22 @@ pod/app-d created
 As we already know, we can't just test our application, because it's not accessible from our PC. We need to run our `curl` pod with interactive shell and do all testing from there.
 
 ```bash
-# Get IP address of the app-a pod
+# Get api-a pod IP address
+kubectl get po app-a -o json | jq -r .status.podIP
+
+# or
+kubectl get po app-a -o jsonpath='{.status.podIP}'
+
+# or
 kubectl get po app-a -o wide
-NAME    READY   STATUS    RESTARTS   AGE   IP            NODE                                NOMINATED NODE   READINESS GATES
-app-a   1/1     Running   0          14m   10.244.0.34   aks-nodepool1-95835493-vmss000000   <none>           <none>
+
+10.244.0.9
 
 # Start our test `curl` pod
 kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -- sh
 
-# test http://10.244.0.34/weatherforecast endpoint
-[ root@curl:/ ]$ curl http://10.244.0.34/weatherforecast
+# Test http://10.244.0.9/weatherforecast endpoint
+[ root@curl:/ ]$ curl http://10.244.0.9/weatherforecast
 
 # exit from the pod
 [ root@curl:/ ]$ exit
@@ -237,23 +239,22 @@ info: Microsoft.Hosting.Lifetime[0]
       Content root path: /app
 ```
 
-Now repeat Task #6 inside the left window, this time repeat `curl http://...` command several times and observe the right "monitoring" session, you should see new logs coming.
+Now repeat `Task #6` inside your left-hand Terminal window. This time repeat `curl http://...` command several times and observe the right "monitoring" session, you should see new logs coming.
 
 ```bash
 # Get IP address of the app-a pod
-kubectl get po app-a -o wide
-NAME    READY   STATUS    RESTARTS   AGE   IP            NODE                                NOMINATED NODE   READINESS GATES
-app-a   1/1     Running   0          14m   10.244.0.34   aks-nodepool1-95835493-vmss000000   <none>           <none>
+kubectl get po app-a -o jsonpath='{.status.podIP}'
+10.244.0.9
 
 # Start our test `curl` pod
 kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -- sh
 
-# test http://10.244.0.34/weatherforecast endpoint
-[ root@curl:/ ]$ curl http://10.244.0.34/weatherforecast
-[ root@curl:/ ]$ curl http://10.244.0.34/weatherforecast
-[ root@curl:/ ]$ curl http://10.244.0.34/weatherforecast
-[ root@curl:/ ]$ curl http://10.244.0.34/weatherforecast
-[ root@curl:/ ]$ curl http://10.244.0.34/weatherforecast
+# Test http://10.244.0.9/weatherforecast endpoint
+[ root@curl:/ ]$ curl http://10.244.0.9/weatherforecast
+[ root@curl:/ ]$ curl http://10.244.0.9/weatherforecast
+[ root@curl:/ ]$ curl http://10.244.0.9/weatherforecast
+[ root@curl:/ ]$ curl http://10.244.0.9/weatherforecast
+[ root@curl:/ ]$ curl http://10.244.0.9/weatherforecast
 
 # exit from the pod
 [ root@curl:/ ]$ exit

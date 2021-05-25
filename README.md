@@ -12,11 +12,23 @@ This is introduction level (101) workshop for those of you who have never worked
  The workshops consists of 11 labs and estimated time is 3 hours.
  
 ## [Workshop #2 - Advanced AKS configuration](02-aks-advanced-configuration/readme.md)
-## Workshop #3 - Monitoring AKS
+
+The focus for this workshop is advanced configuration aspects of AKS cluster and you will learn:
+
+* how to deploy AKS into your Private Virtual Network 
+* how to configure multiple node pools for system and user workloads
+* how to deploy aad-pod-identity and how to enable pod identity for your applications
+* how to deploy and configure nginx ingress controller and how to configure ingress for your services
+* how to configure egress traffic
+* how to expose your AKS publicly with Azure API Management 
+* how to upgrade your AKS cluster
+
+Workshop is organized as a combination of theoretical blocks and 10 labs.
+
+## Workshop #3 - Use Pulumi to provision and configuring AKS cluster
 ## Workshop #4 - Service mesh with linkerd
 ## Workshop #5 - AKS application deployment options
 ## Workshop #6 - security
-## Workshop #3 - Use Pulumi to provision and configuring AKS cluster
 
 
 

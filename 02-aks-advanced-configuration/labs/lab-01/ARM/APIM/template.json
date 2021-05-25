@@ -10,8 +10,10 @@
       }
     },
     "variables": {
-      "apimServiceName": "[concat('iac-ws2-', parameters('userName'), '-apim')]",
-      "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'iac-ws2-base-vnet', 'apim-net')]"
+      "prefix": "iac-ws2",
+      "vnetName": "[concat(variables('prefix'), '-vnet')]",
+      "apimServiceName": "[concat(variables('prefix'), '-', parameters('userName'), '-apim')]",
+      "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), 'apim-net')]"
     },
     "resources": [
       {

@@ -1,105 +1,54 @@
-# lab-03 - ....
+# lab-03 - build and push docker images to Container Registry
 
-## Estimated completion time - 50 min
+## Estimated completion time - 10 min
 
-![model](images/apim-agw-front-door.png)
+To test different use-cases during our workshop, I have made two simple dotnet core api applications. They are located under `02-aks-advanced-configuration\src\` folder. If you are using Visual Studio, open them by using `apps.sln` file. 
+* Both `api-a` and `api-b` have two controllers called `HealthController` and `ReadinessController` that are used to configure liveness and readiness probes for Kubernetes pods. 
+* `api-a` `ApiController` controller traces a message to the output.
+* `api-b` `ApiController` controller calls endpoint configured at `ApiAServiceUrl` app setting key.
+* `api-b` `KeyVaultTestController` controller is used at `lab-05` when we work with `Managed Identities`. It reads secret from KeyVault using Managed Identity, assigned to the pod. 
 
-## Goals
+Let's push these applications to our Azure Container Registry.
 
-## Task #1 - create AKS resources
+## Task #1 - build and push `api-a` application
+
+Let's publish `api-a` image to the Azure Container Registry.
 
 ```bash
-# Set your user name for global resources (LogAnalytics, AppInsight, APIM etc...)
-YOUR_NAME="evg"
+# Go to aks-workshops\02-aks-advanced-configuration\src\api-a folder
+cd aks-workshops\02-aks-advanced-configuration\src\api-a
 
-# Create AKS resource group
-az group create -g iac-ws2-aks-blue-rg -l westeurope 
+# Build and publish apib:v1 image into your ACR
+az acr build --registry iacws2<YOUR-NAME>acr --image apia:v1 --file Dockerfile ..
+```
 
-# Create AKS Vnet
-az network vnet create -g iac-ws2-aks-blue-rg -n iac-ws2-aks-blue-vnet --address-prefix 10.11.0.0/16 --subnet-name aks-net --subnet-prefix 10.11.0.0/20
+## Task #2 - build and push `api-b` application
 
-# Get base VNet Id
-BASE_VNET_ID="$(az network vnet show -g iac-ws2-base-rg -n iac-ws2-base-vnet --query id -o tsv)"
+Let's publish `api-b` image to the Azure Container Registry.
 
-# Establish VNet peering from AKS VNet to base VNet
-az network vnet peering create -g iac-ws2-aks-blue-rg -n aks-blue-to-base --vnet-name iac-ws2-aks-blue-vnet --allow-vnet-access --allow-forwarded-traffic --remote-vnet $BASE_VNET_ID
+```bash
+# Go to aks-workshops\02-aks-advanced-configuration\src\api-b folder
+cd aks-workshops\02-aks-advanced-configuration\src\api-b
 
-# Get AKS VNet ID
-AKS_BLUE_VNET_ID="$(az network vnet show -g iac-ws2-aks-blue-rg -n iac-ws2-aks-blue-vnet --query id -o tsv)"
-
-# Establish VNet peering from base VNet to AKS VNet
-az network vnet peering create -g iac-ws2-base-rg -n base-to-aks-blue --vnet-name iac-ws2-base-vnet --allow-vnet-access --allow-forwarded-traffic --remote-vnet $AKS_BLUE_VNET_ID
-
-# Get workspace resource id
-WORKSPACE_ID="$(az monitor log-analytics workspace show -g iac-ws2-base-rg -n iac-ws2-${YOUR_NAME}-la --query id -o tsv)"
-
-# Create Azure AD group iac-ws2
-az ad group create --display-name iac-ws2 --mail-nickname iac-ws2
-
-# Get your user Azure AD objectId 
-USER_ID="$(az ad user show --id "<AZURE-AD-USER-NAME>" --query objectId -o tsv)"
-
-# Sometimes userPrincipalName is in really strange format. In that case, you can try to search
-USER_ID="$(az ad user list --query "[?contains(userPrincipalName, '<PART-OF-USER-NAME>')].objectId" -o tsv)"
-
-# Add user into iac-ws2 Azure AD group. Use object Id from previous query 
-az ad group member add -g iac-ws2 --member-id ${USER_ID}
-
-# Get iac-ws2 Azure AD group id)
-ADMIN_GROUP_ID="$(az ad group show -g iac-ws2 --query objectId -o tsv)"
-
-# Get subnet Id
-SUBNET_ID="$(az network vnet subnet show -g iac-ws2-aks-blue-rg --vnet-name iac-ws2-aks-blue-vnet -n aks-net --query id -o tsv)"
-
-# Create user assigned managed identity
-az identity create --name iac-ws2-aks-blue-mi --resource-group iac-ws2-aks-blue-rg
-
-# Get managed identity ID
-MANAGED_IDENTITY_ID="$(az identity show --name iac-ws2-aks-blue-mi --resource-group iac-ws2-aks-blue-rg --query id -o tsv)"
-
-# Create AKS cluster
-az aks create -g iac-ws2-aks-blue-rg -n aks-ws2-blue \
-    --nodepool-name systempool  \
-    --node-count 1 \
-    --max-pods 110 \
-    --enable-aad --aad-admin-group-object-ids ${ADMIN_GROUP_ID} \
-    --kubernetes-version 1.19.6 \
-    --network-plugin azure \
-    --network-policy calico \
-    --vm-set-type VirtualMachineScaleSets \
-    --docker-bridge-address 172.17.0.1/16 \
-	--enable-managed-identity \
-    --assign-identity ${MANAGED_IDENTITY_ID} \
-    --vnet-subnet-id ${SUBNET_ID} \
-    --no-ssh-key \
-    --attach-acr iacws2${YOUR_NAME}acr \
-    --enable-addons monitoring --workspace-resource-id ${WORKSPACE_ID}
-
-# Get AKS credentials
-az aks get-credentials -g iac-ws2-aks-blue-rg -n aks-ws2-blue --overwrite-existing
-
-# Get nodes
-kubectl get nodes
-To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code C9HNNZ8SE to authenticate.
-# Because of we enabled RBAC, we need to authenticate with Azure AD
-NAME                             STATUS   ROLES   AGE   VERSION
-aks-system-40523769-vmss000000   Ready    agent   52m   v1.19.6
+# Build and publish apib:v1 image into your ACR
+az acr build --registry iacws2<YOUR-NAME>acr --image apib:v1 --file Dockerfile ..
 ```
 
 ## Useful links
 
-* [Azure Container Registry documentation](https://docs.microsoft.com/en-us/azure/container-registry/?WT.mc_id=AZ-MVP-5003837)
-* [Configure Azure CNI networking in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/configure-azure-cni?WT.mc_id=AZ-MVP-5003837)
-https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-advanced-scheduler
-https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools
-https://docs.microsoft.com/en-us/azure/aks/use-system-pools
-https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+* [Visual Studio 2019 Community Edition](https://visualstudio.microsoft.com/downloads/?WT.mc_id=AZ-MVP-5003837)
+* [Download .NET 5.0](https://dotnet.microsoft.com/download/dotnet/5.0?WT.mc_id=AZ-MVP-5003837)
+* [Create your first Docker container with an ASP.NET web app](https://tutorials.visualstudio.com/aspnet-container/containerize?WT.mc_id=AZ-MVP-5003837)
+* [Visual Studio Container Tools with ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/docker/visual-studio-tools-for-docker?view=aspnetcore-5.0&WT.mc_id=AZ-MVP-5003837)
+* [Container Tools in Visual Studio](https://docs.microsoft.com/en-us/visualstudio/containers/?view=vs-2019&WT.mc_id=AZ-MVP-5003837)
+* [How to configure Visual Studio Container Tools](https://docs.microsoft.com/en-us/visualstudio/containers/container-tools-configure?view=vs-2019&WT.mc_id=AZ-MVP-5003837)
+* [az acr build command](https://docs.microsoft.com/en-us/cli/azure/acr?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837#az_acr_build)
+* [Push your first image to a private Docker container registry using the Docker CLI](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli?WT.mc_id=AZ-MVP-5003837)
 
-
-## Next: 
+## Next: working with AKS node pools
 
 [Go to lab-04](../lab-04/readme.md)
 
 ## Feedback
 
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/xx) to comment on this lab. 
+* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/17) to comment on this lab. 

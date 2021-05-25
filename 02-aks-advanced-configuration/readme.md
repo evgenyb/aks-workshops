@@ -2,39 +2,36 @@
 
 ![logo](images/logo.png)
 
-
-
-Here is the agenda for the workshops:
+Here is the preliminary agenda for the workshops (still work in progress):
  
  * Slides - Workshop introduction
- * Slides - Networking (VNet, NSG, peering, AKS capacity planning, Prefix)
- * Lab-01 - configure Private Virtual Networks
- * Lab-02 - provision APIM (50 min) -> fire and forget
+ * Slides - Workshop architecture overview
+ * [Lab-01](labs/lab-01/readme.md) - provision supporting resources
  * Slides - AKS configuration (Network, egress, RBAC, Managed Identity, Network Policy, Node Pools, )  
- * Lab-03 - provision AKS and all prerequisites
+ * [Lab-02](labs/lab-02/readme.md) - provision AKS cluster
  * Slides - guinea pig apps walk through
- * Lab-04 - build and push docker images
- * Lab-05 - deploy applications and services to AKS
+ * [Lab-03](labs/lab-03/readme.md) - build and push docker images to Container Registry
+ * Pause 10 min
  * Slides - AKS node pools
- * Lab-06 - add new node pool for our workload
+ * [Lab-04](labs/lab-04/readme.md) - working with AKS node pools
  * Slides - AAD Pod Identity
- * Lab-07 - add aad-pod-identity support into AKS 
+ * [Lab-05](labs/lab-05/readme.md) - add aad-pod-identity support into AKS
  * Slides - Kubernetes Ingress Controller
- * Lab-08 - deploy nginx ingress controller
+ * Pause 10 min
+ * [Lab-06](labs/lab-06/readme.md) - deploy nginx ingress controller
  * Slides - API Management 101 
- * Lab-09 - deploy api-b API to API Management
- * Lab-10 - AKS egress 
- * Slides AKS upgrade options
- * Lab-11 - upgrade AKS - mutable
- * Lab-12 - upgrade AKS - immutable
- * Lab-13 - cleaning up resources
-
+ * [Lab-07](labs/lab-07/readme.md) - deploy API to API Management
+ * Slides - AKS egress options
+ * Pause 10 min
+ * [Lab-08](labs/lab-08/readme.md) - AKS egress
+ * Slides - Resource Management
+ * [Lab-09](labs/lab-09/readme.md) - Resource Management
+ * [Lab-10](labs/lab-10/readme.md) - cleaning up resources
  
- * Slides - AAD Pod Identity
-
 ## Links
 
 * [Prerequisites](prerequisites.md)
+* [Naming conventions](naming-conventions.md)
 
 ## Feedback
 

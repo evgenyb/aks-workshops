@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: iacws2evgacr.azurecr.io/apib:v11
+        image: iacws2evgacr.azurecr.io/apib:v1
         imagePullPolicy: IfNotPresent
         resources: {}
         livenessProbe:
@@ -50,15 +50,9 @@ spec:
           initialDelaySeconds: 3
           periodSeconds: 3
         volumeMounts:
-        - name: secrets
-          mountPath: /app/secrets
-          readOnly: true          
         - name: appsettings
           mountPath: /app/config          
       volumes:
-      - name: secrets
-        secret:
-          secretName: api-b-secret-appsettings
       - name: appsettings
         configMap:
           name: api-b-appsettings

@@ -1,37 +1,25 @@
-# lab-10 - AKS egress
+# lab-10 - cleaning up
 
-## Estimated completion time - xx min
+## Estimated completion time - 10 min
 
+To avoid Azure charges, you should clean up unneeded resources. When the cluster is no longer needed, use the az group delete command to remove the ACR, AKS, resource group and all related resources.
 
 ## Goals
 
-## Task #1 - 
+* Cleanup unused resources to avoid unnecessary Azure costs
+
+## Task #1 - delete the cluster
+
+When you are done, delete both resource groups.
 
 ```bash
-# Get Public IP prefix ID
-az network public-ip prefix show  -g iac-ws2-base-rg -n iac-ws2-pip-prefix --query id
+# Delete aks-blue resource group
+az group delete -n iac-ws2-blue-rg --yes
 
-# Create public IP address from prefix 
-az network public-ip create -g iac-ws2-aks-blue-rg -n iac-ws2-aks-blue-egress-pip --sku Standard --public-ip-prefix <PREFIX-ID> 
-
-# Get public egress IP ID
-az network public-ip show -g iac-ws2-aks-blue-rg -n iac-ws2-aks-blue-egress-pip --query id
-
-# Update AKS egress with PIP maintained by us
-az aks update -g iac-ws2-aks-blue-rg -n aks-ws2-blue  \
-	--load-balancer-outbound-ips <PUBLIC-EGRESS-IP-ID>
-
+# Delete base resource group
+az group delete -n iac-ws2-rg --yes
 ```
 
 ## Useful links
-https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic
-https://docs.microsoft.com/en-us/azure/aks/egress
 
-
-## Next: 
-
-[Go to lab-11](../lab-11/readme.md)
-
-## Feedback
-
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/xx) to comment on this lab. 
+* [az group delete](https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837#az_group_delete)
