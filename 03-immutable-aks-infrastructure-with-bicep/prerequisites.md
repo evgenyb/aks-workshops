@@ -73,28 +73,3 @@ If you are deploying an AKS service for the first time in your subscription, you
 # Register Microsoft.ContainerService provider
 az provider register --namespace 'Microsoft.ContainerService'
 ```
-
-## Create your Azure DevOps account
-
-If you don't have an Azure DevOps, please create one before the workshop.
-[Azure DevOps - start for free](https://azure.microsoft.com/en-gb/services/devops/)
-
-## Create a new Project at Azure DevOps
-
-Follow this [how-to guide](https://docs.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=preview-page) and create a new project called `iac-aks-ws3`. Feel free to use existing project, if you already have one.
-
-## Create a new git repository
-
-Create new git repository under your Azure DevOps project. Follow this [how-to guide](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-new-repo?toc=%2Fazure%2Fdevops%2Forganizations%2Ftoc.json&bc=%2Fazure%2Fdevops%2Forganizations%2Fbreadcrumb%2Ftoc.json&view=azure-devops) and create a new repository called `immutable-aks`.
-
-## Check that you have access to Azure DevOps
-
-Try to login to your Azure DevOps Account. Use some time and get yourself familiar with this product. During the workshop we will use the following features of this product:
-
-<<<<<<< HEAD
-* [Repositories](https://docs.microsoft.com/en-gb/azure/devops/repos/get-started/what-is-repos?view=azure-devops) - here we will keep our source code
-* [Pipelines](https://docs.microsoft.com/en-gb/azure/devops/pipelines/get-started/what-is-azure-pipelines?view=azure-devops) - all our build and release pipelines will be implemented here
-=======
-* [Repos](https://docs.microsoft.com/en-gb/azure/devops/repos/get-started/what-is-repos?view=azure-devops) - here we will keep our source code
-* [Pipelines](https://docs.microsoft.com/en-gb/azure/devops/pipelines/get-started/what-is-azure-pipelines?view=azure-devops) - all our build and release pipelines will be implemented here
->>>>>>> main
