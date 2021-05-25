@@ -1,5 +1,5 @@
-param environment string = 'dev'
-param slot string = 'blue'
+var environment = 'dev'
+var slot = 'blue'
 
 var fdName = 'iac-${environment}-${uniqueString(resourceGroup().id)}-fd'
 var agwPipName = 'iac-${environment}-${slot}-agw-pip'

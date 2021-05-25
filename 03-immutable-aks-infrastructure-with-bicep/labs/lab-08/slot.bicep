@@ -1,6 +1,6 @@
-param environment string = 'dev'
-param slot string = 'blue'
-param vnetAddressPrefixBase string = '10.11'
+var environment = 'dev'
+var slot = 'blue'
+var vnetAddressPrefixBase = '10.10'
 
 var vnetAddressPrefix = '${vnetAddressPrefixBase}.0.0/16'
 var aksSubnetAddressPrefix = '${vnetAddressPrefixBase}.0.0/20'
@@ -10,7 +10,6 @@ var agwName = 'iac-${environment}-${slot}-aks-agw'
 var aksName = 'iac-${environment}-${slot}-aks' 
 var agwPipName = 'iac-${environment}-${slot}-agw-pip'
 var aksNsgName = 'iac-${environment}-${slot}-aks-nsg' 
-var agwNsgName = 'iac-${environment}-${slot}-agw-nsg' 
 
 resource aksNsg 'Microsoft.Network/networkSecurityGroups@2020-11-01' = {
   name: aksNsgName

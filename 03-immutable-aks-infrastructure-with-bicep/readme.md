@@ -16,9 +16,8 @@ Here is the agenda for the workshops:
  * [Lab-06](labs/lab-06/readme.md) - Convert an existing ARM to Bicep
  * [Lab-07](labs/lab-07/readme.md) - Loops
  * Slide - Implement AKS infrastructure
- * Lab-08 - Implement AKS infrastructure
- * Slides - CI/CD with github actions
- 
+ * [Lab-08](labs/lab-08/readme.md) - Implement AKS infrastructure
+  
 ## Links
 
 * [Prerequisites](prerequisites.md)

@@ -9,7 +9,7 @@
             "value": "green"
         },
         "vnetAddressPrefixBase": {
-            "value": "10.12"
+            "value": "10.11"
         }
     }
 }

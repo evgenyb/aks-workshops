@@ -44,7 +44,7 @@ You should now see `vnet.bicep` file with Bicep version of ARM templates.
 
 ## Next: Loops
 
-[Go to lab-06](../lab-07/readme.md)
+[Go to lab-07](../lab-07/readme.md)
 
 ## Feedback
 

@@ -115,10 +115,10 @@ You should see the same that it's expected that three new `userAssignedIdentitie
 * [Bicep playground](https://bicepdemo.z22.web.core.windows.net/)
 * [Loops](https://github.com/Azure/bicep/blob/main/docs/spec/loops.md)
 
-## Next: 
+## Next: Implement AKS infrastructure
 
-[Go to lab-06](../lab-07/readme.md)
+[Go to lab-08](../lab-08/readme.md)
 
 ## Feedback
 
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/31) to comment on this lab. 
+* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/32) to comment on this lab. 
