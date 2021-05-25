@@ -164,6 +164,76 @@ You need to refactor `base.bicep` template so it fulfills the following requirem
 az deployment sub create -f infra-base.bicep -p environment=dev -p slot=blue  -l westeurope
 ```
 
+Normally it takes up to 5 min for Front Door to deploy changes. Eventually, when you navigate to Front Door URL, you should see the same page you got when accessed via Ingress public IP.
+
+You can find URL at the portal (you will have a different URL)
+
+![fd-portal](images/fd-portal.png)
+
+![fd-app](images/fd-app.png)
+
+## Task #8 - provision `green` slot 
+
+Make sure that `dev-green.json` file contains correct values for `environment`, `slot` and `vnetAddressPrefixBase` parameters (it should be `dev`, `green` and `10.11`).
+
+Provision the `green` slot using `infra-slot.bicep` template
+
+```bash
+# Provision green slot
+az deployment sub create -f infra-slot.bicep -p dev-green.json -l westeurope
+```
+
+Provisioning takes approx. 10 min.
+
+```bash
+# Get agw resource id
+agwId=$(az network application-gateway show -g iac-dev-green-rg -n iac-dev-green-aks-agw --query id -otsv)
+
+# Enable ingress-appgw addon
+az aks enable-addons -n iac-dev-green-aks -g iac-dev-green-rg -a ingress-appgw --appgw-id $agwId
+
+# Get AKS credentials
+az aks get-credentials -n iac-dev-green-aks -g iac-dev-green-rg --overwrite-existing
+
+# Deploy simple sample-app pods
+kubectl apply -f https://raw.githubusercontent.com/Azure/application-gateway-kubernetes-ingress/master/docs/examples/sample-app/deployment.yaml
+
+# Deploy simple sample-app service
+kubectl apply -f https://raw.githubusercontent.com/Azure/application-gateway-kubernetes-ingress/master/docs/examples/sample-app/service.yaml
+
+# Deploy simple sample-app ingress
+kubectl apply -f https://raw.githubusercontent.com/Azure/application-gateway-kubernetes-ingress/master/docs/examples/sample-app/ingress-http.yaml
+
+# Check ingress resource 
+kubectl get ing -w
+NAME        CLASS    HOSTS   ADDRESS         PORTS   AGE
+sample-app   <none>   *          80      19s
+sample-app   <none>   *       13.95.211.200   80      19s
+```
+
+Eventually, you should see the public ip address is assigned to the ingress. 
+When IP is assigned, try to `curl` it or open it in the browser. 
+
+```bash
+# Test that app is up and running and accessible from 
+curl http://13.95.211.200/
+```
+
+You should see the following page:
+![sample-app](images/sample-app.png)
+
+Now, let's re-configure front door to route traffic to `green` slot.
+
+```bash
+# Reconfigure front door towards green slot
+az deployment sub create -f infra-base.bicep -p environment=dev -p slot=green -l westeurope
+```
+
+Normally it takes up to 5 min for Front Door to deploy changes. Eventually, when you navigate to Front Door URL, you should see the same page you got when accessed via Ingress public IP. Eventually you will see that the page has changed to the one we deployed to `green` slot. 
+
+![fd-app](images/fd-app.png)
+
+
 ## Useful links
 
 * [What is Application Gateway Ingress Controller?](https://docs.microsoft.com/en-us/azure/application-gateway/ingress-controller-overview)
