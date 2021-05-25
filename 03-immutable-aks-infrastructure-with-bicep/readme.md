@@ -17,6 +17,7 @@ Here is the agenda for the workshops:
  * [Lab-07](labs/lab-07/readme.md) - Loops
  * Slide - Implement AKS infrastructure
  * [Lab-08](labs/lab-08/readme.md) - Implement AKS infrastructure
+ * [Lab-09](labs/lab-09/readme.md) - Cleaning up
   
 ## Links
 

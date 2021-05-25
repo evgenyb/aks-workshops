@@ -170,7 +170,7 @@ az deployment sub create -f infra-base.bicep -p environment=dev -p slot=blue  -l
 * [What is Azure Front Door?](https://docs.microsoft.com/en-us/azure/frontdoor/front-door-overview)
 * [Bicep playground](https://bicepdemo.z22.web.core.windows.net/)
 
-## Next: 
+## Next: Cleaning up
 
 [Go to lab-09](../lab-09/readme.md)
 
