@@ -47,11 +47,10 @@ Finally, provision AKS. Let's all us use the same cluster name - `aks-ws1`
 
 ```bash
 # get workspace resource id
-az monitor log-analytics workspace show -g iac-aks-ws1-rg -n iac-aks-ws1-<YOU-NAME>-la --query id -o tsv
-"/subscriptions/8878beb2-5e5d-4418-0000-783674eea324/resourcegroups/iac-aks-ws1-rg/providers/microsoft.operationalinsights/workspaces/iac-aks-ws1-<YOU-NAME>-la"
+WORKSPACE_ID=$(az monitor log-analytics workspace show -g iac-aks-ws1-rg -n iac-aks-ws1-<YOU-NAME>-la --query id -o tsv)
 
 # Provision new AKS cluster
-az aks create --resource-group iac-aks-ws1-rg --name aks-ws1 --node-count 1 --kubernetes-version 1.19.6 --attach-acr iacaksws1<YOU-NAME>acr --generate-ssh-keys --enable-addons monitoring --workspace-resource-id "<WORKSPACE-ID>"
+az aks create --resource-group iac-aks-ws1-rg --name aks-ws1 --node-count 1 --kubernetes-version 1.20.7 --attach-acr iacaksws1<YOU-NAME>acr --generate-ssh-keys --enable-addons monitoring --workspace-resource-id $WORKSPACE_ID
 ```
 
 ## Task #2 - install kubectl
@@ -99,7 +98,7 @@ To verify the connection to your cluster, let's use the `kubectl get` commands t
 # Get nodes
 kubectl get nodes
 NAME                                STATUS   ROLES   AGE     VERSION
-aks-nodepool1-95835493-vmss000000   Ready    agent   6m24s   v1.18.14
+aks-nodepool1-95835493-vmss000000   Ready    agent   6m24s   v1.20.7
 
 # Get namespaces
 kubectl get ns
