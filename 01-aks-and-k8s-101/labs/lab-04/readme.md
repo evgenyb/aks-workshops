@@ -59,7 +59,8 @@ Now, let's run another version of application (tagged with `:1.0.0`), this time 
 
 ```bash
 # Run pod app-b
-kubectl run app-b --image iacaksws1<YOU-NAME>acr.azurecr.io/apia:1.0.0 pod/app-b created
+kubectl run app-b --image iacaksws1<YOU-NAME>acr.azurecr.io/apia:1.0.0 
+pod/app-b created
 ```
 
 ## Task #2 - get information about pods

@@ -51,7 +51,7 @@ we expect to see all 4 type of log levels, but after changing log level configur
     }
   }
 ```
-we expect to see only logs of typ `Warning` and `Critical`.
+we expect to see only logs of type `Warning` and `Critical`.
 
 ## Goals
 

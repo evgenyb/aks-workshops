@@ -229,7 +229,7 @@ lab6-task3   2/2     2            2           57m
 You can also scale Deployment down to zero
 
 ```bash
-# Scale lab6-task3 Deployment down to 2 replicas
+# Scale lab6-task3 Deployment down to 0 replicas
 kubectl scale deployment lab6-task3 --replicas=0
 deployment.apps/lab6-task3 scaled
 
