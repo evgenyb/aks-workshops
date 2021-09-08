@@ -36,8 +36,18 @@ Workshop goals:
 
 Workshop is organized as a combination of theoretical blocks and 9 labs.
 
-## Workshop #4 - Service mesh with linkerd
-## Workshop #5 - AKS application deployment options
+## [Workshop #4 - GitOps in AKS with Flux](04-gitops-in-aks-with-flux/readme.md)
+
+This workshop covers the basics of GitOps in Kubernetes with [Flux](https://fluxcd.io/) and you will learn:
+ * How to install Flux to AKS cluster
+ * How to configure Flux with your git repositories
+ * How to continuous deliver infrastructure and workloads changes defined with Kubernetes manifests and assembled with [Kustomize](https://kustomize.io/)
+ * How to declaratively manage Helm chart releases with Kubernetes manifests 
+ * Different ways how you can structure your repositories
+ * How to upgrade flux 
+ * How to monitor flux
+
+## Workshop #5 - Service mesh with linkerd
 ## Workshop #6 - security
 
 
