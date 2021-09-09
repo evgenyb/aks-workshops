@@ -10,7 +10,9 @@ This is an introduction level workshop for those of you who have never worked wi
  * Different ways how you can structure your repositories
  * How to upgrade flux 
  * How to monitor flux
- 
+
+## Agenda
+
 Here is the preliminary agenda for the workshops (this is subject to change):
  
  * Welcome
