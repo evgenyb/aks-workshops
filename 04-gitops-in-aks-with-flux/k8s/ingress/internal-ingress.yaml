@@ -1,0 +1,14 @@
+controller:
+  replicaCount: 2
+  service:
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+  nodeSelector: 
+    beta.kubernetes.io/os: linux
+  admissionWebhooks:
+    patch:
+      nodeSelector: 
+        beta.kubernetes.io/os: linux    
+defaultBackend:
+  nodeSelector: 
+    beta.kubernetes.io/os: linux

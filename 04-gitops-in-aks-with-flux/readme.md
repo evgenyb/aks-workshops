@@ -15,9 +15,9 @@ Here is the preliminary agenda for the workshops (this is subject to change):
  
  * Welcome
  * GitOps at AKS with Flux (slides)
- * Lab-01 - setting up new AKS cluster (20 min)
- * Lab-02 - manually configure RBAC, install [aad-pod-identity](https://azure.github.io/aad-pod-identity/) and [NGINX ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress-internal-ip?WT.mc_id=AZ-MVP-5003837) (xx min)
- * Lab-03 - install Flux CLI to your PC and Flux onto your cluster (xx min)
+ * [Lab-01](labs/lab-01/readme.md) - provision AKS cluster (20 min)
+ * [Lab-02](labs/lab-02/readme.md) - post provisioning configuration: namespaces, RBAC, deploy [kured](https://github.com/weaveworks/kured) and [NGINX ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress-internal-ip?WT.mc_id=AZ-MVP-5003837) (xx min)
+ * [Lab-03](labs/lab-03/readme.md) - install Flux CLI to your PC and Flux onto your cluster (xx min)
  * Lab-04 - add repository to Flux with Kubernetes manifests (xx min)
  * Lab-05 - manage Helm Releases with Flux  (xx min)
  * Leb-06 - implement and deploy new AKS environment with Flux
