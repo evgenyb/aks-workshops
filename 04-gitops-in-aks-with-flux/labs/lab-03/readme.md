@@ -39,13 +39,13 @@ Receiving objects: 100% (3/3), done.
 cd .\iac-ws4-flux\
 
 # Create new folder for flux manifests
-mkdir k8s/flux-system
+mkdir clusters/iac-ws4-green-aks/flux-system
 
 # Write install manifests to file
-flux install  --export > ./k8s/flux-system/gotk-components.yaml
+flux install  --export > ./clusters/iac-ws4-green-aks/flux-system/gotk-components.yaml
 
 # Deploy flux components
-kubectl apply -f ./k8s/flux-system/gotk-components.yaml
+kubectl apply -f ./clusters/iac-ws4-green-aks/flux-system/gotk-components.yaml
 
 # Verify that the controllers have started
 flux check
@@ -63,36 +63,27 @@ flux create source git flux-system --url=ssh://git@github.com/evgenyb/iac-ws4-fl
 Behind the scene, flux creates new secret with the same name as the source (`flux-system`) and three data items: `identity`, `identity.pub` and `known_hosts`  
 
 ```powershell
+# Get information about flux-system secret
 kubectl -n flux-system describe secret flux-system
-Name:         flux-system
-Namespace:    flux-system
-
-Type:  Opaque
-
-Data
-====
-known_hosts:   391 bytes
-identity:      1704 bytes
-identity.pub:  381 bytes
 ```
 
 ## Task #5 - create kustomization object, export k8s manifests and commit them to the repo
 
 ```powershell
 # Create a Kustomization object on your cluster
-flux create kustomization flux-system --source=flux-system --path="./k8s/flux-system/" --prune=false --interval=10m
+flux create kustomization flux-system --source=flux-system --path="./clusters/iac-ws4-green-aks/flux-system/" --prune=false --interval=10m
 
-# At this point, it should fail with similar error, because there are no files under ./k8s/flux-system/ folder yet committed into the repository.
-kustomization path not found: stat /tmp/flux-system053895390/k8s/flux-system: no such file or directory
+# At this point, it should fail with similar error, because there are no files under ./clusters/iac-ws4-green-aks/flux-system/ folder yet committed into the repository.
+kustomization path not found: stat /tmp/flux-system053895390/clusters/iac-ws4-green-aks/flux-system: no such file or directory
 ```
 
 ```powershell
 # Export both source and kustomization objects
-flux export source git flux-system > .\k8s\flux-system\gotk-sync.yaml
-flux export kustomization flux-system  >> .\k8s\flux-system\gotk-sync.yaml
+flux export source git flux-system > ./clusters/iac-ws4-green-aks/flux-system/gotk-sync.yaml
+flux export kustomization flux-system  >> ./clusters/iac-ws4-green-aks/flux-system/gotk-sync.yaml
 
 # Generate a kustomization.yaml
-cd .\k8s\flux-system\ 
+cd ./clusters/iac-ws4-green-aks/flux-system/ 
 kustomize create --autodetect
 
 # Commit and push the manifests to Git
@@ -105,7 +96,7 @@ flux get kustomizations --watch
 
 # After about a minute, you should see the READY status to be updated to true and MESSAGE containing 'Applied revision: main/....'
 NAME            READY   MESSAGE                                                                                                 REVISION        SUSPENDED
-flux-system     False   kustomization path not found: stat /tmp/flux-system053895390/k8s/flux-system: no such file or directory                 False
+flux-system     False   kustomization path not found: stat /tmp/flux-system053895390/clusters/iac-ws4-green-aks/flux-system: no such file or directory                 False
 flux-system     Unknown reconciliation in progress              False
 flux-system     Unknown reconciliation in progress              False
 flux-system     True    Applied revision: main/516b34befb68dc706e4e4c476b58956b8374754d main/516b34befb68dc706e4e4c476b58956b8374754d   False
@@ -113,7 +104,7 @@ flux-system     True    Applied revision: main/516b34befb68dc706e4e4c476b58956b8
 
 ## Task #6 - change kustomization interval
 
-Open `.\k8s\flux-system\gotk-sync.yaml` file and change `interval` property `flux-system` kustomization manifests file from `10m0s` to `5m0s`
+Open `./clusters/iac-ws4-green-aks/flux-system/gotk-sync.yaml` file and change `interval` property `flux-system` kustomization manifests file from `10m0s` to `5m0s`
 
 ```yaml
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
@@ -123,7 +114,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 5m0s
-  path: ./k8s/flux-system
+  path: ./clusters/iac-ws4-green-aks/flux-system
   prune: false
   sourceRef:
     kind: GitRepository
