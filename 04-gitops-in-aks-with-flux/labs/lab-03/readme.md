@@ -1,7 +1,14 @@
-# lab-03 - install Flux CLI to your PC and Flux onto your cluster
+# lab-03 - install Flux CLI to your PC and bootstrap Flux onto your cluster
 
 ## Estimated completion time - xx min
 
+Now, let's install flux CLI and bootstrap our cluster. 
+
+## Goals
+
+* Install `flux cli` to your PC 
+* Create new ``github` repository
+* Install `flux` onto your cluster 
 
 ## Task #1 - install Flux CLI 
 
@@ -17,14 +24,16 @@ brew install fluxcd/tap/flux
 choco install flux
 ```
 
-## Task #2 - create github repository for flux manifests
+## Task #2 - create github repository iac-ws4-lab03-05 for flux manifests
+
+You can manually create new repository at github portal using. I am currently learning the [github cli](https://cli.github.com/), so I will create repo using `gh`. Let's use `iac-ws4-lab03-05` as a repository name. That will make troubleshooting easier. If, for some reason, you can't create new repository and you have to re-use the existing one, use your repository name instead.
 
 ```powershell
-# Create a new repository
-gh repo create iac-ws4-flux --private -g VisualStudio -y
+# Create a new repository. Make sure that you run this command outside of github repository, otherwise you will get the following error message  'error: remote origin already exists.' and you will need to clone iac-ws4-lab03-05 to some other folder.
+gh repo create iac-ws4-lab03-05 --private -g VisualStudio -y
 
-✓ Created repository evgenyb/iac-ws4-flux on GitHub
-Cloning into 'iac-ws4-flux'...
+✓ Created repository evgenyb/iac-ws4-lab03-05 on GitHub
+Cloning into 'iac-ws4-lab03-05'...
 remote: Enumerating objects: 3, done.
 remote: Counting objects: 100% (3/3), done.
 remote: Compressing objects: 100% (2/2), done.
@@ -32,79 +41,115 @@ remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
 Receiving objects: 100% (3/3), done.
 ```
 
-## Task #3 - generate manifests file and deploy flux into the cluster
+## Task #3 - bootstrap new cluster
 
-```powershell
-# Go into newly created repository 
-cd .\iac-ws4-flux\
+```bash
+# Export your GitHub access token and username
+$Env:GITHUB_TOKEN='ghp_....'
+$Env:GITHUB_USER='<your-github-username>'
 
-# Create new folder for flux manifests
-mkdir clusters/iac-ws4-green-aks/flux-system
+# Check you have everything needed to run Flux by running 
+flux check --pre
 
-# Write install manifests to file
-flux install  --export > ./clusters/iac-ws4-green-aks/flux-system/gotk-components.yaml
+# Bootstrap the iac-ws4-blue-aks cluster
+flux bootstrap github --owner=$Env:GITHUB_USER --repository=iac-ws4-lab03-05 --branch=main --personal --path=clusters/iac-ws4-blue-aks
 
-# Deploy flux components
-kubectl apply -f ./clusters/iac-ws4-green-aks/flux-system/gotk-components.yaml
-
-# Verify that the controllers have started
-flux check
+# ... eventually you will see 
+✔ notification-controller: deployment ready
+✔ source-controller: deployment ready
+✔ all components are healthy
 ```
 
-## Task #4 - create git source
+## Task #4 - check what Flux bootstrap command above does 
 
-When you run `flux create source git` command, flux will generate SSH deploy and will prompt you to add a deploy key to your repository. You can find `Deploy keys` page under the following URL `https://github.com/YOUR-GITHUB-USER/iac-ws4-flux/settings/keys` 
+The bootstrap command above does following:
 
-```powershell
-# Create a GitRepository object on your cluster by specifying the SSH address of your repo
-flux create source git flux-system --url=ssh://git@github.com/evgenyb/iac-ws4-flux --branch=main --interval=1m
+### Adds Flux component manifests to the repository
+
+Goto your `iac-ws4-lab03-05` repo folder and run pull latest changes
+
+```bash
+# Get latest
+git pull
+Fast-forward
+ .../flux-system/gotk-components.yaml               | 4107 ++++++++++++++++++++
+ .../iac-ws4-blue-aks/flux-system/gotk-sync.yaml    |   26 +
+ .../flux-system/kustomization.yaml                 |    5 +
+ 3 files changed, 4138 insertions(+)
+ create mode 100644 clusters/iac-ws4-blue-aks/flux-system/gotk-components.yaml
+ create mode 100644 clusters/iac-ws4-blue-aks/flux-system/gotk-sync.yaml
+ create mode 100644 clusters/iac-ws4-blue-aks/flux-system/kustomization.yaml
 ```
 
-Behind the scene, flux creates new secret with the same name as the source (`flux-system`) and three data items: `identity`, `identity.pub` and `known_hosts`  
+As you can see it added three files. 
+`gotk-components.yaml` contains Flux k8s manifests such as namespace, Flux Custom Resource Definitions, Flux controllers, Network Policies etc...
+`gotk-sync.yaml` contains [GitRepository](https://fluxcd.io/docs/components/source/gitrepositories/#artifact) resource configured towards newly created `iac-ws4-lab03-05` repository and [Kustomization](https://fluxcd.io/docs/components/kustomize/kustomization/#source-reference) resource configured against `./clusters/iac-ws4-blue-aks` folder in `iac-ws4-lab03-05` repo. 
 
-```powershell
-# Get information about flux-system secret
-kubectl -n flux-system describe secret flux-system
+
+### Adds deployment key
+
+Navigate to the `https://github.com/<YOUR-USER-NAME>/iac-ws4-lab03-05/settings/keys` folder and you will find new deployment key called `flux-system-main-flux-system-./clusters/iac-ws4-blue-aks`
+
+![deployment-key](./images/github-deployment-key.png)
+
+### Deploys Flux Components to your Kubernetes Cluster
+
+```bash
+# Get list of flux controllers 
+kubectl -n flux-system get po
+helm-controller-74b45cbc97-gwvgg           1/1     Running   0          46m
+kustomize-controller-5c74dd5db-pxqth       1/1     Running   0          46m
+notification-controller-7484478487-grlp9   1/1     Running   0          46m
+source-controller-7b4b67684-sfgn5          1/1     Running   0          46m
 ```
 
-## Task #5 - create kustomization object, export k8s manifests and commit them to the repo
+As you can see, by default Flux installs the following controllers:
+* [Helm controller](https://fluxcd.io/docs/components/helm/)
+* [Source controller](https://fluxcd.io/docs/components/source/)
+* [Kustomize controller](https://fluxcd.io/docs/components/kustomize/)
+* [Notification controller](https://fluxcd.io/docs/components/notification/)
 
-```powershell
-# Create a Kustomization object on your cluster
-flux create kustomization flux-system --source=flux-system --path="./clusters/iac-ws4-green-aks/flux-system/" --prune=false --interval=10m
 
-# At this point, it should fail with similar error, because there are no files under ./clusters/iac-ws4-green-aks/flux-system/ folder yet committed into the repository.
-kustomization path not found: stat /tmp/flux-system053895390/clusters/iac-ws4-green-aks/flux-system: no such file or directory
+### Configures Flux components to track the path /clusters/my-cluster/ in the repository
+
+```bash
+# Get list GitRepository resource
+kubectl -n flux-system get GitRepository
+
+# Get flux-system GitRepository details
+kubectl -n flux-system get GitRepository flux-system -oyaml
 ```
 
-```powershell
-# Export both source and kustomization objects
-flux export source git flux-system > ./clusters/iac-ws4-green-aks/flux-system/gotk-sync.yaml
-flux export kustomization flux-system  >> ./clusters/iac-ws4-green-aks/flux-system/gotk-sync.yaml
+Note, that deployment key is stored at the secret called `flux-system`
 
-# Generate a kustomization.yaml
-cd ./clusters/iac-ws4-green-aks/flux-system/ 
-kustomize create --autodetect
+```yaml
+  secretRef:
+    name: flux-system
+```
+    
+```bash
+# Get flux-system secret details
+kubectl -n flux-system get secret flux-system -oyaml
 
-# Commit and push the manifests to Git
-git add -A
-git commit -m "add sync manifests"
-git push
+# Get list of Kustomization resources
+kubectl -n flux-system get Kustomization 
 
-# Wait for Flux to reconcile your previous commit with
-flux get kustomizations --watch
-
-# After about a minute, you should see the READY status to be updated to true and MESSAGE containing 'Applied revision: main/....'
-NAME            READY   MESSAGE                                                                                                 REVISION        SUSPENDED
-flux-system     False   kustomization path not found: stat /tmp/flux-system053895390/clusters/iac-ws4-green-aks/flux-system: no such file or directory                 False
-flux-system     Unknown reconciliation in progress              False
-flux-system     Unknown reconciliation in progress              False
-flux-system     True    Applied revision: main/516b34befb68dc706e4e4c476b58956b8374754d main/516b34befb68dc706e4e4c476b58956b8374754d   False
+# Get flux-system Kustomization details
+kubectl -n flux-system get Kustomization flux-system -oyaml
 ```
 
-## Task #6 - change kustomization interval
+## Task #5 - change kustomization interval
 
-Open `./clusters/iac-ws4-green-aks/flux-system/gotk-sync.yaml` file and change `interval` property `flux-system` kustomization manifests file from `10m0s` to `5m0s`
+At this point, `flux` is installed and "self configured". Now, let's change interval at which the kustomize build output is applied on the cluster. 
+
+```bash
+# Go to the iac-ws4-lab03-05 folder and get latest
+git pull
+Already up to date.
+
+```
+
+Open `clusters/iac-ws4-blue-aks/flux-system/gotk-sync.yaml` file and change `interval` property `flux-system` kustomization manifests file from `10m0s` to `5m0s`
 
 ```yaml
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
@@ -114,15 +159,17 @@ metadata:
   namespace: flux-system
 spec:
   interval: 5m0s
-  path: ./clusters/iac-ws4-green-aks/flux-system
-  prune: false
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
+  ...
 ```
 
-```powershell
+```bash
 # Commit and push the manifests to Git
+git status
+...
+modified:   clusters/iac-ws4-blue-aks/flux-system/gotk-sync.yaml
+...
+
+# Add, commit and push changes
 git add -A
 git commit -m "change interval from 10 to 5 min"
 git push
@@ -133,14 +180,27 @@ flux get kustomizations --watch
 # After about a minute, the applied revision will change and that means that changes we committed to the github are deployed
 
 # Verify that changes are deployed.
-kubectl -n flux-system get ks flux-system -oyaml
+kubectl -n flux-system get ks flux-system -oyaml | grep interval
+interval: 5m0s
 ``` 
 
-The [source-controller](https://fluxcd.io/docs/components/source/) will pull the changes on the cluster, then kustomize-controller will perform a rolling update of all Flux components including itself.
+If you are on Windows and don't have `grep` installed, you can install it by using [chocolaty](https://chocolatey.org/install). 
+
+```bash
+# install GNU grep
+choco install grep
+```
 
 ## Useful links
 
-* [Install the Flux CLI](https://fluxcd.io/docs/installation/#install-the-flux-cli)
+* [FLux: Install the Flux CLI](https://fluxcd.io/docs/installation/#install-the-flux-cli)
+* [FLux: GitRepository](https://fluxcd.io/docs/components/source/gitrepositories/#artifact)
+* [FLux: Kustomization](https://fluxcd.io/docs/components/kustomize/kustomization/#source-reference)
+* [FLux: Helm controller](https://fluxcd.io/docs/components/helm/)
+* [FLux: Source controller](https://fluxcd.io/docs/components/source/)
+* [FLux: Kustomize controller](https://fluxcd.io/docs/components/kustomize/)
+* [FLux: Notification controller](https://fluxcd.io/docs/components/notification/)
+* [CHOCOLATEY - SOFTWARE MANAGEMENT FOR WINDOWS](https://chocolatey.org/install)
 
 ## Next: 
 

@@ -1,0 +1,17 @@
+controller:
+  image:
+     tag: "v1.0.3"
+  replicaCount: 1
+  service:
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    loadBalancerIP: 10.11.1.10
+  nodeSelector: 
+    beta.kubernetes.io/os: linux
+  admissionWebhooks:
+    patch:
+      nodeSelector: 
+        beta.kubernetes.io/os: linux    
+defaultBackend:
+  nodeSelector: 
+    beta.kubernetes.io/os: linux

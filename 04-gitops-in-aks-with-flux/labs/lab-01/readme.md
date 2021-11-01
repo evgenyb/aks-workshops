@@ -1,14 +1,23 @@
-# lab-01 - provision AKS cluster
+# lab-01 - provision AKS cluster and supporting resources
 
 ## Estimated completion time - 20 min
 
-With supporting resource in place, we will configure and provision AKS. Our AKS cluster needs to fullfil the following requirements:
+To start working with labs, we need to provision Azure Kubernetes Service (AKS) instance. There are multiple ways you can provision AKS. For this workshop we will use `Bicep`. AKS and supporting resources are not free and the compute power will come with some costs. We will use the smallest Virtual Machine size for our nodes and we will use only one node. We will also delete all resources when we are finished working with the labs. Here is the list of resources we need to provision:
+
+* Resource Groups
+* Azure Container Registry (ACR)
+* Azure Log Analytics (ACR)
+* Azure Kubernetes Service (AKS)
+
+Our AKS cluster will fullfil the following requirements:
 
 * Integrate AKS with Azure AD to implement Kubernetes RBAC based on a Azure AD identities
 * Implement [advanced (aka Azure CNI)](https://docs.microsoft.com/en-us/azure/aks/concepts-network?WT.mc_id=AZ-MVP-5003837#azure-cni-advanced-networking) networking model
 * Use [managed identities in AKS](https://docs.microsoft.com/en-us/azure/aks/use-managed-identity?WT.mc_id=AZ-MVP-5003837) to create additional resources like load balancers and managed disks in Azure
 * Integrate AKS with Azure Log Analytics for monitoring
 * Integrate AKS with Azure Container Registry
+
+Here is the complete visualization of resources we will provision.
 
 ![model](images/aks-resources.png)
 
@@ -21,17 +30,39 @@ With supporting resource in place, we will configure and provision AKS. Our AKS 
 * Create new Azure AD group for AKS administrators
 * Add your user into AKS admin Azure AD group
 
-## Task #1 - create AKS resources
+## Task #1 - deploy workshop resources
 
-```powershell
-# Select your subscription
-Set-AzContext -Subscription 8878beb2-5e5d-4418-81ae-783674eea324
-```
+`Bicep` template is split into two modules: `base.bicep` and `aks.bicep`. `base.bicep` contains shared resources such as `ACR` and Log Analytics. `aks.bicep` contains resourced used by AKS such as Private Virtual Network, Managed Identity, Egress Public IP address and AKS instance.
+Deployment is orchestrated by the `deployment.bicep` template. There are two parameter files `parameters-blue.json` and `parameters-green.json` representing the `blue` and `green` instance of clusters. 
 
-```powershell
+```bash
+# Select subscription
+az account set --subscription <YOUR-SUBSCRIPTION-ID>
+
 # Deploy your blue environment
-New-AzSubscriptionDeployment -Location WestEurope -TemplateFile .\deployment.bicep -TemplateParameterFile .\parameters-blue.json
+az deployment sub create --location westeurope --template-file .\deployment.bicep  --parameters '@.\parameters-green.json'
+
+# Connect to your clue cluster
+az aks get-credentials --resource-group iac-ws4-blue-rg --name iac-ws4-blue-aks --overwrite-existing
+
+# Get list of namespaces and authenticate with Azure AD
+kubectl get ns
+
+# You will be prompted to enter devicelogin code.
+To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code D2dVS9PW3 to authenticate.
+
+NAME              STATUS   AGE
+default           Active   14m
+kube-node-lease   Active   14m
+kube-public       Active   14m
+kube-system       Active   14m
 ```
+
+At this point the `blue` cluster is active one. If you use [Oh My Posh](https://ohmyposh.dev/docs/), you can configure that the active cluster is shown at the command line prompt, as it's shown below:
+
+![k8s-at-the-command-line](./images/k8s-at-the-command-line.png)
+
+Learn how you can [setup your shell (bash or PowerShell) for better AKS/kubectl experience](https://github.com/evgenyb/aks-workshops/tree/main/01-aks-and-k8s-101/labs/lab-02)
 
 ## Useful links
 

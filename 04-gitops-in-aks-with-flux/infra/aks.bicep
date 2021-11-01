@@ -85,20 +85,11 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
     agentPoolProfiles: [
       {
         name: 'system'
-        count: 3
-        vmSize: 'Standard_B2s'
-        vnetSubnetID: aksSubnet.id
-        osType: 'Linux'
-        mode: 'System'
-        type: 'VirtualMachineScaleSets'
-      }
-      {
-        name: 'user'
         count: 2
         vmSize: 'Standard_B2s'
         vnetSubnetID: aksSubnet.id
         osType: 'Linux'
-        mode: 'User'
+        mode: 'System'
         type: 'VirtualMachineScaleSets'
       }
     ]
