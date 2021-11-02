@@ -24,16 +24,16 @@ brew install fluxcd/tap/flux
 choco install flux
 ```
 
-## Task #2 - create github repository iac-ws4-lab03-05 for flux manifests
+## Task #2 - create github repository iac-ws4-lab03 for flux manifests
 
-You can manually create new repository at github portal using. I am currently learning the [github cli](https://cli.github.com/), so I will create repo using `gh`. Let's use `iac-ws4-lab03-05` as a repository name. That will make troubleshooting easier. If, for some reason, you can't create new repository and you have to re-use the existing one, use your repository name instead.
+You can manually create new repository at github portal using. I am currently learning the [github cli](https://cli.github.com/), so I will create repo using `gh`. Let's use `iac-ws4-lab03` as a repository name. That will make troubleshooting easier. If, for some reason, you can't create new repository and you have to re-use the existing one, use your repository name instead.
 
-```powershell
-# Create a new repository. Make sure that you run this command outside of github repository, otherwise you will get the following error message  'error: remote origin already exists.' and you will need to clone iac-ws4-lab03-05 to some other folder.
-gh repo create iac-ws4-lab03-05 --private -g VisualStudio -y
+```bash
+# Create a new repository. Make sure that you run this command outside of github repository, otherwise you will get the following error message  'error: remote origin already exists.' and you will need to clone iac-ws4-lab03 to some other folder.
+gh repo create iac-ws4-lab03 --private -g VisualStudio -y
 
-✓ Created repository evgenyb/iac-ws4-lab03-05 on GitHub
-Cloning into 'iac-ws4-lab03-05'...
+✓ Created repository evgenyb/iac-ws4-lab03 on GitHub
+Cloning into 'iac-ws4-lab03'...
 remote: Enumerating objects: 3, done.
 remote: Counting objects: 100% (3/3), done.
 remote: Compressing objects: 100% (2/2), done.
@@ -52,7 +52,7 @@ $Env:GITHUB_USER='<your-github-username>'
 flux check --pre
 
 # Bootstrap the iac-ws4-blue-aks cluster
-flux bootstrap github --owner=$Env:GITHUB_USER --repository=iac-ws4-lab03-05 --branch=main --personal --path=clusters/iac-ws4-blue-aks
+flux bootstrap github --owner=$Env:GITHUB_USER --repository=iac-ws4-lab03 --branch=main --personal --path=clusters/iac-ws4-blue-aks
 
 # ... eventually you will see 
 ✔ notification-controller: deployment ready
@@ -66,7 +66,7 @@ The bootstrap command above does following:
 
 ### Adds Flux component manifests to the repository
 
-Goto your `iac-ws4-lab03-05` repo folder and run pull latest changes
+Goto your `iac-ws4-lab03` repo folder and run pull latest changes
 
 ```bash
 # Get latest
@@ -83,12 +83,12 @@ Fast-forward
 
 As you can see it added three files. 
 `gotk-components.yaml` contains Flux k8s manifests such as namespace, Flux Custom Resource Definitions, Flux controllers, Network Policies etc...
-`gotk-sync.yaml` contains [GitRepository](https://fluxcd.io/docs/components/source/gitrepositories/#artifact) resource configured towards newly created `iac-ws4-lab03-05` repository and [Kustomization](https://fluxcd.io/docs/components/kustomize/kustomization/#source-reference) resource configured against `./clusters/iac-ws4-blue-aks` folder in `iac-ws4-lab03-05` repo. 
+`gotk-sync.yaml` contains [GitRepository](https://fluxcd.io/docs/components/source/gitrepositories/#artifact) resource configured towards newly created `iac-ws4-lab03` repository and [Kustomization](https://fluxcd.io/docs/components/kustomize/kustomization/#source-reference) resource configured against `./clusters/iac-ws4-blue-aks` folder in `iac-ws4-lab03` repo. 
 
 
 ### Adds deployment key
 
-Navigate to the `https://github.com/<YOUR-USER-NAME>/iac-ws4-lab03-05/settings/keys` folder and you will find new deployment key called `flux-system-main-flux-system-./clusters/iac-ws4-blue-aks`
+Navigate to the `https://github.com/<YOUR-USER-NAME>/iac-ws4-lab03/settings/keys` folder and you will find new deployment key called `flux-system-main-flux-system-./clusters/iac-ws4-blue-aks`
 
 ![deployment-key](./images/github-deployment-key.png)
 
@@ -143,7 +143,7 @@ kubectl -n flux-system get Kustomization flux-system -oyaml
 At this point, `flux` is installed and "self configured". Now, let's change interval at which the kustomize build output is applied on the cluster. 
 
 ```bash
-# Go to the iac-ws4-lab03-05 folder and get latest
+# Go to the iac-ws4-lab03 folder and get latest
 git pull
 Already up to date.
 
@@ -202,7 +202,7 @@ choco install grep
 * [FLux: Notification controller](https://fluxcd.io/docs/components/notification/)
 * [CHOCOLATEY - SOFTWARE MANAGEMENT FOR WINDOWS](https://chocolatey.org/install)
 
-## Next: 
+## Next: use Flux to deploy Kubernetes manifests
 
 [Go to lab-04](../lab-04/readme.md)
 
