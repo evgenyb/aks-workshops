@@ -2,8 +2,13 @@
 
 ## Estimated completion time - xx min
 
+When you bootstrap Flux with `flux bootstrap` command, it creates "system" `flux-system` git repository source and `flux-system` Kustomization resources. But quite often k8sKubernetes manifests and helm charts are stored at different github repositories, therefore you might need to configure several `GitRepository` resources and corresponding `Kustomization` resources that will fetch the k8s manifests from the source and apply it on the cluster. 
+
+Flux provides you with [flux create source git](https://fluxcd.io/docs/cmd/flux_create_source_git/) and  [flux create kustomization](https://fluxcd.io/docs/cmd/flux_create_kustomization/) set of commands that create these resources.
 
 ## Goals
+
+The goal for this lab is to learn how to create and configure Flux  `GitRepository` and `Kustomization` resources.
 
 * Create Kubernetes secret with Git SSH authentication key
 * Create GitRepository using `flux cli`
@@ -59,11 +64,11 @@ flux create source git iac-ws4-lab04-1 --url=ssh://git@github.com/evgenyb/iac-ws
 ✔ fetched revision: main/7657e4a6680283f530b618d5afb31542dd4a9f05
 ```
 
-Note that we referenced `iac-ws4-lab04` secret created at the step 1.
+Note that here we referenced `iac-ws4-lab04` secret created at the step 1.
 
 ## Task #4 - use `flux cli` to generate `GitRepository` manifest 
 
-Somtimes you only want to generate k8s manifest withtou actually creating resource in Kubernetes. You can still use `flux create source git` command, but with `--export` flag.
+Sometimes, you only want to generate k8s manifest without actually creating resource in Kubernetes. You can still use `flux create source git` command, but with additional `--export` flag.
 
 ```bash
 # Make sure that you are inside iac-ws4-lab04 repo folder
@@ -117,9 +122,108 @@ iac-ws4-lab04-1   ssh://git@github.com/evgenyb/iac-ws4-lab04      True    Fetche
 iac-ws4-lab04-2   ssh://git@github.com/evgenyb/iac-ws4-lab04      True    Fetched revision: main/7657e4a6680283f530b618d5afb31542dd4a9f05   45s
 ```
 
+## Task #5 - create `Kustomization` resource using `flux cli`
+
+A `Kustomization` object defines the source of Kubernetes manifests by referencing an object managed by source-controller, for this lab `GitRepository`, the path to the manifest files within that source, and the interval at which the kustomize build output is applied on the cluster.
+
+Let's create new `Kustomization` resource that will use `iac-ws4-lab04-1` git repository as a source and use path `./k8s/manifests`.
+
+```bash
+flux create kustomization iac-ws4-lab04-1 --source=iac-ws4-lab04-1 --path="./k8s/manifests" --interval=1m
+
+✚ generating Kustomization
+► applying Kustomization
+✔ Kustomization created
+◎ waiting for Kustomization reconciliation
+✗ kustomization path not found: stat /tmp/iac-ws4-lab04-1823367980/k8s/manifests: no such file or directory 
+```
+
+It fails because `k8s/manifests` folder is not found under the `iac-ws4-lab04-1` repo. Let's fix it. 
+
+```bash
+# Make sure that you are inside iac-ws4-lab04 repo folder
+pwd
+Path
+----
+C:\Users\evgen\git\iac-ws4-lab04
+
+# Create k8s/manifests folder structure
+mkdir k8s/manifests
+
+# Move iac-ws4-lab04-2-source.yaml into k8s/manifests folder
+mv ./iac-ws4-lab04-2-source.yaml ./k8s/manifests
+
+# Add, commit and push change to the repo
+git status
+git add -A
+git commit -m "Add k8s/manifests folders"
+git push
+
+# Check the status of iac-ws4-lab04-1 kustomization 
+flux get kustomization iac-ws4-lab04-1 -w
+
+# After about one minute the READY status should be set to True and MESSAGE should contain the current revision
+NAME            READY   MESSAGE                                                                                                         REVISION        SUSPENDED
+iac-ws4-lab04-1 False   kustomization path not found: stat /tmp/iac-ws4-lab04-1483509593/k8s/manifests: no such file or directory                       False
+iac-ws4-lab04-1 Unknown reconciliation in progress              False
+iac-ws4-lab04-1 True    Applied revision: main/cfdea4cb46314c387b624dcd954f4aa5f2d5c27d main/cfdea4cb46314c387b624dcd954f4aa5f2d5c27d   False
+```
+
+## Task #6 - use `flux cli` to generate `Kustomization` manifest file 
+
+Quite often, you only need to generate Kubernetes manifest without actually creating resource in Kubernetes. You can still use `flux create kustomization` command with additional `--export` flag.
+
+```bash
+# Make sure that you are inside iac-ws4-lab04 repo folder
+pwd
+Path
+----
+C:\Users\evgen\git\iac-ws4-lab04
+
+# Generate Kustomization manifest 
+flux create kustomization iac-ws4-lab04-2 --source=iac-ws4-lab04-2 --path="./k8s/manifests" --interval=1m --export > k8s/manifests/iac-ws4-lab04-2-kustomization.yaml
+```
+
+Check the content of the `iac-ws4-lab04-2-kustomization.yaml` file. It should look similar to this one:
+
+```yaml
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: iac-ws4-lab04-2
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  path: ./k8s/manifests
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: iac-ws4-lab04-2
+```
+
+```bash
+# Add, commit and push change to the repo
+git status
+git add -A
+git commit -m "Add iac-ws4-lab04-2-kustomization.yaml under flux"
+git push
+
+# Check the status of iac-ws4-lab04-1 kustomization 
+flux get kustomization iac-ws4-lab04-2 -w
+
+# Eventually, new resource will be created
+NAME            READY   MESSAGE                         REVISION        SUSPENDED
+iac-ws4-lab04-2 False   waiting to be reconciled                        False
+iac-ws4-lab04-2 False   waiting to be reconciled                False
+iac-ws4-lab04-2 Unknown reconciliation in progress              False
+iac-ws4-lab04-2 True    Applied revision: main/cfdea4cb46314c387b624dcd954f4aa5f2d5c27d main/cfdea4cb46314c387b624dcd954f4aa5f2d5c27d   False
+```
+
 ## Useful links
 
-* [k8s: Namespaces](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+* [flux create source git](https://fluxcd.io/docs/cmd/flux_create_source_git/)
+* [flux create kustomization](https://fluxcd.io/docs/cmd/flux_create_kustomization/)
 
 ## Next: 
 
