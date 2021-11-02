@@ -1,6 +1,10 @@
-# lab-04 - use Flux to deploy Kubernetes manifests
+# lab-04 - use Flux Kustomize Controller to deploy Kubernetes manifests
 
 ## Estimated completion time - xx min
+
+The kustomize-controller is a Kubernetes operator, specialized in running continuous delivery pipelines for infrastructure and workloads defined with Kubernetes manifests and assembled with Kustomize.
+
+![kustomize-controller](https://fluxcd.io/img/kustomize-controller.png) 
 
 When you bootstrap Flux with `flux bootstrap` command, it creates "system" `flux-system` git repository source and `flux-system` Kustomization resources. But quite often k8sKubernetes manifests and helm charts are stored at different github repositories, therefore you might need to configure several `GitRepository` resources and corresponding `Kustomization` resources that will fetch the k8s manifests from the source and apply it on the cluster. 
 
@@ -19,7 +23,7 @@ The goal for this lab is to learn how to create and configure Flux  `GitReposito
 ## Task #1 - create new github repository
 
 ```bash
-# Create new iac-ws4-lab04 repository. Make sure that you run this command outside of github repository, otherwise you will get the following error message  'error: remote origin already exists.' and you will need to clone iac-ws4-lab03 to some other folder.
+# Create new iac-ws4-lab04 repository. Make sure that you run this command outside of github repository, otherwise you will get the following error message  'error: remote origin already exists.' and you will need to clone iac-ws4-lab04 to some other folder.
 gh repo create iac-ws4-lab04 --private -g VisualStudio -y
 ```
 
@@ -220,12 +224,20 @@ iac-ws4-lab04-2 Unknown reconciliation in progress              False
 iac-ws4-lab04-2 True    Applied revision: main/cfdea4cb46314c387b624dcd954f4aa5f2d5c27d main/cfdea4cb46314c387b624dcd954f4aa5f2d5c27d   False
 ```
 
+## Task #7 - de-provision blue cluster
+
+```bash
+# Delete blue cluster
+az group delete -g iac-ws4-blue-rg -y
+```
+
 ## Useful links
 
+* [Kustomize Controller](https://fluxcd.io/docs/components/kustomize/)
 * [flux create source git](https://fluxcd.io/docs/cmd/flux_create_source_git/)
 * [flux create kustomization](https://fluxcd.io/docs/cmd/flux_create_kustomization/)
 
-## Next: 
+## Next: manage Helm Releases with Flux
 
 [Go to lab-05](../lab-05/readme.md)
 

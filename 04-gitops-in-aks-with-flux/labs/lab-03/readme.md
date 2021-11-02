@@ -191,6 +191,21 @@ If you are on Windows and don't have `grep` installed, you can install it by usi
 choco install grep
 ```
 
+
+## Task #6 - provision green cluster
+
+We will need a "clean" cluster for `lab #5` and since it takes some time to provision, we will do it now and then it wil be ready while we are working with next lab.
+
+```bash
+# Make sure you are inside infra folder
+pwd 
+C:\Users\evgen\git\aks-workshops\04-gitops-in-aks-with-flux\infra
+
+# Deploy your green cluster
+az deployment sub create --location westeurope --template-file ./deployment.bicep  --parameters './parameters-green.json'
+ \ Running ..
+```
+
 ## Useful links
 
 * [FLux: Install the Flux CLI](https://fluxcd.io/docs/installation/#install-the-flux-cli)

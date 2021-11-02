@@ -35,21 +35,24 @@ Here is the complete visualization of resources we will provision.
 `Bicep` template is split into two modules: `base.bicep` and `aks.bicep`. `base.bicep` contains shared resources such as `ACR` and Log Analytics. `aks.bicep` contains resourced used by AKS such as Private Virtual Network, Managed Identity, Egress Public IP address and AKS instance.
 Deployment is orchestrated by the `deployment.bicep` template. There are two parameter files `parameters-blue.json` and `parameters-green.json` representing the `blue` and `green` instance of clusters. 
 
+Let's provision both clusters.
+
 ```bash
 # Select subscription
 az account set --subscription <YOUR-SUBSCRIPTION-ID>
 
-# Deploy your blue environment
-az deployment sub create --location westeurope --template-file .\deployment.bicep  --parameters '@.\parameters-green.json'
+# Deploy your blue cluster
+az deployment sub create --location westeurope --template-file ./deployment.bicep  --parameters './parameters-blue.json'
+ \ Running ..
 
-# Connect to your clue cluster
+# When provisioning of blue cluster is ready (it takes approx. 5 min), connect to your blue cluster
 az aks get-credentials --resource-group iac-ws4-blue-rg --name iac-ws4-blue-aks --overwrite-existing
 
 # Get list of namespaces and authenticate with Azure AD
 kubectl get ns
 
 # You will be prompted to enter devicelogin code.
-To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code D2dVS9PW3 to authenticate.
+To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code <...> to authenticate.
 
 NAME              STATUS   AGE
 default           Active   14m
