@@ -19,9 +19,10 @@ Here is the preliminary agenda for the workshops (this is subject to change):
  * [Lab-02](labs/lab-02/readme.md) - post provisioning cluster configuration: create namespaces and deploy [NGINX ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress-internal-ip?WT.mc_id=AZ-MVP-5003837) (xx min)
  * [Lab-03](labs/lab-03/readme.md) - install Flux CLI to your PC and bootstrap Flux onto your cluster (xx min)
  * [Lab-04](labs/lab-04/readme.md) - use Flux to deploy Kubernetes manifests (xx min)
- * Lab-05 - manage Helm Releases with Flux  (xx min)
- * Leb-06 - implement and deploy new AKS environment with Flux
- * Lab-07 - setup notifications (xx min)
+ * [Lab-05](labs/lab-05/readme.md) - manage Helm Releases with Flux  (xx min)
+ * [Lab-06](labs/lab-06/readme.md) - kustomize 101
+ * Lab-07 - monorepo as Flux repository structure
+ * Lab-08 - setup notifications (xx min)
  * [Lab-09](labs/lab-09/readme.md) - cleaning up
 
 ## Links
