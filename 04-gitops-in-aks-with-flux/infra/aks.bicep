@@ -3,8 +3,6 @@ param slot string = 'blue'
 param vnetAddressPrefix string = '10.11.0.0/16'
 param aksSubnetAddressPrefix string = '10.11.0.0/23'
 param logAnalyticsWorkspaceId string 
-param tenantId string
-param aadProfileAdminGroupObjectIDs string
 
 var location = resourceGroup().location
 var prefixWithSlot = '${prefix}-${slot}'
@@ -13,8 +11,8 @@ var aksMIName = '${prefixWithSlot}-aks-mi'
 var aksName = '${prefixWithSlot}-aks'
 var aksEgressPipName = '${prefixWithSlot}-aks-egress-pip'
 var nodeResourceGroupName = '${prefixWithSlot}-aks-rg'
-
 var networkContributorRoleId = '4d97b98b-1d4f-4787-a291-c67834d212e7'
+var aadProfileAdminGroupObjectIDs = '<Use Azure AD group object id from lab-01.task1>'
 
 resource vnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
   name: vnetName
@@ -99,7 +97,6 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
       adminGroupObjectIDs: [
         aadProfileAdminGroupObjectIDs
       ]
-      tenantID: tenantId
     }
     networkProfile: {
       networkPlugin: 'azure'

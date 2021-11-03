@@ -63,6 +63,16 @@ az account set --subscription  xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 az account set --subscription subscription_name
 ```
 
+## Install Helm cli
+
+```bash
+# Install helm for Mac
+brew install helm
+
+# Install helm with choco
+choco install kubernetes-helm
+```
+
 ## Register Microsoft.ContainerService Service provider to your Azure subscription
 
 If you are deploying an AKS service for the first time in your subscription, you need to register the `Microsoft.ContainerService` service provider to avoid deployment errors.

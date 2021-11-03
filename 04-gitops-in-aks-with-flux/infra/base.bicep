@@ -2,7 +2,7 @@ param prefix string = 'iac-ws4'
 
 var location = resourceGroup().location
 var prefixForACR = replace(prefix, '-', '')
-var acrName = '${prefixForACR}acr'
+var acrName = '${prefixForACR}evgacr'
 
 var logAnalyticsWorkspaceName = '${prefix}-${uniqueString(subscription().subscriptionId)}-la'
 var logAnalyticsRetentionInDays = 60

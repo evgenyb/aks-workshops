@@ -4,10 +4,8 @@ param tags object
 param location string
 param prefix string = 'iac-ws4'
 param slot string = 'blue'
-param tenantId string 
 param vnetAddressPrefix string
 param aksSubnetAddressPrefix string
-param aadProfileAdminGroupObjectIDs string
 
 var baseResourceGroupName = '${prefix}-rg'
 
@@ -38,10 +36,8 @@ module aks 'aks.bicep' = {
   params: {
     prefix: prefix
     slot: slot
-    tenantId: tenantId
     vnetAddressPrefix: vnetAddressPrefix
     aksSubnetAddressPrefix: aksSubnetAddressPrefix
-    aadProfileAdminGroupObjectIDs: aadProfileAdminGroupObjectIDs
     logAnalyticsWorkspaceId: base.outputs.logAnalyticsWorkspaceId
   }
 }

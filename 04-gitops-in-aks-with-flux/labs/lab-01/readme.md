@@ -30,9 +30,33 @@ Here is the complete visualization of resources we will provision.
 * Create new Azure AD group for AKS administrators
 * Add your user into AKS admin Azure AD group
 
-## Task #1 - deploy workshop resources
+## Task #1 - create new Azure AD group for AKS administrators
 
-`Bicep` template is split into two modules: `base.bicep` and `aks.bicep`. `base.bicep` contains shared resources such as `ACR` and Log Analytics. `aks.bicep` contains resourced used by AKS such as Private Virtual Network, Managed Identity, Egress Public IP address and AKS instance.
+
+```powershell
+# Set your Azure AD username
+$YOUR_AAD_NAME="<YOUR AZURE AD USERNAME>"
+
+# Create Azure AD group iac-ws4
+az ad group create --display-name iac-ws4 --mail-nickname iac-ws4
+
+# Get your Azure AD user objectId 
+$USER_ID="$(az ad user show --id "$YOUR_AAD_NAME" --query objectId -o tsv)"
+
+# Add your user  into iac-ws4 Azure AD group.
+az ad group member add -g iac-ws4 --member-id $USER_ID
+
+# Get iac-ws4 Azure AD group object id
+az ad group show -g iac-ws4 --query objectId -o tsv
+```
+
+## Task #2 - deploy workshop resources
+
+`Bicep` templates are located under `infra` folder and are split into two modules: `base.bicep` and `aks.bicep`. 
+
+`base.bicep` contains shared resources such as `ACR` and Log Analytics. 
+`aks.bicep` contains resourced used by AKS such as Private Virtual Network, Managed Identity, Egress Public IP address and AKS instance.
+
 Deployment is orchestrated by the `deployment.bicep` template. There are two parameter files `parameters-blue.json`, `parameters-green.json` and `parameters-red.json` representing the `blue`, `green` and `red` instance of clusters. 
 
 Let's provision `blue` cluster first.
@@ -67,7 +91,7 @@ At this point the `blue` cluster is active one. If you use [Oh My Posh](https://
 
 Learn how you can [setup your shell (bash or PowerShell) for better AKS/kubectl experience](https://github.com/evgenyb/aks-workshops/tree/main/01-aks-and-k8s-101/labs/lab-02)
 
-## Task #2 - deploy `red` cluster
+## Task #3 - deploy `red` cluster
 
 ```bash
 # Deploy red cluster

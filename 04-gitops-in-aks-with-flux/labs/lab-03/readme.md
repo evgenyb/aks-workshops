@@ -43,6 +43,8 @@ Receiving objects: 100% (3/3), done.
 
 ## Task #3 - bootstrap new cluster
 
+First, generate new [github personal access token](https://github.com/settings/tokens).
+
 ```bash
 # Export your GitHub access token and username
 $Env:GITHUB_TOKEN='ghp_....'

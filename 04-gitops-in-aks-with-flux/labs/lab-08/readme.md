@@ -90,11 +90,14 @@ The `base` folder contains folders for `namespaces` and `nginx-ingress`.
 The `nginx-ingress` folder contains manifest files for `HelmRepository`, `HelmRelease` and `namespace`.
 The `iac-ws4-red-aks` folder contains `patches-nginx-ingress.yaml` with nginx overlays that we have implemented during `lab #6` and look like this:
 
-Feel free to implement this yourself or just check completed version at the `completed-labs\lab-08` folder.
+Feel free to implement this yourself or just check the completed version at the `completed-labs\lab-08` folder.
 
-When it's implemented, commit changes into the `iac-ws4-lab08` repo:
+When it's implemented, let's test it using `kustomize build` commit changes into the `iac-ws4-lab08` repo:
 
 ```bash
+# Test kustomize build. It should contain no errors and should generate YAML manifest
+kustomize build infra/iac-ws4-red-aks
+
 # Add, commit and push changes
 git add -A
 git status
