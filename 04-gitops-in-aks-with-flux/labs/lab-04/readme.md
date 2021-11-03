@@ -185,7 +185,7 @@ spec:
     name: iac-ws4-lab04-2
 ```
 
-## Task #7 - add namespaces.yaml from lab-02 
+## Task #7 - add namespaces.yaml under source control
 
 If you managed to complete `lab-02`, just copy `namespaces.yaml` file into the `k8s/manifests` folder, otherwise create new file with the following content:
 

@@ -13,6 +13,15 @@ The Flux controllers emit Kubernetes events whenever a resource status changes. 
 
 * Setup Flux Notifications into the `Slack`
 
+## Task #0 - switch back to `blue` cluster
+
+Since we already deployed `Kustomization` int the `blue` cluster, let's switch back to it.
+
+```bash
+# Switch to the to iac-ws4-blue-aks
+kubectl config use-context iac-ws4-blue-aks
+```
+
 ## Task #1 - Install Slack and create workspace
 
 If you already using `Slack`, you can skip this step. 
@@ -64,6 +73,42 @@ flux create alert slack-alert --event-severity info --event-source Kustomization
 ```
 
 As always, if you need to generate Kubernetes manifest files without creating resources, use `--export` flag.
+
+## Task #4 - test alert
+
+To test alert, we need to apply a change at manifests under the `Kustomization`. During `lab-04` we added `namespaces.yaml` file under the `k8s/manifests` folder of `iac-ws4-lab04` repo. Let's add new namespace into this file and push the change.
+
+```yaml
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: team-a
+```
+
+```bash
+# Add, commit and push changes
+git add -A
+git commit -m "Add team-a namespace"
+git push
+
+# Check namespaces
+kubectl get ns -w
+NAME              STATUS   AGE
+default           Active   60m
+flux-system       Active   22m
+kube-node-lease   Active   60m
+kube-public       Active   60m
+kube-system       Active   60m
+team-b            Active   15m
+team-c            Active   15m
+team-a            Active   0s
+```
+
+Eventually `team-a` namespace will be created and you should also see the notification alert in your `Slack` channel
+
+![slack-alert](images/slack-alert.png)
+
 
 ## Useful links
 
