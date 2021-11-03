@@ -179,6 +179,6 @@ spec:
 * [flux create source helm](https://fluxcd.io/docs/cmd/flux_create_source_helm/)
 * [flux create helmrelease](https://fluxcd.io/docs/cmd/flux_create_helmrelease/)
 
-## Next: 
+## Next: kustomize 101
 
-[Go to lab-07](../lab-07/readme.md)
+[Go to lab-06](../lab-06/readme.md)
