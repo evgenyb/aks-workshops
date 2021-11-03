@@ -19,6 +19,9 @@ az group delete -g iac-ws4-green-rg -y
 # Delete blue cluster
 az group delete -g iac-ws4-blue-rg -y
 
+# Delete red cluster
+az group delete -g iac-ws4-red-rg -y
+
 # Delete shared resources
 az group delete -g iac-ws4-rg -y
 ```

@@ -8,6 +8,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infra/iac-ws4-green-aks
+  path: ./infra/iac-ws4-red-aks
   prune: true
   validation: client

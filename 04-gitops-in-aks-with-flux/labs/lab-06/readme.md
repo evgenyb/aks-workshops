@@ -136,7 +136,7 @@ spec:
 ```
 Note that properties that must to be overwritten (like `loadBalancerIP`) use `TO-BE-REPLACED` as a value. Properties that can be overwritten, contain the default value.
 
-The `iac-ws4-blue-aks` and `iac-ws4-green-aks` folders contain `kustomization.yaml` file with the following content:
+Both `iac-ws4-blue-aks` and `iac-ws4-green-aks` folders contain `kustomization.yaml` file with the following content:
 
 ```yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
@@ -147,7 +147,7 @@ patchesStrategicMerge:
   - patches-nginx-ingress.yaml
 ```
 
-and `patches-nginx-ingress.yaml` patch file with the following content:
+`patches-nginx-ingress.yaml` patch file inside `iac-ws4-blue-aks` folder the with the following content:
 
 ```yaml
 ---
@@ -168,6 +168,26 @@ spec:
         loadBalancerIP: 10.11.1.10
 ```
 
+`patches-nginx-ingress.yaml` patch file inside `iac-ws4-green-aks` folder the with the following content:
+
+```yaml
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: nginx-ingress
+  namespace: nginx-ingress
+spec:
+  chart:
+    spec:
+      chart: ingress-nginx
+      version: 4.0.5
+  values:
+    controller:
+      replicaCount: 1
+      service:
+        loadBalancerIP: 10.12.1.10
+```
 ## Task #3 - build manifest files for blue cluster
 
 ```bash
@@ -187,9 +207,9 @@ You should see the valid YAML manifest and all `TO-BE-REPLACED` values should be
 * [Kubernetes native configuration management](https://kustomize.io/)
 * [Kustomize tutorial](https://kustomize.io/tutorial)
 
-## Next: monorepo as Flux repository structure
+## Next: working with notifications
 
-[Go to lab-08](../lab-08/readme.md)
+[Go to lab-07](../lab-07/readme.md)
 
 ## Feedback
 

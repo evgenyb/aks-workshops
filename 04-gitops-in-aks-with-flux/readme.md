@@ -21,8 +21,8 @@ Here is the preliminary agenda for the workshops (this is subject to change):
  * [Lab-04](labs/lab-04/readme.md) - use Flux to deploy Kubernetes manifests (xx min)
  * [Lab-05](labs/lab-05/readme.md) - manage Helm Releases with Flux  (xx min)
  * [Lab-06](labs/lab-06/readme.md) - kustomize 101
- * Lab-07 - monorepo as Flux repository structure
- * Lab-08 - setup notifications (xx min)
+ * [Lab-07](labs/lab-07/readme.md) - working with notifications (xx min)
+ * [Lab-08](labs/lab-08/readme.md) - monorepo as Flux repository structure
  * [Lab-09](labs/lab-09/readme.md) - cleaning up
 
 ## Links
