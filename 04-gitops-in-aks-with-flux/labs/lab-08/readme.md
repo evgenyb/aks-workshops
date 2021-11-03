@@ -102,18 +102,7 @@ git commit -m "Initial commit"
 git push
 ```
 
-
-## Task #4 - create a secret with your Slack incoming webhook
-
-We will create `Slack` alerts as part of cluster configuration. We need to create a `Slack` webhook secret. Use the same URL we used at [lab #7](../lab-07/readme.md)
-
-```bash
-# Create a secret with your Slack incoming webhook
-kubectl -n flux-system create secret generic slack-url --from-literal=address=your_slack_webhook
-secret/slack-url created
-```
-
-## Task #5 - bootstrap Flux into the cluster
+## Task #4 - bootstrap Flux into the cluster
 
 ```bash
 # Export your GitHub access token and username
@@ -127,6 +116,29 @@ flux check --pre
 flux bootstrap github --owner=$Env:GITHUB_USER --repository=iac-ws4-lab08 --branch=main --personal --path=clusters/iac-ws4-red-aks
 ```
 
+## Task #5 - create a secret with your Slack incoming webhook
+
+We will create `Slack` alerts as part of cluster configuration. We need to create a `Slack` webhook secret. Use the same URL we used at [lab #7](../lab-07/readme.md)
+
+```bash
+# Create a secret with your Slack incoming webhook
+kubectl -n flux-system create secret generic slack-url --from-literal=address=your_slack_webhook
+secret/slack-url created
+```
+
+## Task #6 - upgrade nginx version
+
+Change `infra\iac-ws4-red-aks\patches-nginx-ingress.yaml` file and update nginx chart version to `4.0.6`. 
+Commit and push changes and observe changes at the `nginx-ingress` namespace.
+
+```bash
+# Watch pod changes at the nginx-ingress namespace
+kubectl -n nginx-ingress get po -w
+```
+
+In addition to that you should see new alerts at the Slack channel
+
+![](images/slack-alerts.png)
 
 ## Useful links
 

@@ -25,6 +25,9 @@ The goal for this lab is to learn how to create and configure Flux  `GitReposito
 ```bash
 # Create new iac-ws4-lab04 repository. Make sure that you run this command outside of github repository, otherwise you will get the following error message  'error: remote origin already exists.' and you will need to clone iac-ws4-lab04 to some other folder.
 gh repo create iac-ws4-lab04 --private -g VisualStudio -y
+
+# Go ito the repo folder
+cd iac-ws4-lab04
 ```
 
 ## Task #2 - create deployment key
@@ -102,30 +105,6 @@ spec:
     name: iac-ws4-lab04
   url: ssh://git@github.com/<YOUR-GITHUB-USER>/iac-ws4-lab04
 ```
-
-Now you can deploy it using `kubectl`
-
-```bash
-# Deploy iac-ws4-lab04-2-source.yaml manifest
-
-kubectl apply -f ./iac-ws4-lab04-2-source.yaml
-gitrepository.source.toolkit.fluxcd.io/iac-ws4-lab04-2 created
-
-# Get list of GitRepositories using flux
-flux get source git
-NAME            READY   MESSAGE                                                         REVISION                                        SUSPENDED
-flux-system     True    Fetched revision: main/042d13d34b222e0a0955f88f09cc84f848545f69 main/042d13d34b222e0a0955f88f09cc84f848545f69   False
-iac-ws4-lab04-1 True    Fetched revision: main/7657e4a6680283f530b618d5afb31542dd4a9f05 main/7657e4a6680283f530b618d5afb31542dd4a9f05   False
-iac-ws4-lab04-2 True    Fetched revision: main/7657e4a6680283f530b618d5afb31542dd4a9f05 main/7657e4a6680283f530b618d5afb31542dd4a9f05   False
-
-# Get list of GitRepositories using kubectl
-kubectl -n flux-system get GitRepository
-NAME              URL                                             READY   STATUS                                                            AGE
-flux-system       ssh://git@github.com/evgenyb/iac-ws4-lab03-05   True    Fetched revision: main/042d13d34b222e0a0955f88f09cc84f848545f69   134m
-iac-ws4-lab04-1   ssh://git@github.com/evgenyb/iac-ws4-lab04      True    Fetched revision: main/7657e4a6680283f530b618d5afb31542dd4a9f05   15m
-iac-ws4-lab04-2   ssh://git@github.com/evgenyb/iac-ws4-lab04      True    Fetched revision: main/7657e4a6680283f530b618d5afb31542dd4a9f05   45s
-```
-
 ## Task #5 - create `Kustomization` resource using `flux cli`
 
 A `Kustomization` object defines the source of Kubernetes manifests by referencing an object managed by source-controller, for this lab `GitRepository`, the path to the manifest files within that source, and the interval at which the kustomize build output is applied on the cluster.
@@ -149,7 +128,7 @@ It fails because `k8s/manifests` folder is not found under the `iac-ws4-lab04-1`
 pwd
 Path
 ----
-C:\Users\evgen\git\iac-ws4-lab04
+...\iac-ws4-lab04
 
 # Create k8s/manifests folder structure
 mkdir k8s/manifests
@@ -206,22 +185,30 @@ spec:
     name: iac-ws4-lab04-2
 ```
 
+## Task #7 - add namespaces.yaml from lab-02 
+
+If you managed to complete `lab-02`, just copy `namespaces.yaml` file into the `k8s/manifests` folder, otherwise create new file with the following content:
+
+```yaml
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: team-b
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: team-c
+```
+
+Add, commit and push changes 
 ```bash
 # Add, commit and push change to the repo
 git status
 git add -A
-git commit -m "Add iac-ws4-lab04-2-kustomization.yaml under flux"
+git commit -m "Add namespaces"
 git push
-
-# Check the status of iac-ws4-lab04-1 kustomization 
-flux get kustomization iac-ws4-lab04-2 -w
-
-# Eventually, new resource will be created
-NAME            READY   MESSAGE                         REVISION        SUSPENDED
-iac-ws4-lab04-2 False   waiting to be reconciled                        False
-iac-ws4-lab04-2 False   waiting to be reconciled                False
-iac-ws4-lab04-2 Unknown reconciliation in progress              False
-iac-ws4-lab04-2 True    Applied revision: main/cfdea4cb46314c387b624dcd954f4aa5f2d5c27d main/cfdea4cb46314c387b624dcd954f4aa5f2d5c27d   False
 ```
 
 ## Task #7 - deploy `green` cluster and get some coffee
