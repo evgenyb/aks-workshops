@@ -32,9 +32,11 @@ cd iac-ws4-lab04
 
 ## Task #2 - create deployment key
 
+Note, you need to replace `<YOUR-GITHUB-USER>` with your user or organization name for each github repository URL.
+
 ```bash
 # Create a Git SSH authentication secret
-flux create secret git iac-ws4-lab04 --url=ssh://git@github.com/evgenyb/iac-ws4-lab04 --ssh-key-algorithm=rsa  --ssh-rsa-bits 4096
+flux create secret git iac-ws4-lab04 --url=ssh://git@github.com/<YOUR-GITHUB-USER>/iac-ws4-lab04 --ssh-key-algorithm=rsa  --ssh-rsa-bits 4096
 
 ✚ deploy key: ssh-rsa AAAAB...==
 
@@ -61,7 +63,7 @@ There are two ways you can create GitRepository. You can manually create k8s man
 
 ```bash
 # Create new github repository 
-flux create source git iac-ws4-lab04-1 --url=ssh://git@github.com/evgenyb/iac-ws4-lab04 --secret-ref iac-ws4-lab04 --branch=main --interval=1m
+flux create source git iac-ws4-lab04-1 --url=ssh://git@github.com/<YOUR-GITHUB-USER>/iac-ws4-lab04 --secret-ref iac-ws4-lab04 --branch=main --interval=1m
 
 ✚ generating GitRepository source
 ► applying GitRepository source
@@ -82,10 +84,10 @@ Sometimes, you only want to generate k8s manifest without actually creating reso
 pwd
 Path
 ----
-C:\Users\evgen\git\iac-ws4-lab04
+...\iac-ws4-lab04
 
 # Generate GitRepository manifest 
-flux create source git iac-ws4-lab04-2 --url=ssh://git@github.com/evgenyb/iac-ws4-lab04 --secret-ref iac-ws4-lab04 --branch=main --interval=1m --export > iac-ws4-lab04-2-source.yaml
+flux create source git iac-ws4-lab04-2 --url=ssh://git@github.com/<YOUR-GITHUB-USER>/iac-ws4-lab04 --secret-ref iac-ws4-lab04 --branch=main --interval=1m --export > iac-ws4-lab04-2-source.yaml
 ```
 
 Check the content of the `iac-ws4-lab04-2-source.yaml` file. It should look like this:
@@ -161,7 +163,7 @@ Quite often, you only need to generate Kubernetes manifest without actually crea
 pwd
 Path
 ----
-C:\Users\evgen\git\iac-ws4-lab04
+...\iac-ws4-lab04
 
 # Generate Kustomization manifest 
 flux create kustomization iac-ws4-lab04-2 --source=iac-ws4-lab04-2 --path="./k8s/manifests" --interval=1m --export > k8s/manifests/iac-ws4-lab04-2-kustomization.yaml
