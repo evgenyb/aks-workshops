@@ -27,10 +27,13 @@
             "value": "10.11.0.0/23"
         },
         "tenantId": {
-            "value": "faf31a1e-aec7-44a8-ae80-843057f39cca"
+            "value": "REPLACE_WITH_YOUR_TENANT_ID"
         },
         "aadProfileAdminGroupObjectIDs": {
-            "value": "4f2a7d8a-3699-4e15-bfbd-50d00bdc938e"
+            "value": "REPLACE_WITH_AAD_GROUP_OBJECTID"
+        },
+        "deployBase": {
+            "value": true
         }
     }
 }
