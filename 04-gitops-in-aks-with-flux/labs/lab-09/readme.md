@@ -13,11 +13,11 @@ To avoid Azure charges, you should clean up unneeded resources. When the cluster
 When you are done, delete both resource groups.
 
 ```bash
-# Delete green cluster
-az group delete -g iac-ws4-green-rg -y
-
 # Delete blue cluster
 az group delete -g iac-ws4-blue-rg -y
+
+# Delete green cluster
+az group delete -g iac-ws4-green-rg -y
 
 # Delete red cluster
 az group delete -g iac-ws4-red-rg -y
