@@ -109,6 +109,9 @@ Eventually `team-a` namespace will be created and you should also see the notifi
 
 ![slack-alert](images/slack-alert.png)
 
+If something is broken, Flux can't get sources or deployment fails, you will receive alerts into `Slack`. Here is another example of Flux reacting when I removed repository that was still in use.
+
+![slack-error-alert](images/slack-error.png)
 
 ## Useful links
 
