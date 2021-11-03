@@ -210,7 +210,3 @@ You should see the valid YAML manifest and all `TO-BE-REPLACED` values should be
 ## Next: working with notifications
 
 [Go to lab-07](../lab-07/readme.md)
-
-## Feedback
-
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/xx) to comment on this lab.

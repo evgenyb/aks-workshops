@@ -126,7 +126,3 @@ If something is broken, Flux can't get sources or deployment fails, you will rec
 ## Next: monorepo as Flux repository structure
 
 [Go to lab-08](../lab-08/readme.md)
-
-## Feedback
-
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/xx) to comment on this lab.

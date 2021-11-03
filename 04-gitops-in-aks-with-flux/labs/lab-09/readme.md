@@ -25,7 +25,6 @@ az group delete -g iac-ws4-red-rg -y
 # Delete shared resources
 az group delete -g iac-ws4-rg -y
 ```
-
 ## Useful links
 
 * [az group delete](https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837#az_group_delete)

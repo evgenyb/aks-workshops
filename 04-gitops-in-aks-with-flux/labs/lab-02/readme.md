@@ -101,7 +101,3 @@ nginx-ingress-ingress-nginx-controller-admission   ClusterIP      10.0.146.49   
 ## Next: install Flux CLI to your PC and Flux onto your cluster
 
 [Go to lab-03](../lab-03/readme.md)
-
-## Feedback
-
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/xx) to comment on this lab. 

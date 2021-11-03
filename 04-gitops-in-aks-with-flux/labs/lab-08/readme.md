@@ -142,12 +142,8 @@ In addition to that you should see new alerts at the Slack channel
 
 ## Useful links
 
-* [Install Kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/)
+* [Ways of structuring your repositories](https://fluxcd.io/docs/guides/repository-structure/)
 
 ## Next: cleaning up
 
 [Go to lab-09](../lab-09/readme.md)
-
-## Feedback
-
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/xx) to comment on this lab.

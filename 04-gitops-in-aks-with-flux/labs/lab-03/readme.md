@@ -207,7 +207,3 @@ choco install grep
 ## Next: use Flux to deploy Kubernetes manifests
 
 [Go to lab-04](../lab-04/readme.md)
-
-## Feedback
-
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/xx) to comment on this lab. 

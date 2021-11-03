@@ -91,7 +91,3 @@ Note, do not connect to this cluster yet. We will use it at `lab-08`.
 ## Next: post provisioning configuration
 
 [Go to lab-02](../lab-02/readme.md)
-
-## Feedback
-
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/xx) to comment on this lab. 

@@ -228,7 +228,3 @@ az deployment sub create --location westeurope --template-file ./deployment.bice
 ## Next: manage Helm Releases with Flux
 
 [Go to lab-05](../lab-05/readme.md)
-
-## Feedback
-
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/xx) to comment on this lab.

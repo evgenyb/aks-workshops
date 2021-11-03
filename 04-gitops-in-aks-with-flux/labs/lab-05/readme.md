@@ -182,7 +182,3 @@ spec:
 ## Next: 
 
 [Go to lab-07](../lab-07/readme.md)
-
-## Feedback
-
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/xx) to comment on this lab.
