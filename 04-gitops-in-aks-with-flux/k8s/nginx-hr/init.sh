@@ -1,0 +1,2 @@
+flux -n nginx-ingress create source helm ingress-nginx --url=https://kubernetes.github.io/ingress-nginx --interval=1m --export > source.yaml
+flux -n nginx-ingress create hr nginx-ingress --source=HelmRepository/ingress-nginx --chart=ingress-nginx --values=./internal-ingress.yaml --export > release.yaml

@@ -17,14 +17,15 @@ Here is the preliminary agenda for the workshops (this is subject to change):
  
  * Welcome
  * GitOps at AKS with Flux (slides)
- * Lab-01 - setting up new AKS cluster (20 min)
- * Lab-02 - manually configure RBAC, install [aad-pod-identity](https://azure.github.io/aad-pod-identity/) and [NGINX ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress-internal-ip?WT.mc_id=AZ-MVP-5003837) (xx min)
- * Lab-03 - install Flux CLI to your PC and Flux onto your cluster (xx min)
- * Lab-04 - add repository to Flux with Kubernetes manifests (xx min)
- * Lab-05 - manage Helm Releases with Flux  (xx min)
- * Leb-06 - implement and deploy new AKS environment with Flux
- * Lab-07 - setup notifications (xx min)
- * Lab-08 - cleaning up
+ * [Lab-01](labs/lab-01/readme.md) - provision AKS cluster and supporting resources (20 min)
+ * [Lab-02](labs/lab-02/readme.md) - post provisioning cluster configuration: create namespaces and deploy [NGINX ingress controller](https://docs.microsoft.com/en-us/azure/aks/ingress-internal-ip?WT.mc_id=AZ-MVP-5003837) (xx min)
+ * [Lab-03](labs/lab-03/readme.md) - install Flux CLI to your PC and bootstrap Flux onto your cluster (xx min)
+ * [Lab-04](labs/lab-04/readme.md) - use Flux to deploy Kubernetes manifests (xx min)
+ * [Lab-05](labs/lab-05/readme.md) - manage Helm Releases with Flux  (xx min)
+ * [Lab-06](labs/lab-06/readme.md) - kustomize 101
+ * [Lab-07](labs/lab-07/readme.md) - working with notifications (xx min)
+ * [Lab-08](labs/lab-08/readme.md) - monorepo as Flux repository structure
+ * [Lab-09](labs/lab-09/readme.md) - cleaning up
 
 ## Links
 
