@@ -224,11 +224,12 @@ iac-ws4-lab04-2 Unknown reconciliation in progress              False
 iac-ws4-lab04-2 True    Applied revision: main/cfdea4cb46314c387b624dcd954f4aa5f2d5c27d main/cfdea4cb46314c387b624dcd954f4aa5f2d5c27d   False
 ```
 
-## Task #7 - de-provision blue cluster
+## Task #7 - deploy `green` cluster and get some coffee
 
 ```bash
-# Delete blue cluster
-az group delete -g iac-ws4-blue-rg -y
+# Deploy green cluster
+az deployment sub create --location westeurope --template-file ./deployment.bicep  --parameters './parameters-green.json'
+ \ Running ..
 ```
 
 ## Useful links

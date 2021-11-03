@@ -33,9 +33,9 @@ Here is the complete visualization of resources we will provision.
 ## Task #1 - deploy workshop resources
 
 `Bicep` template is split into two modules: `base.bicep` and `aks.bicep`. `base.bicep` contains shared resources such as `ACR` and Log Analytics. `aks.bicep` contains resourced used by AKS such as Private Virtual Network, Managed Identity, Egress Public IP address and AKS instance.
-Deployment is orchestrated by the `deployment.bicep` template. There are two parameter files `parameters-blue.json` and `parameters-green.json` representing the `blue` and `green` instance of clusters. 
+Deployment is orchestrated by the `deployment.bicep` template. There are two parameter files `parameters-blue.json`, `parameters-green.json` and `parameters-red.json` representing the `blue`, `green` and `red` instance of clusters. 
 
-Let's provision both clusters.
+Let's provision `blue` cluster first.
 
 ```bash
 # Select subscription
@@ -66,6 +66,16 @@ At this point the `blue` cluster is active one. If you use [Oh My Posh](https://
 ![k8s-at-the-command-line](./images/k8s-at-the-command-line.png)
 
 Learn how you can [setup your shell (bash or PowerShell) for better AKS/kubectl experience](https://github.com/evgenyb/aks-workshops/tree/main/01-aks-and-k8s-101/labs/lab-02)
+
+## Task #2 - deploy `red` cluster
+
+```bash
+# Deploy red cluster
+az deployment sub create --location westeurope --template-file ./deployment.bicep  --parameters './parameters-red.json'
+ \ Running ..
+```
+
+Note, do not connect to this cluster yet. We will use it at `lab-08`.
 
 ## Useful links
 
