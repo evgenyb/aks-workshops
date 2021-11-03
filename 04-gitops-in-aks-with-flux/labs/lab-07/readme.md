@@ -1,4 +1,4 @@
-# lab-08 - working with notifications
+# lab-07 - working with notifications
 
 ## Estimated completion time - xx min
 
