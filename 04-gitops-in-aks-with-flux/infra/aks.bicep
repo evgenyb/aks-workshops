@@ -12,7 +12,6 @@ var aksName = '${prefixWithSlot}-aks'
 var aksEgressPipName = '${prefixWithSlot}-aks-egress-pip'
 var nodeResourceGroupName = '${prefixWithSlot}-aks-rg'
 var networkContributorRoleId = '4d97b98b-1d4f-4787-a291-c67834d212e7'
-var aadProfileAdminGroupObjectIDs = '<Use Azure AD group object id from lab-01.task1>'
 
 resource vnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
   name: vnetName
@@ -90,14 +89,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
         mode: 'System'
         type: 'VirtualMachineScaleSets'
       }
-    ]
-    aadProfile: {
-      managed: true
-      enableAzureRBAC: true
-      adminGroupObjectIDs: [
-        aadProfileAdminGroupObjectIDs
-      ]
-    }
+    ]    
     networkProfile: {
       networkPlugin: 'azure'
       networkPolicy: 'azure'
