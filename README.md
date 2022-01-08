@@ -39,6 +39,7 @@ Workshop is organized as a combination of theoretical blocks and 9 labs.
 ## [Workshop #4 - GitOps in AKS with Flux](04-gitops-in-aks-with-flux/readme.md)
 
 This workshop covers the basics of GitOps in Kubernetes with [Flux](https://fluxcd.io/) and you will learn:
+
  * How to install Flux to AKS cluster
  * How to configure Flux with your git repositories
  * How to continuous deliver infrastructure and workloads changes defined with Kubernetes manifests and assembled with [Kustomize](https://kustomize.io/)
@@ -47,8 +48,18 @@ This workshop covers the basics of GitOps in Kubernetes with [Flux](https://flux
  * How to upgrade flux 
  * How to monitor flux
 
-## Workshop #5 - Service mesh with linkerd
-## Workshop #6 - security
+## [Workshop #5 - scaling options for applications and clusters in AKS](05-scaling-options-in-aks/readme.md)
 
+This workshop covers scaling options for applications and clusters in AKS and you will learn:
 
+* What kind of scaling options are available for applications in AKS
+* How to manually scale pods and nodes
+* What is Horizontal pod autoscaler (HPA)
+* How cluster autoscaler works
+* What is Kubernetes-based Event Driven Autoscaler ([KEDA](https://keda.sh/))
+
+## Workshop #6 - monitoring options in AKS
+
+## Workshop #7 - service mesh in AKS with [linkerd](https://linkerd.io/)
+## Workshop #8 - security in AKS
 
