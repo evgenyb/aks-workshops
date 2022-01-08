@@ -6,7 +6,7 @@ This is an introduction level workshop that covers scaling options for applicati
 
 * What kind of scaling options are available for applications and clusters in AKS
 * How to manually scale pods and nodes
-* What is Horizontal pod autoscaler (HPA) and how does it work
+* What is [Horizontal Pod Autoscaling](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) (HPA) and how does it work
 * How cluster autoscaler works
 * What is Kubernetes-based Event Driven Autoscaler ([KEDA](https://keda.sh/)) and how to use it to scale your applications
 
