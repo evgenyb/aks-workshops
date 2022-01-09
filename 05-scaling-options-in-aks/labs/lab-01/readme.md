@@ -74,7 +74,7 @@ If you are running on WSL, you may need to use `sudo` command, in this case run
 sudo az aks install-cli
 ```
 
-When `kubectl` installed, test it by getting list of namespaces...
+When `kubectl` is installed, test it by getting list of namespaces...
 
 ```bash
 # Get list of namespaces
