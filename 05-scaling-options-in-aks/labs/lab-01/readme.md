@@ -51,6 +51,32 @@ az deployment sub create --location westeurope --template-file ./deployment.bice
 # When provisioned (it takes approx. 5 min), connect to your cluster
 az aks get-credentials --resource-group iac-ws5-rg --name iac-ws5-aks --overwrite-existing
 
+# Install kubectl
+az aks install-cli
+```
+
+If you use PowerShell, you need to update system PATH environment variable and add new item for `%userprofile%\.azure-kubectl`. 
+
+![env](images/env.png)
+
+* Open the Start Search, type in `env`, and choose `Edit the system environment variables`
+* Click the `Environment Variables…` button.
+* Select `Path` variable under `System variables` section
+* CLick `Edit...`
+* Click `New` and set variable to `%userprofile%\.azure-kubectl`
+
+You need to reset your PowerShell (and cmd) session(s) for change to take effect.
+
+If you are running on WSL, you may need to use `sudo` command, in this case run 
+
+```bash
+# Install kubectl using sudo
+sudo az aks install-cli
+```
+
+When `kubectl` installed, test it by getting list of namespaces...
+
+```bash
 # Get list of namespaces
 kubectl get ns
 NAME              STATUS   AGE
@@ -75,6 +101,8 @@ Learn how to [setup your shell (bash or PowerShell) for better AKS/kubectl exper
 * [Azure Container Registry documentation](https://docs.microsoft.com/en-us/azure/container-registry/?WT.mc_id=AZ-MVP-5003837)
 * [Configure Azure CNI networking in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/configure-azure-cni?WT.mc_id=AZ-MVP-5003837)
 * [Best practices for advanced scheduler features in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-advanced-scheduler?WT.mc_id=AZ-MVP-5003837)
+* [az deployment sub create](https://docs.microsoft.com/en-us/cli/azure/deployment/sub?WT.mc_id=AZ-MVP-5003837&view=azure-cli-latest#az-deployment-sub-create)
+* [az aks get-credentials](https://docs.microsoft.com/en-us/cli/azure/aks?WT.mc_id=AZ-MVP-5003837&view=azure-cli-latest#az-aks-get-credentials)
 
 ## Next: deploy test application
 
