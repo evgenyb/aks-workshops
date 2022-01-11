@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-a
+  name: guinea-pig
   labels:
-    app: api-a
+    app: guinea-pig
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: api-a
+      app: guinea-pig
   template:
     metadata:
       labels:
-        app: api-a
+        app: guinea-pig
     spec:
       containers:
       - name: api
-        image: iacws5t2jx2i6odz7gkacr.azurecr.io/apia:v2
+        image: iacws5t2jx2i6odz7gkacr.azurecr.io/guinea-pig:v1
         imagePullPolicy: IfNotPresent
         resources: 
           requests:
             cpu: 200m
           limits:
-            cpu: 500m
+            cpu: 400m
         livenessProbe:
           httpGet:
             path: /health
@@ -33,27 +33,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: api-a-service
+  name: guinea-pig-service
   labels:
-    app: api-a
+    app: guinea-pig
 spec:
   ports:
   - port: 80
     protocol: TCP
     targetPort: 80
   selector:
-    app: api-a
+    app: guinea-pig
   type: ClusterIP
----
-apiVersion: autoscaling/v1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: api-a-hpa
-spec:
-  maxReplicas: 10 # define max replica count
-  minReplicas: 1  # define min replica count
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: api-a
-  targetCPUUtilizationPercentage: 50 # target CPU utilization

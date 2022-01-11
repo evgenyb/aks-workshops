@@ -2,46 +2,78 @@
 
 ## Estimated completion time - 10 min
 
-There is a simple C# rest API dotnet app, called `guinea-pig` that performs some CPU intensive computations, in order to simulate load in your cluster.
-
-```c#
-var x = 0.0001;
-
-for (var i = 0; i < 2000000; i++)
-{
-    x += Math.Sqrt(x);
-}
-```
-
+There is a simple C# rest API dotnet app, called `GuineaPig` that performs some CPU intensive computations, in order to simulate load in your cluster.
 The source code is located under `src` folder. If you use Visual Studio open `app.sln` file. 
 
 ## Goals
 
 * build and push application image to Azure Container Registry
-* deploy `guinea-pig` app to the cluster
+* deploy `GuineaPig` application into the cluster
 
-## Task #1 - build and push `guinea-pig` application
+## Task #1 - build and push `GuineaPig` application
 
-Let's publish `api-a` image to the Azure Container Registry.
+The simplest way to build and push image is to use `az acr build` command. Let's publish `GuineaPig` image to our Azure Container Registry.
 
 ```bash
-# Go to aks-workshops\02-aks-advanced-configuration\src\api-a folder
-cd aks-workshops\02-aks-advanced-configuration\src\api-a
+# Go to aks-workshops\05-scaling-options-in-aks\src\GuineaPig folder
+cd src\GuineaPig
 
-# Build and publish apib:v1 image into your ACR
-az acr build --registry iacws2<YOUR-NAME>acr --image apia:v1 --file Dockerfile ..
+# Build and publish guinea-pig:v1 image into your ACR
+az acr build --registry iacws5<YOU-UNIQUE-ID>acr --image guinea-pig:v1 --file Dockerfile ..
 ```
 
-## Task #2 - build and push `api-b` application
+## Task #2 - deploy application to cluster
 
-Let's publish `api-b` image to the Azure Container Registry.
+Create new `deployment.yaml` file with the following content
 
-```bash
-# Go to aks-workshops\02-aks-advanced-configuration\src\api-b folder
-cd aks-workshops\02-aks-advanced-configuration\src\api-b
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guinea-pig
+  labels:
+    app: guinea-pig
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: guinea-pig
+  template:
+    metadata:
+      labels:
+        app: guinea-pig
+    spec:
+      containers:
+      - name: api
+        image: iacws5<YOU-UNIQUE-ID>acr.azurecr.io/guinea-pig:v1
+        imagePullPolicy: IfNotPresent
+        resources: 
+          requests:
+            cpu: 200m
+          limits:
+            cpu: 300m
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 3    
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: guinea-pig-service
+  labels:
+    app: guinea-pig
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: guinea-pig
+  type: ClusterIP
 
-# Build and publish apib:v1 image into your ACR
-az acr build --registry iacws2<YOUR-NAME>acr --image apib:v1 --file Dockerfile ..
 ```
 
 ## Useful links

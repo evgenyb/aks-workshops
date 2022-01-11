@@ -1,7 +1,6 @@
 param prefix string
 param logAnalyticsWorkspaceId string 
 param aksSubnetId string
-param enableDiagnostics bool = false
 
 var location = resourceGroup().location
 var aksMIName = '${prefix}-aks-mi' 
@@ -67,7 +66,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
     }
     addonProfiles: {
       omsagent: {
-        enabled: enableDiagnostics
+        enabled: true
         config: {
           logAnalyticsWorkspaceResourceID: logAnalyticsWorkspaceId
         }
