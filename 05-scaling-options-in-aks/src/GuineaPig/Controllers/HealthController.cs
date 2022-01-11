@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace api_a.Controllers
+namespace IaC.WS5.GuineaPig.Controllers
 {
     [ApiController]
     [Route("[controller]")]

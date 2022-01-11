@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
-namespace api_a
+namespace IaC.WS5.GuineaPig
 {
     public class Startup
     {

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>api_a</RootNamespace>
+    <RootNamespace>IaC.WS5.GuineaPig</RootNamespace>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <UserSecretsId>27643eaf-920b-498f-adad-b23c3a6b7d76</UserSecretsId>
     <ApplicationInsightsResourceId>/subscriptions/8878beb2-5e5d-4418-81ae-783674eea324/resourceGroups/iac-ws2-base-rg/providers/microsoft.insights/components/iac-ws2-appinsights</ApplicationInsightsResourceId>

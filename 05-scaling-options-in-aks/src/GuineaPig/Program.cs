@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
 
-namespace api_a
+namespace IaC.WS5.GuineaPig
 {
     public class Program
     {
