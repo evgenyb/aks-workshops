@@ -21,20 +21,23 @@ namespace IaC.WS5.GuineaPig.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            _logger.LogInformation("[api-a] - OK.");
-            return Ok("[api-a] - OK.");
+            var message = "[guinea-pig] - OK.";
+            _logger.LogInformation(message);
+            return Ok(message);
         }
 
         [HttpGet("highcpu")]
-        // readiness/unstable
         public IActionResult HighCpu()
         {
+            var sw = Stopwatch.StartNew();
             var x = 0.0001;
 
             for (var i = 0; i < 2000000; i++)
             {
                 x += Math.Sqrt(x);
             }
+            sw.Stop();
+            _logger.LogInformation($"[guinea-pig.highcpu] - execution took {sw.ElapsedMilliseconds} ms.");
             return Ok();
         }
     }

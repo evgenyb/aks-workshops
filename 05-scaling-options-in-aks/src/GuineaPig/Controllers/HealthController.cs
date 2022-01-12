@@ -17,7 +17,7 @@ namespace IaC.WS5.GuineaPig.Controllers
         [HttpGet]
         public IActionResult Healthy()
         {
-            return Ok("[api-a] - healthy");
+            return Ok("[guinea-pig] - healthy");
         }
     }
 }

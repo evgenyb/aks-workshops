@@ -12,11 +12,10 @@ namespace IaC.WS5.GuineaPig
         {
             Log.Logger = new LoggerConfiguration()
                .Enrich.FromLogContext()
-               .MinimumLevel.Debug()
-               .WriteTo.Console(
-                   LogEventLevel.Information,
-                   "{Timestamp:dd.MM.yyyy HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}")
-                   .CreateLogger();
+               .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+               .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+               .WriteTo.Console()
+               .CreateLogger();
             try
             {
                 CreateHostBuilder(args).Build().Run();

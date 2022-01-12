@@ -76,6 +76,77 @@ spec:
 
 ```
 
+Deploy application into `default` namespace. 
+
+```bash
+# Deploy application into default namespace
+k apply -f .\deployment.yaml
+deployment.apps/guinea-pig created
+service/guinea-pig-service created
+
+# Check that pod is up and running
+kubectl get po
+NAME                          READY   STATUS    RESTARTS   AGE
+guinea-pig-6c994669b7-c8rtz   1/1     Running   0          32s
+
+# Check that service was created
+kubectl get svc
+NAME                 TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+guinea-pig-service   ClusterIP   10.0.49.164   <none>        80/TCP    47s
+```
+
+## Task #3 - test application
+
+Now let's test if application is actually up and running. We will use our old freind - [busyboxplus:curl](https://hub.docker.com/r/radial/busyboxplus) image, mainly because it contains `curl` command that we need for our testing. 
+
+```bash
+# Run pod as interactive shell
+kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -- sh
+
+# Here is prompt from withing the pod
+[ root@curl:/ ]$ 
+
+# Call api endpoint. It should response with "[guinea-pig] - OK."
+[ root@curl:/ ]$ curl http://guinea-pig-service/api
+[guinea-pig] - OK.
+```
+
+In the separate terminal window, watch application logs.
+
+```bash
+# Get pod name
+kubectl get po
+NAME                          READY   STATUS    RESTARTS   AGE
+guinea-pig-75f86bcf55-bzb5g   1/1     Running   0          2m18s
+
+# Get guinea-pig application logs
+kubectl logs guinea-pig-75f86bcf55-bzb5g -f
+[21:26:36 WRN] Failed to determine the https port for redirect.
+[21:26:56 INF] [guinea-pig] - OK.
+```
+
+Now let's test another application endpoint from the busyboxplus 
+
+```bash
+[ root@curl:/ ]$ curl http://guinea-pig-service/api/highcpu
+[ root@curl:/ ]$ curl http://guinea-pig-service/api/highcpu
+```
+
+You should see new logs appear from `kubectl logs ` window
+
+```bash
+kubectl logs guinea-pig-75f86bcf55-bzb5g -f
+[21:26:36 WRN] Failed to determine the https port for redirect.
+[21:26:56 INF] [guinea-pig] - OK.
+[21:26:58 INF] [guinea-pig] - OK.
+[21:32:05 INF] [guinea-pig.highcpu] - execution took 18 ms.
+[21:32:05 INF] [guinea-pig.highcpu] - execution took 18 ms.
+```
+
+## Task #4 - get pod CPU utilization metrics
+
+
+
 ## Useful links
 
 * [Visual Studio 2019 Community Edition](https://visualstudio.microsoft.com/downloads/?WT.mc_id=AZ-MVP-5003837)

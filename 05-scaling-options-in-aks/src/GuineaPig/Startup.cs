@@ -22,7 +22,7 @@ namespace IaC.WS5.GuineaPig
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "api-a", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "guinea-pig", Version = "v1" });
             });
             services.AddApplicationInsightsTelemetry();
         }
@@ -34,7 +34,7 @@ namespace IaC.WS5.GuineaPig
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "api-a v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "guinea-pig v1"));
             }
 
             app.UseHttpsRedirection();
