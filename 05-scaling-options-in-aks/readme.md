@@ -18,6 +18,7 @@ Here is the preliminary agenda for the workshops (still work in progress and sub
  * [Lab-01](labs/lab-01/readme.md) - provision workshop resources (20 min)
  * Scaling applications in AKS concepts (slides)
  * [Lab-02](labs/lab-02/readme.md) - build and deploy test application (xx min)
+ * [Lab-03](labs/lab-03/readme.md) - create monitoring dashboard for test application
  * Lab-03 - manually scale applications in AKS
  * Lab-04 - use Horizontal Pod Autoscaling (HPA) to automatically scale applications
  * Scaling AKS cluster concepts (slides)

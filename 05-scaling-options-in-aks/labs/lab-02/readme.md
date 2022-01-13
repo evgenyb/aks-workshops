@@ -125,7 +125,7 @@ kubectl logs guinea-pig-75f86bcf55-bzb5g -f
 [21:26:56 INF] [guinea-pig] - OK.
 ```
 
-Now let's test another application endpoint from the busyboxplus 
+Now let's test another application endpoint from the `busybox` shell.  
 
 ```bash
 [ root@curl:/ ]$ curl http://guinea-pig-service/api/highcpu
@@ -143,10 +143,6 @@ kubectl logs guinea-pig-75f86bcf55-bzb5g -f
 [21:32:05 INF] [guinea-pig.highcpu] - execution took 18 ms.
 ```
 
-## Task #4 - get pod CPU utilization metrics
-
-
-
 ## Useful links
 
 * [Visual Studio 2019 Community Edition](https://visualstudio.microsoft.com/downloads/?WT.mc_id=AZ-MVP-5003837)
@@ -158,10 +154,6 @@ kubectl logs guinea-pig-75f86bcf55-bzb5g -f
 * [az acr build command](https://docs.microsoft.com/en-us/cli/azure/acr?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837#az_acr_build)
 * [Push your first image to a private Docker container registry using the Docker CLI](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli?WT.mc_id=AZ-MVP-5003837)
 
-## Next: working with AKS node pools
+## Next: create monitoring dashboard for test application
 
-[Go to lab-04](../lab-04/readme.md)
-
-## Feedback
-
-* Visit the [Github Issue](https://github.com/evgenyb/aks-workshops/issues/17) to comment on this lab. 
+[Go to lab-03](../lab-03/readme.md)
