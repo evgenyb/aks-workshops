@@ -82,13 +82,88 @@ We summarize average values of CPU metrics into `AvgCPUUsageNanoCores` field wit
 | summarize AvgCPUUsageNanoCores = avg(CounterValue) by bin(TimeGenerated, 10sec), tostring(ContainerName)
 ...
 ```
+## Task #2 - create a line chart to visualize `guinea-pig` CPU usage
 
+To visualize data, navigate to the `Chart` tab. By default, data will be presented as a `Stacked column`, but you can select other options from `Chart type` drop-down list. 
+
+![la-chart1](images/la-chart1.png)
+
+In our case, the better representation of the data will be `Line chart`. 
+
+![la-chart2](images/la-chart2.png)
+
+## Task #3 - create an Azure Dashboard with different monitoring metrics
+
+The query results and chart will not be auto-refreshed. You need to click `Run` to get new data and you will need to change chart type every time and this is not convenient. To fix that, we can pin chart into `Azure Dashboard`.
+
+First, navigate to Azure Dashboard 
+
+![dash1](images/dashboard1.png)
+
+Then click on `New dashboard` and select `Blank dashboard`
+
+![dash2](images/dashboard2.png)
+
+Give dashboard a name and click `Save`.
+
+![dash3](images/dashboard3.png)
+
+The dashboard is empty and it's fine for now. Now, go back to your Log Analytics query, run it and configure Chart as we did in `Task#2`.
+
+Note, that you have your previous queries in the `Queries history`. 
+
+![la-history](images/la-history.png)
+
+Find the one you need, click `Run` and configure line chart. Then click `Pin to` and select `Azure dashboard`
+
+![la-pin](images/la-pin.png)
+
+At the `Pin to dashboard` window, click `Existing` -> `Private`, select dashboard that you just created and click `Pin`.
+
+![la-pin](images/la-pin.png)
+
+Now, navigate to the dashboard and you should see your pod CPU metrics. 
+
+![dash4](images/dashboard4.png)
+
+## Task #4 - put some load to the application
+
+To get some more metrics, let's put some load to our application by running the following command
+
+```bash
+kubectl run -i --tty load-generator --rm --image=busybox --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://guinea-pig-service/api/highcpu; done"
+```
+
+This script will run `wget -q -O- http://guinea-pig-service/api/highcpu` command 10 times / sec in the infinitive loop. 
+
+Check application logs 
+
+```bash
+# get pod name
+kubectl get po
+NAME                          READY   STATUS    RESTARTS   AGE
+guinea-pig-6c994669b7-hm5kj   1/1     Running   0          39m
+
+# get application logs
+kubectl logs guinea-pig-6c994669b7-hm5kj -f
+[21:44:54 INF] [guinea-pig.highcpu] - execution took 18 ms.
+[21:44:54 INF] [guinea-pig.highcpu] - execution took 39 ms.
+[21:44:54 INF] [guinea-pig.highcpu] - execution took 18 ms.
+[21:44:54 INF] [guinea-pig.highcpu] - execution took 48 ms.
+```
+You should see a lot of logs coming.
+
+Now go back to your dashboard and click `Refresh` on the chart.
+
+![dash5](images/dashboard5.png)
+
+The metrics from AKS are pushed to Log Analytics approx with 2 mins intervals, so be patient and new data will be shown soon.  
 
 ## Useful links
 
 * [Kusto Query Language (KQL) overview](https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/?WT.mc_id=AZ-MVP-5003837)
+* [Create a dashboard in the Azure portal](https://docs.microsoft.com/en-us/azure/azure-portal/azure-portal-dashboards?WT.mc_id=AZ-MVP-5003837)
 
-
-## Next: create monitoring dashboard for test application
+## Next: manually scale applications in AKS
 
 [Go to lab-04](../lab-04/readme.md)
