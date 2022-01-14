@@ -27,7 +27,7 @@ Here is the preliminary agenda for the workshops (still work in progress and sub
  * Kubernetes Event-driven Autoscaling KEDA (slides)
  * Lab-07 - deploy KEDA
  * Lab-08 - use KEDA to autoscale application processing Azure Service Bus Queue
- * [Lab-09](labs/lab-09/readme.md) - cleaning up resources
+ * [Lab-10](labs/lab-10/readme.md) - cleaning up resources
 
 ## Links
 

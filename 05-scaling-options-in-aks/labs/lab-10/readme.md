@@ -1,4 +1,4 @@
-# lab-09 - Cleaning up resources
+# lab-10 - Cleaning up resources
 
 ## Estimated completion time - 10 min
 
