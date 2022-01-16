@@ -163,6 +163,7 @@ The metrics from AKS are pushed to Log Analytics approx with 2 mins intervals, s
 
 * [Kusto Query Language (KQL) overview](https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/?WT.mc_id=AZ-MVP-5003837)
 * [Create a dashboard in the Azure portal](https://docs.microsoft.com/en-us/azure/azure-portal/azure-portal-dashboards?WT.mc_id=AZ-MVP-5003837)
+* [Monitoring metrics in AKS](https://vincentlauzon.com/2019/05/09/monitoring-metrics-in-aks/)
 
 ## Next: manually scale applications in AKS
 
