@@ -1,8 +1,6 @@
 # lab-04 - manually scale applications in AKS
 
-
-## Goals
-
+You can manually scale replicas (pods) to test how your application responds to a change in available resources and state. Manually scaling resources also lets you define a set amount of resources to use to maintain a fixed cost. To manually scale, you define the replica count. The Kubernetes API then schedules creating additional pods based on that replica count.
 
 ## Task #1 - manually scale guinea-pig application to 3 instances
 
