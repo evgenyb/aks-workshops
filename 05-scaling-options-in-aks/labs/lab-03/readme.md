@@ -183,6 +183,7 @@ When you finish, your dashboard should look something like this.
 To get some more metrics, let's put some load to our application by running the following command
 
 ```bash
+# Generate some load to guinea-pig application
 kubectl run -i --tty load-generator --rm --image=busybox --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://guinea-pig-service/api/highcpu; done"
 ```
 
