@@ -1,8 +1,7 @@
+# lab-04 - manually scale applications in AKS
 
 
-![aks-insights-1](images/aks-insights1.png)
 
-![aks-insights-1](images/aks-insights2.png)
 
 
 ```bash
@@ -16,4 +15,4 @@ kubectl scale --replicas=3 deployment/guinea-pig
 
 ## Next: manually scale applications in AKS
 
-[Go to lab-04](../lab-04/readme.md)
+[Go to lab-05](../lab-05/readme.md)

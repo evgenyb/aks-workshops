@@ -26,13 +26,13 @@ Copy the following query and paste it into the Logs query editor (where it says 
 Perf
 | where ObjectName == "K8SContainer" and CounterName == "cpuUsageNanoCores"
 | extend InstanceNameParts = split(InstanceName, "/")  
-| extend ContainerName = InstanceNameParts[(array_length(InstanceNameParts)-1)] 
+| extend ContainerName = InstanceNameParts[(array_length(InstanceNameParts) - 1)] 
 | project-away InstanceNameParts 
 | summarize AvgCPUUsageNanoCores = avg(CounterValue) by bin(TimeGenerated, 10sec), tostring(ContainerName)
-| where TimeGenerated > ago(30min) and ContainerName == 'api'
+| where ContainerName == 'api'
 ```
 
-Click `Run`. You should see something similar.
+Set `Time range` to 30 min and click `Run`. You should see something similar.
 
 ![la-run](images/la-run.png)
 
@@ -47,7 +47,7 @@ Perf
 | where TimeGenerated > ago(30min)
 ```
 
-Expand one of the rows and check the `InstanceName` field. It contains resource id that consists of several parts (like subscription id, resource group name, resource name etc...) separated by `/`. 
+Expand one of the rows and check the `InstanceName` field. It contains resource id that consists of several parts (subscription id, resource group name, resource name etc...) separated by `/`. 
 
 ![la-run1](images/la-run1.png)
 
@@ -64,16 +64,10 @@ The following code
 splits all parts of `InstanceName` string into the `InstanceNameParts` array. Then it extracts the last item from this array into `ContainerName`. The last item of the `InstanceName` when `ObjectName` is "K8SContainer" will be container name. In our case, `guinea-pig` pod only contains one container called `api`, therefore we need to add this condition 
 
 ```sql
-| where ContainerName == 'api' ...
+| where ContainerName == 'api' 
 ```
 
 to filter only metrics coming from our app.
-
-To get logs for the last 30 mins, we use the following condition.
-
-```sql
-... and TimeGenerated > ago(30min) 
-```
 
 We summarize average values of CPU metrics into `AvgCPUUsageNanoCores` field with `10sec` intervals and group data by container name...
 
@@ -84,7 +78,7 @@ We summarize average values of CPU metrics into `AvgCPUUsageNanoCores` field wit
 ```
 ## Task #2 - create a line chart to visualize `guinea-pig` CPU usage
 
-To visualize data, navigate to the `Chart` tab. By default, data will be presented as a `Stacked column`, but you can select other options from `Chart type` drop-down list. 
+To visualize results, navigate to the `Chart` tab and expand `Chart formatting` panel, located at the right part of the window. By default, data will be presented as a `Stacked column`, but you can select other options from `Chart type` drop-down list. 
 
 ![la-chart1](images/la-chart1.png)
 
@@ -92,7 +86,8 @@ In our case, the better representation of the data will be `Line chart`.
 
 ![la-chart2](images/la-chart2.png)
 
-## Task #3 - create an Azure Dashboard with different monitoring metrics
+
+## Task #3 - create an Azure Dashboard for monitoring metrics
 
 The query results and chart will not be auto-refreshed. You need to click `Run` to get new data and you will need to change chart type every time and this is not convenient. To fix that, we can pin chart into `Azure Dashboard`.
 
@@ -120,13 +115,70 @@ Find the one you need, click `Run` and configure line chart. Then click `Pin to`
 
 At the `Pin to dashboard` window, click `Existing` -> `Private`, select dashboard that you just created and click `Pin`.
 
-![la-pin](images/la-pin.png)
+![la-pin2](images/la-pin2.png)
 
 Now, navigate to the dashboard and you should see your pod CPU metrics. 
 
 ![dash4](images/dashboard4.png)
 
-## Task #4 - put some load to the application
+
+Make sure that you set the time range to `Past 30 min` and `Show time as` is set to `Local`.
+
+![dash1](images/dashboard1-1.png)
+
+
+## Task #4 - add CPU % chart to the dashboard
+
+We have now implemented CPU usage by `api` container. It shows how much CPU is used in `NanoCores`. Quite often what we want to see is how much % of defined CPU limits are used. Here is the Kusto query that does it. It's much more complicated, queries data from several tables (`Perf` and `KubePodInventory`). It reads `cpuLimitNanoCores` defined for `api` container, reads the actual `cpuUsageNanoCores` and then calculates the %.
+
+```sql
+let trendBinSize = 30sec;
+let capacityCounterName = 'cpuLimitNanoCores';
+let usageCounterName = 'cpuUsageNanoCores';
+let applicationName = 'guinea-pig';
+KubePodInventory
+| where ControllerKind in ('DaemonSet', 'ReplicaSet')
+| where Namespace in ('default')
+| extend InstanceName = strcat(ClusterId, '/', ContainerName),
+    ContainerName = tostring(split(ContainerName, '/')[1]),
+    PodName = Name
+| where PodStatus in ('Running')
+| where PodName startswith applicationName 
+| distinct Computer, InstanceName, ContainerName
+| join hint.strategy=shuffle (
+    Perf
+    | where ObjectName == 'K8SContainer'
+    | where CounterName == capacityCounterName
+    | summarize LimitValue = max(CounterValue) by Computer, InstanceName, bin(TimeGenerated, trendBinSize)
+    | project
+        Computer,
+        InstanceName,
+        LimitStartTime = TimeGenerated,
+        LimitEndTime = TimeGenerated + trendBinSize,
+        LimitValue,
+        limitA=100
+    )
+    on Computer, InstanceName
+| join kind=inner hint.strategy=shuffle (
+    Perf
+    | where ObjectName == 'K8SContainer'
+    | where CounterName == usageCounterName
+    | project Computer, InstanceName, UsageValue = CounterValue,
+limit=100, TimeGenerated
+) on Computer, InstanceName
+| where TimeGenerated >= LimitStartTime and TimeGenerated < LimitEndTime
+| project ContainerName, TimeGenerated, UsagePercent = UsageValue * 100.0 / LimitValue 
+| summarize AggregatedValue=max(UsagePercent) by bin(TimeGenerated, trendBinSize), ContainerName
+
+```
+
+Now, the same way as we did at `Task #3`, use this query, create line chart and add it into the `iac-ws5-cpu` Dashboard.
+
+When you finish, your dashboard should look something like this.
+
+![dashboard6](images/dashboard6.png)
+
+## Task #5 - put some load to the application
 
 To get some more metrics, let's put some load to our application by running the following command
 
@@ -157,7 +209,11 @@ Now go back to your dashboard and click `Refresh` on the chart.
 
 ![dash5](images/dashboard5.png)
 
-The metrics from AKS are pushed to Log Analytics approx with 2 mins intervals, so be patient and new data will be shown soon.  
+The metrics from AKS are pushed to Log Analytics approx with 2 mins intervals, so be patient and new data will be shown soon :) 
+
+As you can see from the right chart, with the load we put to our application, it now uses 100% of the allocated CPU limits. 
+
+In the next labs we will see how we can fix it.
 
 ## Useful links
 
