@@ -30,6 +30,18 @@ Wait about 1-2 mins and refresh your dashboard. You should see that CPU usage dr
 
 ![chart](images/charts.png)
 
+## Task #2 - scale down application to one replica
+
+```bash
+# Scaling guinea-pig to 3 instances
+kubectl scale deployment/guinea-pig --replicas=1
+
+# Check that we are back to one pod
+kubectl get po -w
+NAME                          READY   STATUS    RESTARTS   AGE
+guinea-pig-6c994669b7-xnvnr   1/1     Running   0          59m
+load-generator                1/1     Running   0          38m
+```
 
 ## Useful links
 

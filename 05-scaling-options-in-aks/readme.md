@@ -20,13 +20,13 @@ Here is the preliminary agenda for the workshops (still work in progress and sub
  * [Lab-02](labs/lab-02/readme.md) - build and deploy test application (xx min)
  * [Lab-03](labs/lab-03/readme.md) - create monitoring dashboard for test application
  * [Lab-04](labs/lab-04/readme.md) - manually scale applications in AKS
- * Lab-05 - use Horizontal Pod Autoscaling (HPA) to automatically scale applications
+ * [Lab-05](labs/lab-05/readme.md) - use Horizontal Pod Autoscaling (HPA) to automatically scale applications
  * Scaling AKS cluster concepts (slides)
- * Lab-05 - manually scale the node count in an AKS cluster 
- * Lab-06 - use cluster autoscaler to automatically scale an AKS cluster to meet application demands
+ * Lab-06 - manually scale the node count in an AKS cluster
+ * Lab-07 - use cluster autoscaler to automatically scale an AKS cluster to meet application demands
  * Kubernetes Event-driven Autoscaling KEDA (slides)
- * Lab-07 - deploy KEDA
- * Lab-08 - use KEDA to autoscale application processing Azure Service Bus Queue
+ * Lab-08 - deploy KEDA
+ * Lab-09 - use KEDA to autoscale application processing Azure Service Bus Queue
  * [Lab-10](labs/lab-10/readme.md) - cleaning up resources
 
 ## Links
