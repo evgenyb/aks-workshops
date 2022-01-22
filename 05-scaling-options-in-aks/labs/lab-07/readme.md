@@ -49,14 +49,16 @@ kubectl scale deployment/guinea-pig --replicas=20
 
 You will see that Kubernetes will start scaling `guinea-pg` application up, will try to create 20 replicas, but you will notice that a lot of pods will be in `Pending` state. This is because there is not enough recurses available to schedule pods. 
 
-In about 1-2 mins, you should see more nodes (two in particular) created first with `NotReady` state and then eventually with `Ready` state.
+In about 1-2 mins, you should see two more nodes created. They will first have `NotReady` state and then eventually switch into `Ready` state.
 
-
+We can use the technique to scale the number of nodes down.
 
 ```bash
 # Scale guinea-pig application down to two replicas
 kubectl scale deployment/guinea-pig --replicas=2
 ```
+
+Observe your monitoring windows. First, you will see that Kubernetes will terminate all but two `guinea-pg` pods. Then it will take some time (sometimes more than 5 min)before AKS will start draining nodes. You will notice it when nodes status will change to `NotReady`. After that nodes will be decommissioned.
 
 ## Useful links
 
