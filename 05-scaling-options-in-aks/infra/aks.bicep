@@ -39,11 +39,8 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
     agentPoolProfiles: [
       {
         name: 'system'
-        minCount: 1
-        maxCount: 4
         count: 1
-        vmSize: 'Standard_B2s'
-        enableAutoScaling: true
+        vmSize: 'Standard_DS2_v2'
         vnetSubnetID: aksSubnetId
         osType: 'Linux'
         mode: 'System'
@@ -52,7 +49,6 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
     ]    
     networkProfile: {
       networkPlugin: 'azure'
-      networkPolicy: 'calico'
       loadBalancerSku: 'standard'
       loadBalancerProfile: {
         outboundIPs: {
