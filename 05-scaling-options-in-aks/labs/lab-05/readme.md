@@ -55,7 +55,7 @@ Let's check metrics at the dashboard. You should see something similar.
 
 ## Task #2 - decrease the load
 
-Now, let's decrease the load to see how the autoscaler reacts to load decrease. If your `load-generator` command is still running, stop it. If you lost your command, but your `load-generator` pos is still running, kill it.
+Now, let's decrease the load to see how the autoscaler reacts to load decrease. If your `load-generator` command is still running, stop it. If you lost your command, but your `load-generator` pod is still running, kill it.
 
 ```bash
 # check if load-generator pos is up and running
