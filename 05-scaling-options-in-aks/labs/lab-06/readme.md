@@ -4,15 +4,34 @@ You can manually scale nodes to test how your applications responds to a change 
 
 When scaling down nodes, the Kubernetes API calls the relevant Azure Compute API tied to the compute type used by your cluster. For example, for clusters built on VM Scale Sets the logic for selecting which nodes to remove is determined by the VM Scale Sets API. 
 
-## Task #1 - scale up cluster to two nodes
+## Task #1 - manually scale number of nodes in cluster up and down
 
 You can adjust the number of nodes manually if you plan more or fewer container workloads on your cluster.
 
 The following command increases the number of nodes to two. The command takes a couple of minutes to complete.
 
 ```bash
-# scale up cluster to two nodes
+# Check how many nodes are in the cluster now
+kubectl get nodes
+NAME                             STATUS   ROLES   AGE   VERSION
+aks-system-36621428-vmss000000   Ready    agent   18m   v1.21.7
 
+# scale up cluster to two nodes
+az aks scale --resource-group iac-ws5-rg --name iac-ws5-aks --node-count 2
+
+# Get number of nodes
+kubectl get nodes
+NAME                             STATUS   ROLES   AGE   VERSION
+aks-system-36621428-vmss000000   Ready    agent   19m   v1.21.7
+aks-system-36621428-vmss000001   Ready    agent   43s   v1.21.7
+
+# scale cluster down to one node
+az aks scale --resource-group iac-ws5-rg --name iac-ws5-aks --node-count 1
+
+# Get number of nodes
+kubectl get nodes
+NAME                             STATUS   ROLES   AGE   VERSION
+aks-system-36621428-vmss000000   Ready    agent   19m   v1.21.7
 ```
 
 ## Useful links
