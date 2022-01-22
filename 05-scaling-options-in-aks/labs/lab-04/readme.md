@@ -45,6 +45,7 @@ load-generator                1/1     Running   0          38m
 
 ## Useful links
 
+* [Scaling options for applications in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/concepts-scale?WT.mc_id=AZ-MVP-5003837)
 * [Manually scale pods](https://docs.microsoft.com/en-us/azure/aks/tutorial-kubernetes-scale?WT.mc_id=AZ-MVP-5003837&tabs=azure-cli#manually-scale-pods)
 * [kubectl scale](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#scale)
 
