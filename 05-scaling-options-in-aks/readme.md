@@ -25,7 +25,7 @@ Here is the preliminary agenda for the workshops (still work in progress and sub
  * [Lab-06](labs/lab-06/readme.md) - manually scale the node count in an AKS cluster
  * [Lab-07](labs/lab-07/readme.md) - use cluster autoscaler to automatically scale an AKS cluster to meet application demands
  * Kubernetes Event-driven Autoscaling KEDA (slides)
- * Lab-08 - deploy KEDA
+ * [Lab-08](labs/lab-08/readme.md) - Kubernetes Event-driven Autoscaling KEDA
  * Lab-09 - use KEDA to autoscale application processing Azure Service Bus Queue
  * [Lab-10](labs/lab-10/readme.md) - cleaning up resources
 
