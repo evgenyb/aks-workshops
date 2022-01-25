@@ -27,11 +27,8 @@ helm repo add kedacore https://kedacore.github.io/charts
 # Update Helm repo
 helm repo update
 
-# Create keda namespace
-kubectl create namespace keda
-
 # Install KEDA Helm chart
-helm install keda kedacore/keda --namespace keda
+helm install keda kedacore/keda --create-namespace --namespace keda 
 
 # Check KEDA is up and running
 kubectl -n keda get po
@@ -48,6 +45,7 @@ When you install KEDA, it creates four [custom resources](https://kubernetes.io/
 
 
 Read more about those resources at the [original documentation](https://keda.sh/docs/2.5/concepts/#custom-resources-crd) 
+
 ## Useful links
 
 * [Installing Helm](https://helm.sh/docs/intro/install/)

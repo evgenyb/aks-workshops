@@ -69,3 +69,11 @@ module acrToAks 'attachACRToAKS.bicep' = {
     aksKubeletIdentityObjectId: aks.outputs.aksKubeletIdentityObjectId
   }
 }
+
+module asb 'sb.bicep' = {
+  scope: resourceGroup
+  name: 'asb'
+  params: {
+    prefix: prefix
+  }
+}
