@@ -24,7 +24,7 @@ az acr build --registry iacws5<YOU-UNIQUE-ID>acr --image guinea-pig:v1 --file Do
 
 ## Task #2 - deploy application to cluster
 
-Create new `deployment.yaml` file with the following content
+Create new `deployment.yaml` file with the following content. Replace `image` with your ACR instance name.
 
 ```yaml
 apiVersion: apps/v1
@@ -51,7 +51,7 @@ spec:
           requests:
             cpu: 200m
           limits:
-            cpu: 300m
+            cpu: 400m
         livenessProbe:
           httpGet:
             path: /health
@@ -73,14 +73,13 @@ spec:
   selector:
     app: guinea-pig
   type: ClusterIP
-
 ```
 
 Deploy application into `default` namespace. 
 
 ```bash
 # Deploy application into default namespace
-k apply -f .\deployment.yaml
+kubectl apply -f deployment.yaml
 deployment.apps/guinea-pig created
 service/guinea-pig-service created
 
