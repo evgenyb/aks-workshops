@@ -51,7 +51,9 @@ Create new `deploy-app.yaml` file and copy content from the original [deploy-app
 
 Get base64 encoded connection string for `order-consumer` key. 
 
-For the `az cli` commands below you need to use your Azure Service Bus namespace instance name, because it's globally unique. You can either copy it from Azure Portal, or use this `az cli` command to query it.
+> Note! For the `az cli` commands below you need to use your Azure Service Bus namespace instance name, because it's globally unique. 
+
+You can either copy it from Azure Portal, or use this `az cli` command to query it.
 
 ```bash
 az servicebus namespace list -g iac-ws5-rg | jq .[].name -r
@@ -66,6 +68,8 @@ az servicebus queue authorization-rule keys list --resource-group iac-ws5-rg --n
 
 Copy the above string and replace `<base64-encoded-connection-string>` in `deploy-autoscaling.yaml` file with it.
 Save `deploy-app.yaml` file and deploy it into `keda-dotnet-sample` namespace.
+
+`deploy-app.yaml` contains two kubernetes resources - `order-processor` Deployment and `secret`, containing connection string. 
 
 ```bash
 # Deploy order-processor application
@@ -106,6 +110,47 @@ az servicebus queue authorization-rule keys list --resource-group iac-ws5-rg --n
 Copy the above string and replace `<base64-encoded-connection-string>` in `deploy-autoscaling.yaml` file with it.
 Save `deploy-autoscaling.yaml` file and deploy it into `keda-dotnet-sample` namespace.
 
+`deploy-autoscaling.yaml` contains three kubernetes resources - `TriggerAuthentication`, `ScaledObject` and `secret`, containing connection string.
+
+`ScaledObject` is KEDA scaling resource that defines the type of scale trigger is `azure-servicebus`, scaling criteria is set that we'd like to scale out if there more than 50 messages in the `orders` queue with a maximum of 50 concurrent replicas which is defined via maxReplicaCount.
+
+```yaml
+apiVersion: keda.sh/v1alpha1 
+kind: ScaledObject
+metadata:
+  name: order-processor-scaler
+spec:
+  scaleTargetRef:
+    name: order-processor
+  minReplicaCount: 0 # Change to define how many minimum replicas you want
+  maxReplicaCount: 50
+  # The period to wait after the last trigger reported active before scaling the resource back to 0.
+  # By default it’s 5 minutes (300 seconds).
+  cooldownPeriod: 5
+  triggers:
+  - type: azure-servicebus
+    metadata:
+      queueName: orders
+      messageCount: '50'
+    authenticationRef:
+      name: trigger-auth-service-bus-orders
+```
+
+`TriggerAuthentication` resource defines how KEDA (for instance `ScaledObject` object) should authenticate to get the metrics.  
+
+```yaml
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: trigger-auth-service-bus-orders
+spec:
+  secretTargetRef:
+  - parameter: connection
+    name: secrets-order-management
+    key: servicebus-order-management-connectionstring
+```
+
+
 ```bash
 # Deploy autoscaling 
 kubectl apply -f deploy-autoscaling.yaml -n keda-dotnet-sample
@@ -115,7 +160,7 @@ kubectl get deployments --namespace keda-dotnet-sample
 NAME              READY   UP-TO-DATE   AVAILABLE   AGE
 order-processor   0/0     0            0           15m
 ```
-As you can see, there are no pods available. KEDA autoscaler scaled it down, because queue is empty and there is no work to do.
+As you can see, there are no pods available. KEDA autoscaler scaled it down, because queue is currently empty and there is no work to do.
 
 ## Task #4 - publish messages to the queue
 
