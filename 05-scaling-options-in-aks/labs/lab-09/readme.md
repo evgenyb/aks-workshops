@@ -192,8 +192,7 @@ net.OrderGenerator\Program.cs` file
 # Get order-generator connection string
 az servicebus queue authorization-rule keys list --resource-group iac-ws5-rg --namespace-name iac-ws5-<YOUR-UNUQUE-ID>-sbns --queue-name orders --name order-generator | jq .primaryConnectionString -r 
 ```
-Lines 12 and 13 in your `.\src\Keda.Samples.Dot
-net.OrderGenerator\Program.cs` should look something similar to 
+Lines 12 and 13 in your `.\src\Keda.Samples.Dotnet.OrderGenerator\Program.cs` should look something similar to 
 
 ```c#
 ...
