@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-processor
+  labels:
+    app: order-processor
+spec:
+  selector:
+    matchLabels:
+      app: order-processor
+  template:
+    metadata:
+      labels:
+        app: order-processor
+    spec:
+      containers:
+      - name: order-processor
+        image: ghcr.io/kedacore/sample-dotnet-worker-servicebus-queue:latest
+        env:
+        - name: KEDA_SERVICEBUS_AUTH_MODE
+          value: ConnectionString
+        - name: KEDA_SERVICEBUS_QUEUE_CONNECTIONSTRING
+          valueFrom:
+            secretKeyRef:
+             name: secrets-order-consumer
+             key: servicebus-connectionstring
+        - name: KEDA_SERVICEBUS_QUEUE_NAME
+          value: orders
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: secrets-order-consumer
+  labels:
+    app: order-processor
+data:
+  servicebus-connectionstring: RW5kcG9pbnQ9c2I6Ly9pYWMtd3M1LXQyangyaTZvZHo3Z2stc2Jucy5zZXJ2aWNlYnVzLndpbmRvd3MubmV0LztTaGFyZWRBY2Nlc3NLZXlOYW1lPW9yZGVyLWNvbnN1bWVyO1NoYXJlZEFjY2Vzc0tleT1qN3BFL3JRZzBIS0MzamMvWWJxNzF4RHVSZy9oeGdkWHJTN1cxQjJRTHVnPTtFbnRpdHlQYXRoPW9yZGVycw0K

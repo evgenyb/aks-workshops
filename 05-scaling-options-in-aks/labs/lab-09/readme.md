@@ -185,13 +185,15 @@ Follow the instruction described in this tutorial https://github.com/kedacore/sa
 git clone https://github.com/kedacore/sample-dotnet-worker-servicebus-queue
 cd sample-dotnet-worker-servicebus-queue
 ```
-Use the following command to get Connection string to insert into `Program.cs` file
+Use the following command to get Connection string to insert into `.\src\Keda.Samples.Dot
+net.OrderGenerator\Program.cs` file
 
 ```bash
 # Get order-generator connection string
 az servicebus queue authorization-rule keys list --resource-group iac-ws5-rg --namespace-name iac-ws5-<YOUR-UNUQUE-ID>-sbns --queue-name orders --name order-generator | jq .primaryConnectionString -r 
 ```
-Lines 12 and 13 in your `Program.cs` should look something similar to 
+Lines 12 and 13 in your `.\src\Keda.Samples.Dot
+net.OrderGenerator\Program.cs` should look something similar to 
 
 ```c#
 ...
