@@ -150,7 +150,6 @@ spec:
     key: servicebus-order-management-connectionstring
 ```
 
-
 ```bash
 # Deploy autoscaling 
 kubectl apply -f deploy-autoscaling.yaml -n keda-dotnet-sample
@@ -161,6 +160,19 @@ NAME              READY   UP-TO-DATE   AVAILABLE   AGE
 order-processor   0/0     0            0           15m
 ```
 As you can see, there are no pods available. KEDA autoscaler scaled it down, because queue is currently empty and there is no work to do.
+
+Behind the scene, KEDA also created HPA resource for `order-processor` Deployment.
+
+```bash
+# Get HPA at keda-dotnet-sample namespace
+kubectl -n keda-dotnet-sample get hpa        
+NAME                              REFERENCE                    TARGETS              MINPODS   MAXPODS   REPLICAS   AGE
+keda-hpa-order-processor-scaler   Deployment/order-processor   <unknown>/50 (avg)   1         50        0          4m34s
+
+# Get keda-hpa-order-processor-scaler template 
+kubectl -n keda-dotnet-sample get hpa keda-hpa-order-processor-scaler -o yaml
+```
+
 
 ## Task #4 - publish messages to the queue
 

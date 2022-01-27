@@ -25,7 +25,32 @@ In the left terminal, create new  HorizontalPodAutoscaler.
 # Create the HorizontalPodAutoscaler
 kubectl autoscale deployment guinea-pig --cpu-percent=70 --min=1 --max=10
 horizontalpodautoscaler.autoscaling/guinea-pig autoscaled
+
+# Get HPA yaml template
+kubectl get hpa guinea-pig -oyaml 
 ```
+
+```yaml
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: guinea-pig
+  namespace: default
+spec:
+  maxReplicas: 10
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: guinea-pig
+  targetCPUUtilizationPercentage: 70
+status:
+  currentCPUUtilizationPercentage: 4
+  currentReplicas: 1
+  desiredReplicas: 1
+```
+
+
 
 Observe the HPA status changes at the left window.
 

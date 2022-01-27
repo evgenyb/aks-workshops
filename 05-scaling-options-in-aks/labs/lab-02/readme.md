@@ -12,7 +12,8 @@ The source code is located under `src` folder. If you use Visual Studio open `ap
 
 ## Task #1 - build and push `GuineaPig` application
 
-The simplest way to build and push image is to use `az acr build` command. Let's publish `GuineaPig` image to our Azure Container Registry.
+The simplest way to build and push image is to use `az acr build` command. Let's publish `GuineaPig` image to the Azure Container Registry. 
+> Note! Don't forget to replace `iacws5<YOU-UNIQUE-ID>acr` with your ACR instance name.
 
 ```bash
 # Go to aks-workshops\05-scaling-options-in-aks\src\GuineaPig folder
