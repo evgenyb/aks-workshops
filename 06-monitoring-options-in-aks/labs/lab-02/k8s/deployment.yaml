@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guinea-pig
+  labels:
+    app: guinea-pig
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: guinea-pig
+  template:
+    metadata:
+      labels:
+        app: guinea-pig
+    spec:
+      containers:
+      - name: api
+        image: iacws5t2jx2i6odz7gkacr.azurecr.io/guinea-pig:v1
+        imagePullPolicy: IfNotPresent
+        resources: 
+          requests:
+            cpu: 200m
+          limits:
+            cpu: 400m
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 3    
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: guinea-pig-service
+  labels:
+    app: guinea-pig
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: guinea-pig
+  type: ClusterIP

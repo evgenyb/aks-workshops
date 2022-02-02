@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "westeurope"
+        },
+        "prefix": {
+            "value": "iac-ws6"
+        },
+        "tags": {
+            "value": {
+                "Owner": "IaC Oslo",
+                "Environment": "Lab"
+            }
+        },
+        "vnetAddressPrefix": {
+            "value": "10.11.0.0/16"
+        },
+        "aksSubnetAddressPrefix": {
+            "value": "10.11.0.0/23"
+        },
+        "agwSubnetAddressPrefix": {
+            "value": "10.11.2.0/24"
+        }
+    }
+}
