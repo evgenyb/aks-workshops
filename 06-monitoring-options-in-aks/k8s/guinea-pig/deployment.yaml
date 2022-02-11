@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: iacws6htbszcvmf6bjoacr.azurecr.io/guinea-pig:v4
+        image: iacws6htbszcvmf6bjoacr.azurecr.io/guinea-pig:v1
         imagePullPolicy: IfNotPresent
         env:
           - name: APPINSIGHTS_INSTRUMENTATIONKEY
