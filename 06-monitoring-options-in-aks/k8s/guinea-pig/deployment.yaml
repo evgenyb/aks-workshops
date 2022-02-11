@@ -16,8 +16,11 @@ spec:
     spec:
       containers:
       - name: api
-        image: iacws6htbszcvmf6bjoacr.azurecr.io/guinea-pig:v1
+        image: iacws6htbszcvmf6bjoacr.azurecr.io/guinea-pig:v4
         imagePullPolicy: IfNotPresent
+        env:
+          - name: APPINSIGHTS_INSTRUMENTATIONKEY
+            value: <INSTRUMENTATION-KEY>
         resources: 
           requests:
             cpu: 200m
@@ -38,7 +41,8 @@ metadata:
     app: guinea-pig
 spec:
   ports:
-  - port: 80
+  - name: web
+    port: 80
     protocol: TCP
     targetPort: 80
   selector:

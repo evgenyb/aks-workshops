@@ -143,6 +143,18 @@ kubectl logs guinea-pig-75f86bcf55-bzb5g -f
 [21:32:05 INF] [guinea-pig.highcpu] - execution took 18 ms.
 ```
 
+## Task #4 - put some load to the application
+
+To get some more metrics, let's put some load to our application by running the following command
+
+```bash
+# Generate some load to guinea-pig application
+kubectl run -i --tty load-generator --rm --image=busybox --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://guinea-pig-service/api/highcpu; done"
+```
+
+This script will run an infinite loop, sending `wget -q -O- http://guinea-pig-service/api/highcpu` query to the `guinea-pig-service` every 0.01 sec, resulting in approx. 25 requests per sec. load.
+
+
 ## Useful links
 
 * [Visual Studio 2019 Community Edition](https://visualstudio.microsoft.com/downloads/?WT.mc_id=AZ-MVP-5003837)

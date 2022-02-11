@@ -26,7 +26,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
     agentPoolProfiles: [
       {
         name: 'system'
-        count: 1
+        count: 2
         vmSize: 'Standard_DS2_v2'
         vnetSubnetID: aksSubnetId
         osType: 'Linux'
