@@ -2,8 +2,8 @@ param prefix string
 param vnetAddressPrefix string
 param aksSubnetAddressPrefix string
 param agwSubnetAddressPrefix string
+param location string
 
-var location = resourceGroup().location
 var vnetName = '${prefix}-vnet'
 
 resource vnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {

@@ -1,6 +1,6 @@
 param prefix string
+param location string
 
-var location = resourceGroup().location
 var prefixForACR = replace(prefix, '-', '')
 var uniqueStr = uniqueString(subscription().subscriptionId, resourceGroup().id)
 var acrName = '${prefixForACR}${uniqueStr}acr'

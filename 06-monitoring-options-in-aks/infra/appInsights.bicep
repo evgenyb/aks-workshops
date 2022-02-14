@@ -1,6 +1,6 @@
 param prefix string
+param location string
 
-var location = resourceGroup().location
 var appInsightsName = '${prefix}-ai'
 
 resource appInsights 'Microsoft.Insights/components@2020-02-02-preview' = {

@@ -1,6 +1,6 @@
 param prefix string
+param location string
 
-var location = resourceGroup().location
 var uniqueStr = uniqueString(subscription().subscriptionId, resourceGroup().id)
 var logAnalyticsWorkspaceName = '${prefix}-${uniqueStr}-la'
 

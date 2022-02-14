@@ -26,8 +26,25 @@ If you are more comfortable working in the portal, [use the portal to create an 
 Otherwise, use the following script:
 
 ```bash
+# Get resource group resource id
+az group show -n iac-ws6-rg --query id
 
+# Create new SPN with  'Monitoring Reader' role at the iac-ws6-rg scope. Use resource group id from the previous query 
+az ad sp create-for-rbac -n 'grafana-data-source-spn' --role 'Monitoring Reader' --scope <RG-ID> --years 3
 ```
+
+If succeeded, you will get the following json back
+
+```json
+{
+  "appId": "...",
+  "displayName": "grafana-data-source-spn",
+  "password": "...",
+  "tenant": "..."
+}
+```
+
+Don't close this window or copy result somewhere. We will need this information at the next Task when we create Azure Monitor Data Source.
 
 ## Task #2 - add Azure Monitor Data Source into Grafana
 
@@ -46,21 +63,7 @@ Search for `azure` and select `Azure Monitor` data source
 
 ![g-ds-1](images/g-ds-2.png)
 
-Next, we need the following Azure Monitor information:
-
-### Tenant Id
-
-```bash
-# Get your tenant id
-az account show --query tenantId
-```
-
-### Subscription Id
-
-```bash
-# Get your subscription id
-az account show --query Id
-```
+Use `appId`, `tenant` and `password` from the `Task #1` and 
 
 
 

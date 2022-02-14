@@ -1,8 +1,8 @@
 param prefix string
 param logAnalyticsWorkspaceId string 
 param aksSubnetId string
+param location string
 
-var location = resourceGroup().location
 var aksMIName = '${prefix}-aks-mi' 
 var aksName = '${prefix}-aks'
 

@@ -20,6 +20,7 @@ module appInsights 'appInsights.bicep' = {
   name: 'appInsights'
   params: {
     prefix: prefix
+    location: location
   }
 }
 module acr 'acr.bicep' = {
@@ -27,6 +28,7 @@ module acr 'acr.bicep' = {
   name: 'acr'
   params: {
     prefix: prefix
+    location: location
   }
 }
 
@@ -35,6 +37,7 @@ module logAnalytics 'logAnalytics.bicep' = {
   name: 'logAnalytics'
   params: {
     prefix: prefix
+    location: location
   }
 }
 
@@ -43,6 +46,7 @@ module vnet 'vnet.bicep' = {
   name: 'vnet'
   params: {
     prefix: prefix
+    location: location
     vnetAddressPrefix: vnetAddressPrefix
     aksSubnetAddressPrefix: aksSubnetAddressPrefix
     agwSubnetAddressPrefix: agwSubnetAddressPrefix
@@ -54,6 +58,7 @@ module aks 'aks.bicep' = {
   name: 'aks'
   params: {
     prefix: prefix
+    location: location
     aksSubnetId: vnet.outputs.aksSubnetId
     logAnalyticsWorkspaceId: logAnalytics.outputs.logAnalyticsWorkspaceId
   }
