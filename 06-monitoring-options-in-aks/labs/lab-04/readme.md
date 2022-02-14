@@ -21,9 +21,6 @@ cd kube-prometheus
 # Create the namespace and CRDs
 kubectl apply --server-side -f manifests/setup
 
-# Check that monitoring namespace was created
-kubectl get ns monitoring
-
 # Check that Prometheus Custom Resource were created
 kubectl -n monitoring get crd
 NAME                                             CREATED AT
@@ -44,8 +41,6 @@ volumesnapshots.snapshot.storage.k8s.io          2022-02-11T20:31:31Z
 kubectl apply -f manifests/
 
 # Wait until all resources are created and wait until all pods are up and running
-kubectl -n monitoring get po -w
-
 kubectl -n monitoring get po
 NAME                                   READY   STATUS    RESTARTS   AGE
 alertmanager-main-0                    2/2     Running   0          51s
