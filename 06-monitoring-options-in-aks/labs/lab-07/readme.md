@@ -61,9 +61,22 @@ Navigate to `Data sources` http://localhost:3000/datasources and click `Add data
 
 Search for `azure` and select `Azure Monitor` data source
 
-![g-ds-1](images/g-ds-2.png)
+![g-ds-2](images/g-ds-2.png)
 
-Use `appId`, `tenant` and `password` from the `Task #1` and 
+Use `appId`, `tenant` and `password` from the `Task #1` to enter `Directory (tenant) ID`, `Application (client) ID` and `Client Secret`. 
+
+When you enter all three fields, the `Load subscription` button will become available. Clit it and if your subscription will be loaded. 
+
+![g-ds-3](images/g-ds-3.png)
+
+Next, click to `Save & test` and you should see that Grafana
+1. Successfully queried the Azure Monitor service. 
+2. Successfully queried the Azure Log Analytics service.
+
+![g-ds-4](images/g-ds-4.png)
+
+
+## Task #3 - import AKS Monitor Container dashboard
 
 
 
