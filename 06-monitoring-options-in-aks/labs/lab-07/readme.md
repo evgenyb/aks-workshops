@@ -13,7 +13,10 @@ Grafana includes built-in support for Azure Monitor. The Azure Monitor data sour
 
 ## Goals
 
-* 
+* Create and configure Azure Monitor data source
+* Explore Azure Log Analytics using Kusto query from Grafana
+* Explore Azure Monitor resource metrics from Grafana
+* Import AKS Monitor Container Grafana dashboard
 
 ## Task #1 - create an Azure AD application and service principal
 
@@ -76,8 +79,93 @@ Next, click to `Save & test` and you should see that Grafana
 ![g-ds-4](images/g-ds-4.png)
 
 
-## Task #3 - import AKS Monitor Container dashboard
+## Task #3 - explore data from Azure Log Analytics in grafana
 
+With data source in place, we can can query data from Log Analytics. Navigate to `Explore` at the left menu and select `Azure Monitor` (or however you named your data source) from data source list.
+
+![](images/explore-1.png)
+
+We will query Log analytics, therefore select `Logs` as a `Service`. 
+
+![](images/explore-2.png)
+
+Click `Select resource` and select Log Analytics workspace from `iac-ws6-rg`. If you follow naming convention, it should be called `iac-ws6-uniqueid-la`. Click `Apply`.
+
+![](images/explore-3.png)
+
+Now you can write and execute [Kusto](https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/tutorial?WT.mc_id=AZ-MVP-5003837&pivots=azuredataexplorer) queries. Use the query below to get `cpuUsageNanoCores` metrics for our GuineaPig `api` containers.
+
+```sql
+Perf
+| where $__timeFilter(TimeGenerated)    
+| where ObjectName == 'K8SContainer'
+| where InstanceName contains "api"
+| where CounterName == 'cpuUsageNanoCores'
+| order by TimeGenerated asc
+| project TimeGenerated, InstanceName, CounterValue
+```
+
+Note, that it allows to choose how to format results. It supports `Table` and `Time series`.
+
+![](images/explore-5.png)
+
+If you select `Table`, the result will be presented as a regular table.
+
+![](images/explore-4.png)
+
+If you chose `Time series`, then grafana will try to visualize it as a time series (type of `Line` by default)
+
+![](images/explore-6.png)
+
+## Task #4 - explore Azure metrics
+
+You can use Azure Monitor data source to query Azure Resource metrics. The example below show how you can get `CPU Usage Millicores` metric for your AKS cluster.
+
+Navigate to `Explore` at the left side menu. Select `Azure Monitor` as a data source and `Metrics` as a Service.
+
+![](images/metrics-1.png)
+
+Then select the following information elements:
+
+1. Subscription 
+2. Resource group -> iac-ws6-rg
+3. Resource type -> Kubernetes service
+4. Resource name -> iac-ws6-aks
+5. metric namespace -> `Microsoft.ContainerService/managedClusters`
+6. Metric -> `CPU Usage Millicores` 
+
+![](images/metrics-2.png)
+
+and you should get graph similar to the one below.
+
+![](images/metrics-3.png)
+
+
+## Task #5 - import AKS Monitor Container dashboard
+
+As you've just learned, you can query pretty much any type of metrics from Azure Monitor and you can compose them into Grafana dashboards. As an example, I took existing [AKS Monitor Container](ttps://grafana.com/grafana/dashboards/12817) Grafana dashboard from [GrafanaLabs dashboard library](https://grafana.com/grafana/dashboards/). I used it at one of my projects before, but now I needed to adjust it a bit, therefore we will import it from our repo, not from the original `GrafanaLabs` repo.
+
+To import Grafana dashboard, navigate to http://localhost:3000/dashboards or click yourself via left menu `Dashboards -> Browse` and click `Import`.
+
+![](images/import-d-1.png)
+
+Click `Upload JSON file` and select `06-monitoring-options-in-aks\dashboards\AKS Monitor Container-1644874521059.json` file.
+
+![](images/import-d-2.png)
+
+Select folder you want this dashboard to be imported to and Azure Monitor data source and click `Import`.
+
+![](images/import-d-3.png)
+
+If import went well, you should see the following dashboard.
+
+![](images/import-d-4.png)
+
+If you have several Azure Monitor data sources, AKS or Log Analytics instances under your subscription, you may need to select the correct values at the top of the dashboard.
+
+![](images/import-d-5.png)
+
+If you want to see pods or namespace specific metrics, you can change namespaces at the same menu.
 
 
 ## Useful links
@@ -85,8 +173,9 @@ Next, click to `Save & test` and you should see that Grafana
 * [Azure Monitor data source](https://grafana.com/docs/grafana/latest/datasources/azuremonitor/)
 * [Add a data source](https://grafana.com/docs/grafana/latest/datasources/add-a-data-source/)
 * [Grafana data source as code - or how to automate deployment of Azure Monitor data sources to Grafana for multi-team setup](https://borzenin.com/grafana-data-source-as-code-or-how-to-deploy-azure-monitor-data-course-to-grafana/)
-* [Use the portal to create an Azure AD application and service principal that can access resources](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal)
-* [Azure Monitor Log Analytics API Overview](https://docs.microsoft.com/en-gb/azure/azure-monitor/logs/api/overview)
+* [Use the portal to create an Azure AD application and service principal that can access resources](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal?WT.mc_id=AZ-MVP-5003837)
+* [Azure Monitor Log Analytics API Overview](https://docs.microsoft.com/en-gb/azure/azure-monitor/logs/api/overview?WT.mc_id=AZ-MVP-5003837)
+* [Kusto](https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/tutorial?WT.mc_id=AZ-MVP-5003837&pivots=azuredataexplorer)
 
 ## Next: cleaning up resources
 
