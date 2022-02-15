@@ -72,12 +72,16 @@ When you enter all three fields, the `Load subscription` button will become avai
 
 ![g-ds-3](images/g-ds-3.png)
 
-Next, click to `Save & test` and you should see that Grafana
+Next, click `Save & test` and you should see that Grafana
 1. Successfully queried the Azure Monitor service. 
 2. Successfully queried the Azure Log Analytics service.
 
 ![g-ds-4](images/g-ds-4.png)
 
+
+You can also find a list of dashboards from `GrafanaLabs` that use Azure Monitor data source. Import one called `Azure App monitoring - Application Insights`.
+
+![g-ds-5](images/g-ds-5.png)
 
 ## Task #3 - explore data from Azure Log Analytics in grafana
 
@@ -113,7 +117,7 @@ If you select `Table`, the result will be presented as a regular table.
 
 ![](images/explore-4.png)
 
-If you chose `Time series`, then grafana will try to visualize it as a time series (type of `Line` by default)
+If you chose `Time series`, then grafana will try to visualize it as a time series (type of `Lines` by default)
 
 ![](images/explore-6.png)
 
@@ -166,6 +170,39 @@ If you have several Azure Monitor data sources, AKS or Log Analytics instances u
 ![](images/import-d-5.png)
 
 If you want to see pods or namespace specific metrics, you can change namespaces at the same menu.
+
+## Task #6 - inspect, edit or explore dashboard elements
+
+If you are curious what queries are used behind the panel elements. This is a very good way to learn `Kusto` and Grafana.
+
+### Inspect Data and Query
+
+if you just want to lok at data and query, select `Inspect->Data` or `Inspect->Query`
+
+![](images/inspect-1.png)
+
+Depending what you select, you will end-up at the `Data` or `Query` tab of Inspect window.
+
+![](images/inspect-2.png)
+
+### Edit panel
+
+If you want to apply some changes to the panel, click `Edit`
+
+![](images/edit-1.png)
+
+You will be switched into Edit mode where you can change query, titles and adjust graphical elements of of the panel. 
+
+You can always get back to the dashboard from the top menu.
+
+![](images/back-to-dashboard.png)
+
+
+### Explore
+
+By clicking `Explore`, you will be switched to the `Explore` mode with preloaded query from the panel.
+
+![](images/ds-explore-1.png)
 
 
 ## Useful links
