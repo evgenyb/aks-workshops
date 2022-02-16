@@ -4,7 +4,7 @@
 
 Typically, to use Prometheus, you need to set up and manage a Prometheus server with a store. By integrating with [Azure Monitor](https://docs.microsoft.com/en-us/azure/azure-monitor/overview), a Prometheus server is not required. You just need to expose the Prometheus metrics endpoint through your exporters or pods (application), and the containerized agent for Container insights can scrape the metrics for you.
 
-![](https://docs.microsoft.com/en-us/azure/azure-monitor/containers/media/container-insights-prometheus-integration/monitoring-kubernetes-architecture.png)
+![model](https://docs.microsoft.com/en-us/azure/azure-monitor/containers/media/container-insights-prometheus-integration/monitoring-kubernetes-architecture.png)
 
 Container insights uses a containerized version of the Log Analytics agent for Linux called `omsagent`.  `omsagent` is deployed as a daemon running at each node. 
 
@@ -36,8 +36,18 @@ If C# is like a Spanish for you, feel free to skip this task. Otherwise, here is
 Install-Package prometheus-net.AspNetCore
 ```
 
+Add `endpoints.MapMetrics()` to the endpoint configuration under `app.UseEndpoints` inside `Startup.cs` file.
 
-## Task #2 - test that `GuineaPig` /metrics endpoint contains Prometheus metrics 
+If you additionally want to expose HTTP request metrics, after `app.UseRouting()` add `app.UseHttpMetrics()`.
+
+Start the project and navigate to `http://localhost:5000/metrics`. You should see bunch of metrics exposed.
+
+![metrics](images/metrics.png)
+
+
+## Task #2 - test that `guinea-pig` `/metrics` endpoint exposes Prometheus metrics 
+
+We already deployed `guinea-pig` app into the cluster, so let's check if we it exposes Prometheus metrics. 
 
 ```bash
 # Start curl just terminal
@@ -48,9 +58,9 @@ kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -
 
 Last command should print bunch of metrics.
 
-## Task #2 - configure and deploy ConfigMaps to enable scraping of Prometheus metrics with Azure Monitor
+## Task #3 - configure and deploy ConfigMaps to enable scraping of Prometheus metrics with Azure Monitor
 
-Create new `container-azm-ms-agentconfig.yaml` file with the following content:
+As we already know, `omsagent` is configured using ConfigMap. Create new `container-azm-ms-agentconfig.yaml` file with the following content:
 
 ```yaml
 kind: ConfigMap
@@ -82,9 +92,9 @@ metadata:
 
 This is very shrinked version of the [default omsagent ConfigMap template](https://raw.githubusercontent.com/microsoft/Docker-Provider/ci_prod/kubernetes/container-azm-ms-agentconfig.yaml). 
 
-I configured cluster-wide (`prometheus_data_collection_settings.cluster` section) metrics to be scrapped every 10 sec (`interval = "10s"`). And I want to only scrape metrics from my `guinea-pig-service` (kubernetes_services = ["http://guinea-pig-service.default/metrics"]).
+I configured cluster-wide (`prometheus_data_collection_settings.cluster` section) metrics to be scrapped every 10 sec (`interval = "10s"`). And I want to only scrape metrics from my `guinea-pig-service` (kubernetes_services = ["http://guinea-pig-service.default/metrics"]) endpoint.
 
-Now, deploy config map file.
+Deploy config map.
 
 ```bash
 # Deploy ConfigMap
@@ -94,7 +104,26 @@ configmap/container-azm-ms-agentconfig created
 
 The configuration change can take a few minutes to finish before taking effect, and all ``omsagent`` pods in the cluster will restart. The restart is a rolling restart for all omsagent pods, not all restart at the same time. 
 
-## Task #3 - query Prometheus metrics data
+You can check if `omsagent` pods were restarted after config map was created.
+
+```bash
+# check omsagent status
+kubectl -n kube-system get po -l component=oms-agent
+NAME             READY   STATUS    RESTARTS        AGE
+omsagent-bj245   2/2     Running   2 (7m6s ago)    49m
+omsagent-zbpc9   2/2     Running   2 (7m26s ago)   49m
+```
+
+You should see (at least) two restarts per pod. If it doesn't restart, check `omsagent` logs for more details.
+
+```bash
+# Check omsagent logs
+kubectl -n kube-system logs omsagent-bj245 -c omsagent-prometheus
+```
+
+If everything works as planned, you should see message similar to `config::configmap container-azm-ms-agentconfig for settings mounted, parsing values for prometheus config map`.
+
+## Task #4 - query Prometheus metrics data
 
 You can run Log Analytics query either directly from under ``AKS->Monitoring->Logs`` menu. Or you can go to your Log Analytics workspace instance and run queries from there. 
 
@@ -126,7 +155,31 @@ InsightsMetrics
 
 As you can see, here we used `guinea_pig_highcpu_failed_total` implemented inside the `guinea-pig` app.
 
+## Task #5 - review Prometheus data usage in Azure Log Analytics
 
+In production cluster, with high load, the cost of collecting Prometheus metrics into Log Analytics might be very high, so you should always keep your eyes on costs. 
+
+To identify the ingestion volume of each metrics size in `GB per day` to understand if it is high, use the following query:
+
+```kql
+InsightsMetrics
+| where Namespace contains "prometheus"
+| where TimeGenerated > ago(24h)
+| summarize VolumeInGB = (sum(_BilledSize) / (1024 * 1024 * 1024)) by Name
+| order by VolumeInGB desc
+| render barchart
+```
+
+To estimate what each metrics size in `GB` is for a month to understand if the volume of data ingested received in the workspace is high, use the following query:
+
+```kql
+InsightsMetrics
+| where Namespace contains "prometheus"
+| where TimeGenerated > ago(24h)
+| summarize EstimatedGBPer30dayMonth = (sum(_BilledSize) / (1024 * 1024 * 1024)) * 30 by Name
+| order by EstimatedGBPer30dayMonth desc
+| render barchart
+```
 ## Useful links
 
 * [Configure scraping of Prometheus metrics with Container insights](https://docs.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-prometheus-integration?WT.mc_id=AZ-MVP-5003837)
