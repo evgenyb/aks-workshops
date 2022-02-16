@@ -166,6 +166,6 @@ This script will run an infinite loop, sending `wget -q -O- http://guinea-pig-se
 * [az acr build command](https://docs.microsoft.com/en-us/cli/azure/acr?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837#az_acr_build)
 * [Push your first image to a private Docker container registry using the Docker CLI](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli?WT.mc_id=AZ-MVP-5003837)
 
-## Next: create monitoring dashboard for test application
+## Next: monitoring AKS with Azure Monitor
 
 [Go to lab-03](../lab-03/readme.md)
