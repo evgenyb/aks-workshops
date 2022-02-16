@@ -87,15 +87,15 @@ You can also find a list of dashboards from `GrafanaLabs` that use Azure Monitor
 
 With data source in place, we can can query data from Log Analytics. Navigate to `Explore` at the left menu and select `Azure Monitor` (or however you named your data source) from data source list.
 
-![](images/explore-1.png)
+![explore-1](images/explore-1.png)
 
 We will query Log analytics, therefore select `Logs` as a `Service`. 
 
-![](images/explore-2.png)
+![explore-2](images/explore-2.png)
 
 Click `Select resource` and select Log Analytics workspace from `iac-ws6-rg`. If you follow naming convention, it should be called `iac-ws6-uniqueid-la`. Click `Apply`.
 
-![](images/explore-3.png)
+![explore-3](images/explore-3.png)
 
 Now you can write and execute [Kusto](https://docs.microsoft.com/en-us/azure/data-explorer/kusto/query/tutorial?WT.mc_id=AZ-MVP-5003837&pivots=azuredataexplorer) queries. Use the query below to get `cpuUsageNanoCores` metrics for our GuineaPig `api` containers.
 
@@ -111,15 +111,15 @@ Perf
 
 Note, that it allows to choose how to format results. It supports `Table` and `Time series`.
 
-![](images/explore-5.png)
+![explore-5](images/explore-5.png)
 
 If you select `Table`, the result will be presented as a regular table.
 
-![](images/explore-4.png)
+![explore-4](images/explore-4.png)
 
 If you chose `Time series`, then grafana will try to visualize it as a time series (type of `Lines` by default)
 
-![](images/explore-6.png)
+![explore-6](images/explore-6.png)
 
 ## Task #4 - explore Azure metrics
 
@@ -127,7 +127,7 @@ You can use Azure Monitor data source to query Azure Resource metrics. The examp
 
 Navigate to `Explore` at the left side menu. Select `Azure Monitor` as a data source and `Metrics` as a Service.
 
-![](images/metrics-1.png)
+![metrics-1](images/metrics-1.png)
 
 Then select the following information elements:
 
@@ -138,11 +138,11 @@ Then select the following information elements:
 5. metric namespace -> `Microsoft.ContainerService/managedClusters`
 6. Metric -> `CPU Usage Millicores` 
 
-![](images/metrics-2.png)
+![metrics-2](images/metrics-2.png)
 
 and you should get graph similar to the one below.
 
-![](images/metrics-3.png)
+![metrics-3](images/metrics-3.png)
 
 
 ## Task #5 - import AKS Monitor Container dashboard
@@ -151,23 +151,23 @@ As you've just learned, you can query pretty much any type of metrics from Azure
 
 To import Grafana dashboard, navigate to http://localhost:3000/dashboards or click yourself via left menu `Dashboards -> Browse` and click `Import`.
 
-![](images/import-d-1.png)
+![import-d-1](images/import-d-1.png)
 
 Click `Upload JSON file` and select `06-monitoring-options-in-aks\dashboards\AKS Monitor Container-1644874521059.json` file.
 
-![](images/import-d-2.png)
+![import-d-2](images/import-d-2.png)
 
 Select folder you want this dashboard to be imported to and Azure Monitor data source and click `Import`.
 
-![](images/import-d-3.png)
+![import-d-3](images/import-d-3.png)
 
 If import went well, you should see the following dashboard.
 
-![](images/import-d-4.png)
+![import-d-4](images/import-d-4.png)
 
 If you have several Azure Monitor data sources, AKS or Log Analytics instances under your subscription, you may need to select the correct values at the top of the dashboard.
 
-![](images/import-d-5.png)
+![import-d-5](images/import-d-5.png)
 
 If you want to see pods or namespace specific metrics, you can change namespaces at the same menu.
 
@@ -179,30 +179,30 @@ If you are curious what queries are used behind the panel elements. This is a ve
 
 if you just want to lok at data and query, select `Inspect->Data` or `Inspect->Query`
 
-![](images/inspect-1.png)
+![inspect-1](images/inspect-1.png)
 
 Depending what you select, you will end-up at the `Data` or `Query` tab of Inspect window.
 
-![](images/inspect-2.png)
+![inspect-2](images/inspect-2.png)
 
 ### Edit panel
 
 If you want to apply some changes to the panel, click `Edit`
 
-![](images/edit-1.png)
+![edit-1](images/edit-1.png)
 
 You will be switched into Edit mode where you can change query, titles and adjust graphical elements of of the panel. 
 
 You can always get back to the dashboard from the top menu.
 
-![](images/back-to-dashboard.png)
+![back-to-dashboard](images/back-to-dashboard.png)
 
 
 ### Explore
 
 By clicking `Explore`, you will be switched to the `Explore` mode with preloaded query from the panel.
 
-![](images/ds-explore-1.png)
+![ds-explore-1](images/ds-explore-1.png)
 
 
 ## Useful links

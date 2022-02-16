@@ -1,137 +1,191 @@
-# lab-04 - deploy and configure Prometheus and Grafana
+# lab-04 - configure scraping of Prometheus metrics with Azure Monitor
 
-## Estimated completion time - 10 min
+`Prometheus` is a popular open source metric monitoring solution and is a part of the [Cloud Native Compute Foundation](https://www.cncf.io/). Container insights provides a seamless onboarding experience to collect Prometheus metrics. 
 
-There are multiple distributions and ways to deploy `Prometheus` and `Grafana` into your cluster. You can use `Helm` or manifests files. It all depends on what is your post-provisioning cluster configuration strategy is. For our workshop we will use [prometheus-operator/kube-prometheus](https://github.com/prometheus-operator/kube-prometheus.git) distribution. This repository contains Kubernetes manifests, Grafana dashboards, and Prometheus rules combined with documentation and scripts to provide easy to operate end-to-end Kubernetes cluster monitoring with Prometheus using the Prometheus Operator.
+Typically, to use Prometheus, you need to set up and manage a Prometheus server with a store. By integrating with [Azure Monitor](https://docs.microsoft.com/en-us/azure/azure-monitor/overview), a Prometheus server is not required. You just need to expose the Prometheus metrics endpoint through your exporters or pods (application), and the containerized agent for Container insights can scrape the metrics for you.
 
-This repository contains several releases. Check the [Kubernetes compatibility matrix](https://github.com/prometheus-operator/kube-prometheus#kubernetes-compatibility-matrix) and choose the correct release version for your cluster. For our workshop, as of today, we use Kubernetes version `1.22.4`, therefore we will use version from `main` branch.
+![model](https://docs.microsoft.com/en-us/azure/azure-monitor/containers/media/container-insights-prometheus-integration/monitoring-kubernetes-architecture.png)
+
+Container insights uses a containerized version of the Log Analytics agent for Linux called `omsagent`.  `omsagent` is deployed as a daemon running at each node. 
+
+Active scraping of metrics from Prometheus in AKS is performed from one of two perspectives: `Cluster-wide` and `Node-wide`.
+
+All metrics collected in both contexts should be defined in the ConfigMap called `ontainer-azm-ms-agentconfig` deployed into `kube-system` namespace.
+
+For detailed documentation about how to configure ConfigMap, check this [document](https://docs.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-prometheus-integration?WT.mc_id=AZ-MVP-5003837#configure-and-deploy-configmaps) 
+
+or just read comments on the [default ConfigMap template](https://raw.githubusercontent.com/microsoft/Docker-Provider/ci_prod/kubernetes/container-azm-ms-agentconfig.yaml).
+
+In this lab, we will configure `omsagent` to scrape Prometheus metrics from our `guinea-pig` application.
 
 ## Goals
 
-* deploy `Prometheus` and `Grafana`
-* get access to `Prometheus` and `Grafana` dashboards 
+* Learn how to enable Prometheus endpoint for asp.net core application
+* Configure and deploy ConfigMaps to enable scraping of Prometheus metrics with Azure Monitor
+* Query Prometheus metrics data
+* Learn how to review Prometheus data usage
 
-## Task #1 - clone `kube-prometheus` repository and deploy kubernetes manifests 
 
-```bash
-# clone kube-prometheus repository
-git clone git@github.com:prometheus-operator/kube-prometheus.git
-cd kube-prometheus
+## Task #1 (Optional) - review how to enable prometheus endpoint at asp.net core application
 
-# Create the namespace and CRDs
-kubectl apply --server-side -f manifests/setup
+If C# is like a Spanish for you, feel free to skip this task. Otherwise, here is quick step-by-step guide about how to enable Prometheus in your asp.net core app.
 
-# Check that Prometheus Custom Resource were created
-kubectl -n monitoring get crd
-NAME                                             CREATED AT
-alertmanagerconfigs.monitoring.coreos.com        2022-02-11T20:45:31Z
-alertmanagers.monitoring.coreos.com              2022-02-11T20:45:31Z
-healthstates.azmon.container.insights            2022-02-11T20:31:32Z
-podmonitors.monitoring.coreos.com                2022-02-11T20:45:31Z
-probes.monitoring.coreos.com                     2022-02-11T20:45:31Z
-prometheuses.monitoring.coreos.com               2022-02-11T20:45:32Z
-prometheusrules.monitoring.coreos.com            2022-02-11T20:45:32Z
-servicemonitors.monitoring.coreos.com            2022-02-11T20:45:32Z
-thanosrulers.monitoring.coreos.com               2022-02-11T20:45:32Z
-volumesnapshotclasses.snapshot.storage.k8s.io    2022-02-11T20:31:31Z
-volumesnapshotcontents.snapshot.storage.k8s.io   2022-02-11T20:31:31Z
-volumesnapshots.snapshot.storage.k8s.io          2022-02-11T20:31:31Z
+### Add Nuget package for ASP.NET Core middleware and stand-alone Kestrel metrics server
 
-# Deploy the remaining resources
-kubectl apply -f manifests/
-
-# Wait until all resources are created and wait until all pods are up and running
-kubectl -n monitoring get po
-NAME                                   READY   STATUS    RESTARTS   AGE
-alertmanager-main-0                    2/2     Running   0          51s
-alertmanager-main-1                    2/2     Running   0          51s
-alertmanager-main-2                    2/2     Running   0          51s
-blackbox-exporter-69894767d5-s8rf6     3/3     Running   0          74s
-grafana-6c44468589-lq4xm               1/1     Running   0          69s
-kube-state-metrics-c655879df-lrmqx     3/3     Running   0          68s
-node-exporter-d9rbd                    2/2     Running   0          67s
-node-exporter-zbkmk                    2/2     Running   0          67s
-prometheus-adapter-6cf5d8bfcf-nwpjg    1/1     Running   0          63s
-prometheus-adapter-6cf5d8bfcf-vh4sz    1/1     Running   0          63s
-prometheus-k8s-0                       2/2     Running   0          51s
-prometheus-k8s-1                       2/2     Running   0          51s
-prometheus-operator-7b997546f8-4795v   2/2     Running   0          63s
+```powershell
+Install-Package prometheus-net.AspNetCore
 ```
 
-The default distribution contains a lot of resources that we don't need for our workshop. The ones that we need are:
+Add `endpoints.MapMetrics()` to the endpoint configuration under `app.UseEndpoints` inside `Startup.cs` file.
 
-* prometheus-k8s-0 and prometheus-k8s-1 (highly available `Prometheus`)
-* alertmanager-main-0 (1 and 2) - highly available `Alertmanager`
-* grafana
+If you additionally want to expose HTTP request metrics, after `app.UseRouting()` add `app.UseHttpMetrics()`.
 
-All `Grafana` dashboards are stored as a [Kubernetes ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
+Start the project and navigate to `http://localhost:5000/metrics`. You should see bunch of metrics exposed.
 
-```bash
-# get config maps
-kubectl -n monitoring get cm
-```
+![metrics](images/metrics.png)
 
-## Task #2 - access `Prometheus` and `Grafana` dashboards
 
-`Prometheus` and `Grafana` dashboards can be accessed quickly using `kubectl port-forward` using commands below. 
+## Task #2 - test that `guinea-pig` `/metrics` endpoint exposes Prometheus metrics 
 
-### Prometheus 
+We already deployed `guinea-pig` app into the cluster, so let's check if we it exposes Prometheus metrics. 
 
 ```bash
-# Access Prometheus dashboard
-kubectl --namespace monitoring port-forward svc/prometheus-k8s 9090
-```
-Now you can access `Prometheus` UI via http://localhost:9090
+# Start curl just terminal
+kubectl run curl -i --tty --rm --restart=Never --image=radial/busyboxplus:curl -- sh
 
-### Grafana
-
-```bash
-# Access Grafana dashboard
-kubectl --namespace monitoring port-forward svc/grafana 3000
+[ root@curl:/ ]$ curl http://guinea-pig-service/metrics
 ```
 
-Now you can access `Grafana` via http://localhost:3000
+Last command should print bunch of metrics.
 
-Use `admin:admin` as username and password and you will be asked to change `admin` password when you access it for the first time.
+## Task #3 - configure and deploy ConfigMaps to enable scraping of Prometheus metrics with Azure Monitor
 
-## Task #3 - deploy `guinea-pig` `ServiceMonitor`
-
-Create new `serviceMonitor.yaml` file with the following content. 
+As we already know, `omsagent` is configured using ConfigMap. Create new `container-azm-ms-agentconfig.yaml` file with the following content:
 
 ```yaml
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+kind: ConfigMap
+apiVersion: v1
+data:
+  schema-version:
+    #string.used by agent to parse config. supported versions are {v1}. Configs with other schema versions will be rejected by the agent.
+    v1
+  config-version:
+    #string.used by customer to keep track of this config file's version in their source control/repository (max allowed 10 chars, other chars will be truncated)
+    ver1
+
+  prometheus-data-collection-settings: |-
+    # Custom Prometheus metrics data collection settings
+    [prometheus_data_collection_settings.cluster]
+        # Cluster level scrape endpoint(s). These metrics will be scraped from agent's Replicaset (singleton)
+        # Any errors related to prometheus scraping can be found in the KubeMonAgentEvents table in the Log Analytics workspace that the cluster is sending data to.
+
+        #Interval specifying how often to scrape for metrics. This is duration of time and can be specified for supporting settings by combining an integer value and time unit as a string value. Valid time units are ns, us (or µs), ms, s, m, h.
+        interval = "10s"
+
+        # An array of Kubernetes services to scrape metrics from.
+        kubernetes_services = ["http://guinea-pig-service.default/metrics"]
+
 metadata:
-  name: guinea-pig
-  labels:
-    team: iac
-spec:
-  selector:
-    matchLabels:
-      app: guinea-pig
-  endpoints:
-  - interval: 30s
-    port: web
+  name: container-azm-ms-agentconfig
+  namespace: kube-system
 ```
+
+This is very shrinked version of the [default omsagent ConfigMap template](https://raw.githubusercontent.com/microsoft/Docker-Provider/ci_prod/kubernetes/container-azm-ms-agentconfig.yaml). 
+
+I configured cluster-wide (`prometheus_data_collection_settings.cluster` section) metrics to be scrapped every 10 sec (`interval = "10s"`). And I want to only scrape metrics from my `guinea-pig-service` (kubernetes_services = ["http://guinea-pig-service.default/metrics"]) endpoint.
+
+Deploy config map.
 
 ```bash
-# deploy guinea-pig ServiceMonitor resource
-
-kubectl apply -f serviceMonitor.yaml
-servicemonitor.monitoring.coreos.com/guinea-pig created
+# Deploy ConfigMap
+kubectl apply -f .\container-azm-ms-agentconfig.yaml
+configmap/container-azm-ms-agentconfig created
 ```
 
-Check that new `serviceMonitor/default/guinea-pig` target is shown under `Prometheus` Targets dashboard. Navigate to http://localhost:9090/targets (I assume that you still running port-forward command for `svc/prometheus-k8s` service)
+The configuration change can take a few minutes to finish before taking effect, and all ``omsagent`` pods in the cluster will restart. The restart is a rolling restart for all omsagent pods, not all restart at the same time. 
 
-![prom-dash](images/prometheus-dashboard.png)
+You can check if `omsagent` pods were restarted after config map was created.
 
+```bash
+# check omsagent status
+kubectl -n kube-system get po -l component=oms-agent
+NAME             READY   STATUS    RESTARTS        AGE
+omsagent-bj245   2/2     Running   2 (7m6s ago)    49m
+omsagent-zbpc9   2/2     Running   2 (7m26s ago)   49m
+```
 
+You should see (at least) two restarts per pod. If it doesn't restart, check `omsagent` logs for more details.
+
+```bash
+# Check omsagent logs
+kubectl -n kube-system logs omsagent-bj245 -c omsagent-prometheus
+```
+
+If everything works as planned, you should see message similar to `config::configmap container-azm-ms-agentconfig for settings mounted, parsing values for prometheus config map`.
+
+## Task #4 - query Prometheus metrics data
+
+You can run Log Analytics query either directly from under ``AKS->Monitoring->Logs`` menu. Or you can go to your Log Analytics workspace instance and run queries from there. 
+
+To view Prometheus metrics scraped by Azure Monitor filtered by Namespace, specify `prometheus`. 
+
+Here are two samples queries to view Prometheus metrics from `guinea-pig` app:
+
+### number of http requests grouped by response code
+
+We want to graph the distribution of the number of `200` versus `404` requests made to the application.
+
+```kql
+InsightsMetrics 
+| where Namespace == "prometheus"
+| where Name == "http_requests_received_total"
+| summarize max(Val) by tostring(parse_json(Tags).code), bin (TimeGenerated, 1m)
+| order by TimeGenerated asc
+| render timechart   
+```
+
+### number of exceptions thrown by `guinea-pig` app
+
+```kql
+InsightsMetrics 
+| where Namespace == "prometheus"
+| where Name == "guinea_pig_highcpu_failed_total"
+| summarize sum(Val)   
+```
+
+As you can see, here we used `guinea_pig_highcpu_failed_total` implemented inside the `guinea-pig` app.
+
+## Task #5 - review Prometheus data usage in Azure Log Analytics
+
+In production cluster, with high load, the cost of collecting Prometheus metrics into Log Analytics might be very high, so you should always keep your eyes on costs. 
+
+To identify the ingestion volume of each metrics size in `GB per day` to understand if it is high, use the following query:
+
+```kql
+InsightsMetrics
+| where Namespace contains "prometheus"
+| where TimeGenerated > ago(24h)
+| summarize VolumeInGB = (sum(_BilledSize) / (1024 * 1024 * 1024)) by Name
+| order by VolumeInGB desc
+| render barchart
+```
+
+To estimate what each metrics size in `GB` is for a month to understand if the volume of data ingested received in the workspace is high, use the following query:
+
+```kql
+InsightsMetrics
+| where Namespace contains "prometheus"
+| where TimeGenerated > ago(24h)
+| summarize EstimatedGBPer30dayMonth = (sum(_BilledSize) / (1024 * 1024 * 1024)) * 30 by Name
+| order by EstimatedGBPer30dayMonth desc
+| render barchart
+```
 ## Useful links
 
-* [prometheus-operator/kube-prometheus](https://github.com/prometheus-operator/kube-prometheus.git)
-* [kubectl port-forward](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#port-forward)
-* [Kubernetes ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)
+* [Configure scraping of Prometheus metrics with Container insights](https://docs.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-prometheus-integration?WT.mc_id=AZ-MVP-5003837)
+* [Query Prometheus metrics data](https://docs.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-log-query#query-prometheus-metrics-data?WT.mc_id=AZ-MVP-5003837)
+* [prometheus-net](https://github.com/prometheus-net/prometheus-net)
 
-## Next: monitoring AKS with Prometheus and Grafana
+## Next: deploy and configure Prometheus and Grafana
 
 [Go to lab-05](../lab-05/readme.md)
