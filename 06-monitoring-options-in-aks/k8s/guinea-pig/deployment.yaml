@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guinea-pig
+  labels:
+    app: guinea-pig
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: guinea-pig
+  template:
+    metadata:
+      labels:
+        app: guinea-pig
+    spec:
+      containers:
+      - name: api
+        image: iacws6htbszcvmf6bjoacr/guinea-pig:v6
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: APPINSIGHTS_INSTRUMENTATIONKEY
+            value: <INSTRUMENTATION-KEY>
+        resources: 
+          requests:            
+            cpu: 200m
+            memory: 100Mi
+          limits:
+            cpu: 400m
+            memory: 200Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 3    
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: guinea-pig-service
+  labels:
+    app: guinea-pig
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: guinea-pig
+  type: ClusterIP
