@@ -12,6 +12,7 @@ Here is the list of resources we will provision:
 * Private Virtual Network
 * Azure Container Registry (ACR)
 * Azure Log Analytics
+* Azure Application Insights
 * Azure Kubernetes Service (AKS)
 
 Our AKS cluster will fullfil the following requirements:
@@ -36,6 +37,7 @@ All `Bicep` templates are located under `infra` folder and are split into the fo
 |--|--|
 | acr.bicep | Azure Container Registry resource implementation |
 | aks.bicep | AKS implementation |
+| appInsights.bicep | Azure Application Insights |
 | attachACRToAKS.bicep | Contains code that attaches ACR to AKS instance |
 | vnet.bicep | Private Virtual Network implementation |
 | grantAksPermissions.bicep | Contains code that assign Network Contributor Role to AKS principal id |
