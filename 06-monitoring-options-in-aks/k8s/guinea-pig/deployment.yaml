@@ -22,10 +22,12 @@ spec:
           - name: APPINSIGHTS_INSTRUMENTATIONKEY
             value: <INSTRUMENTATION-KEY>
         resources: 
-          requests:
+          requests:            
             cpu: 200m
+            memory: 100Mi
           limits:
             cpu: 400m
+            memory: 200Mi
         livenessProbe:
           httpGet:
             path: /health

@@ -55,5 +55,17 @@ namespace IaC.WS5.GuineaPig.Controllers
             _logger.LogInformation("[guinea-pig.highcpu] - execution took {ElapsedMilliseconds} ms", sw.ElapsedMilliseconds);
             return Ok();
         }
+        
+        [HttpGet("highmemory")]
+        public IActionResult HighMemory()
+        {
+            var sw = Stopwatch.StartNew();
+            var numberOfBytes = 1073741824;
+            Marshal.AllocHGlobal(numberOfBytes);
+            sw.Stop();
+            _logger.LogInformation("[guinea-pig.highmemory] - execution took {ElapsedMilliseconds} ms", sw.ElapsedMilliseconds);
+            return Ok("highmemory");
+        }
+
     }
 }

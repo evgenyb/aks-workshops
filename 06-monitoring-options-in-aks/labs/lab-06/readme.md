@@ -3,9 +3,22 @@
 
 ## Goals
 
-* 
+* To get familiar with well known Kubernetes dashboards available in Grafana
 
-## Task #1 - 
+## Task #1 - work with different Grafana dashboards for Kubernetes
+
+Open grafana dashboards at `http://localhost:3000/dashboards` and expand `Default` folder.
+
+Open with "play" with the following dashboards: 
+
+* `Kubernetes / Compute Resources / Cluster` 
+* `Kubernetes / Compute Resources / Node (Pods)` 
+* `Kubernetes / Compute Resources / Namespace (Workloads)` 
+* `Kubernetes / Networking / Cluster`
+* `Node Exporter / Nodes` 
+
+Note, that you can "navigate" between dashboards. For example if you open `Kubernetes / Compute Resources / Cluster`, find the `CPU Quota` panel and click to `default` namespace, it will open `Kubernetes / Compute Resources / Namespace (Pods)` dashboard filtered by `default` namespace.
+
 
 
 ## Useful links

@@ -18,9 +18,9 @@ This is an introduction level workshop that covers monitoring aspects of AKS and
  * [Lab-03](labs/lab-03/readme.md) - monitoring AKS with Azure Container insights
  * [Lab-04](labs/lab-04/readme.md) - configure scraping of Prometheus metrics with Azure Monitor
  * [Lab-05](labs/lab-05/readme.md) - deploy and configure Prometheus and Grafana
- * [Lab-06](labs/lab-05/readme.md) - monitoring AKS with Prometheus and Grafana
- * [Lab-07](labs/lab-05/readme.md) - use Azure Monitor Data Source in Grafana
- * [Lab-08](labs/lab-10/readme.md) - cleaning up resources
+ * [Lab-06](labs/lab-06/readme.md) - monitoring AKS with Prometheus and Grafana
+ * [Lab-07](labs/lab-07/readme.md) - use Azure Monitor Data Source in Grafana
+ * [Lab-08](labs/lab-08/readme.md) - cleaning up resources
 ## Links
 
 * [Prerequisites](prerequisites.md)
