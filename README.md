@@ -58,7 +58,16 @@ This workshop covers scaling options for applications and clusters in AKS and yo
 * How cluster autoscaler works
 * What is Kubernetes-based Event Driven Autoscaler ([KEDA](https://keda.sh/))
 
-## Workshop #6 - monitoring options in AKS
+## [Workshop #6 - monitoring options in AKS](https://github.com/evgenyb/aks-workshops/tree/main/06-monitoring-options-in-aks)
+
+
+This is an introduction level workshop that covers monitoring aspects of AKS and you will learn:
+
+* What monitoring options are available for AKS
+* How to monitor AKS with Azure Monitor
+* How to collect Prometheus Metrics with Azure Monitor
+* How to monitor AKS with Prometheus and Grafana
+* How to query Azure Monitor Metrics in Grafana
 
 ## Workshop #7 - service mesh in AKS with [linkerd](https://linkerd.io/)
 ## Workshop #8 - security in AKS
