@@ -80,7 +80,8 @@ metadata:
     app: guinea-pig
 spec:
   ports:
-  - port: 80
+  - name: web
+    port: 80
     protocol: TCP
     targetPort: 80
   selector:
