@@ -2,7 +2,7 @@
 
 ## Estimated completion time - 10 min
 
-There is a simple C# rest API dotnet app, called `GuineaPig` that performs some CPU intensive computations, in order to simulate load in your cluster.
+There is a simple C# dotnet core app, called `GuineaPig` that performs some CPU (and memory) intensive computations, in order to simulate load in your cluster.
 The source code is located under `src` folder. If you use Visual Studio open `app.sln` file. 
 
 ## Goals
@@ -25,7 +25,14 @@ az acr build --registry iacws6<YOU-UNIQUE-ID>acr --image guinea-pig:v1 --file Do
 
 ## Task #2 - deploy application to cluster
 
-Create new `deployment.yaml` file with the following content. Replace `image` with your ACR instance name.
+First, we need to get Application Insights instrumentation key. 
+
+```bash
+# Get Application Insights instrumentation key
+az resource show -g iac-ws6-rg -n iac-ws6-ai --resource-type "microsoft.insights/components" --query properties.InstrumentationKey
+```
+
+Create new `deployment.yaml` file with the following content. Replace `image` with your ACR instance name. Replace `<INSTRUMENTATION-KEY>` with the value you get from the previous command
 
 ```yaml
 apiVersion: apps/v1
@@ -48,11 +55,16 @@ spec:
       - name: api
         image: iacws6<YOU-UNIQUE-ID>acr.azurecr.io/guinea-pig:v1
         imagePullPolicy: IfNotPresent
+        env:
+          - name: APPINSIGHTS_INSTRUMENTATIONKEY
+            value: <INSTRUMENTATION-KEY>
         resources: 
-          requests:
+          requests:            
             cpu: 200m
+            memory: 100Mi
           limits:
             cpu: 400m
+            memory: 200Mi
         livenessProbe:
           httpGet:
             path: /health
