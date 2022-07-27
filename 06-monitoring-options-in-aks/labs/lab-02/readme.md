@@ -165,7 +165,7 @@ To get some more metrics, let's put some load to our application by running the 
 kubectl run -i --tty load-generator --rm --image=busybox --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://guinea-pig-service/api/highcpu; done"
 ```
 
-This script will run an infinite loop, sending `wget -q -O- http://guinea-pig-service/api/highcpu` query to the `guinea-pig-service` every 0.01 sec, resulting in approx. 25 requests per sec. load.
+This script will run an infinite loop, sending `wget -q -O- http://guinea-pig-service/api/highcpu` query to the `guinea-pig-service` every 0.01 sec, resulting in approx. 25 requests per sec. load. You will notice 404 and 500 responses, but that is expected and you can ignore those for now. Later on we'll explore how those different responses can be monitored.
 
 
 ## Useful links
