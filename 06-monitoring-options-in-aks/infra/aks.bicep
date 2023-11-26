@@ -6,7 +6,7 @@ param location string
 var aksMIName = '${prefix}-aks-mi' 
 var aksName = '${prefix}-aks'
 
-resource aksMI 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
+resource aksMI 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: aksMIName
   location: location
 }
@@ -23,7 +23,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
   properties: {
     dnsPrefix: aksName
     enableRBAC: true    
-    kubernetesVersion: '1.22.4'
+    kubernetesVersion: '1.27.7'
     agentPoolProfiles: [
       {
         name: 'system'

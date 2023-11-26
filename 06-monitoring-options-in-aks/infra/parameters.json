@@ -3,10 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "location": {
-            "value": "westeurope"
+            "value": "eastus"
         },
         "prefix": {
-            "value": "iac-ws6"
+            "value": "aperezv01"
         },
         "tags": {
             "value": {
