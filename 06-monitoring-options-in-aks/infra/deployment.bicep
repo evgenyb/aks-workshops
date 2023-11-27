@@ -62,6 +62,7 @@ module aks 'aks.bicep' = {
     aksSubnetId: vnet.outputs.aksSubnetId
     logAnalyticsWorkspaceId: logAnalytics.outputs.logAnalyticsWorkspaceId
   }
+  dependsOn:[vnet,logAnalytics]
 }
 
 module aksRoles 'grantAKSPermissions.bicep' = {
@@ -71,6 +72,7 @@ module aksRoles 'grantAKSPermissions.bicep' = {
     vnetName: vnet.outputs.vnetName
     principalId: aks.outputs.aksMIPrincipalId
   }
+  dependsOn:[aks,vnet]
 }
 
 module acrToAks 'attachACRToAKS.bicep' = {
@@ -79,5 +81,15 @@ module acrToAks 'attachACRToAKS.bicep' = {
   params: {
     acrName: acr.outputs.acrName
     aksKubeletIdentityObjectId: aks.outputs.aksKubeletIdentityObjectId
+  }
+  dependsOn:[acr,aks]
+}
+
+module asb 'sb.bicep' = {
+  scope: resourceGroup
+  name: 'asb'
+  params: {
+    prefix: prefix
+    location: location
   }
 }

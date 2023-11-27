@@ -28,7 +28,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-05-01' = {
       {
         name: 'system'
         count: 2
-        vmSize: 'Standard_DS2_v2'
+        vmSize: 'Standard_D2s_v3'
         vnetSubnetID: aksSubnetId
         osType: 'Linux'
         mode: 'System'
