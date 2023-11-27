@@ -52,10 +52,10 @@ Let's provision AKS cluster.
 az account set --subscription <YOUR-SUBSCRIPTION-ID>
 
 # Deploy workshop resources
-az deployment sub create --location westeurope --template-file ./deployment.bicep  --parameters './parameters.json'
+az deployment sub create --location eastus --template-file ./deployment.bicep  --parameters './parameters.json' --name <username>
 
 # When provisioned (it takes approx. 5 min), connect to your cluster
-az aks get-credentials --resource-group iac-ws6-rg --name iac-ws6-aks --overwrite-existing
+az aks get-credentials --resource-group <username>-rg --name <username>-aks --overwrite-existing
 ```
 
 If you already work with AKS cluster, most likely you already have `kubectl` CLI tool installed and you can skip next step. Otherwise, you need to install `kubectl`.

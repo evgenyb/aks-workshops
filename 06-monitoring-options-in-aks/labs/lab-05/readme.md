@@ -15,7 +15,7 @@ This repository contains several releases. Check the [Kubernetes compatibility m
 
 ```bash
 # clone kube-prometheus repository
-git clone git@github.com:prometheus-operator/kube-prometheus.git
+git clone https://github.com/prometheus-operator/kube-prometheus
 cd kube-prometheus
 
 # Create the namespace and CRDs
