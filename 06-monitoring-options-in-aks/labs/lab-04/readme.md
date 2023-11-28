@@ -1,4 +1,4 @@
-# lab-04 - configure scraping of Prometheus metrics with Azure Monitor
+# lab-04 OPTIONAL - configure scraping of Prometheus metrics with Azure Monitor
 
 `Prometheus` is a popular open source metric monitoring solution and is a part of the [Cloud Native Compute Foundation](https://www.cncf.io/). Container insights provides a seamless onboarding experience to collect Prometheus metrics. 
 
