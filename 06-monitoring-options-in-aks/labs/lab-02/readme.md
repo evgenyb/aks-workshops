@@ -13,14 +13,14 @@ The source code is located under `src` folder. If you use Visual Studio open `ap
 ## Task #1 - build and push `GuineaPig` application
 
 The simplest way to build and push image is to use `az acr build` command. Let's publish `GuineaPig` image to the Azure Container Registry. 
-> Note! Don't forget to replace `iacws6<YOU-UNIQUE-ID>acr` with your ACR instance name.
+> Note! Don't forget to replace '<YOU-UNIQUE-ID>acr` with your ACR instance name.
 
 ```bash
 # Go to aks-workshops\06-monitoring-options-in-aks\src\GuineaPig folder
 cd src\GuineaPig
 
 # Build and publish guinea-pig:v1 image into your ACR
-az acr build --registry iacws6<YOU-UNIQUE-ID>acr --image guinea-pig:v1 --file Dockerfile ..
+az acr build --registry <YOU-UNIQUE-ID>acr --image guinea-pig:v1 --file Dockerfile ..
 ```
 
 ## Task #2 - deploy application to cluster
@@ -29,7 +29,7 @@ First, we need to get Application Insights instrumentation key.
 
 ```bash
 # Get Application Insights instrumentation key
-az resource show -g iac-ws6-rg -n iac-ws6-ai --resource-type "microsoft.insights/components" --query properties.InstrumentationKey
+az resource show -g <YOU-UNIQUE-ID>-rg -n <YOU-UNIQUE-ID>-ai --resource-type "microsoft.insights/components" --query properties.InstrumentationKey
 ```
 
 Create new `deployment.yaml` file with the following content. Replace `image` with your ACR instance name. Replace `<INSTRUMENTATION-KEY>` with the value you get from the previous command
