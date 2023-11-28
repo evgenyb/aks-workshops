@@ -10,7 +10,7 @@ Since we already have a provision cluster with autoscaler disabled, we need to e
 
 ```bash
 # enable the cluster autoscaler
-az aks update --resource-group iac-ws5-rg --name iac-ws5-aks --enable-cluster-autoscaler --min-count 1 --max-count 3
+az aks update --resource-group <your-unique-id>-rg --name <your-unique-id>-aks --enable-cluster-autoscaler --min-count 1 --max-count 3
 ```
 ## Task #2 - test autoscaler
 
