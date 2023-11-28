@@ -94,7 +94,7 @@ Now you can access `Grafana` via http://localhost:3000
 
 Use `admin:admin` as username and password and you will be asked to change `admin` password when you access it for the first time.
 
-## Task #3 - deploy `guinea-pig` `ServiceMonitor`
+## Task #3 OPTIONAL - deploy `guinea-pig` `ServiceMonitor`
 
 Create new `serviceMonitor.yaml` file with the following content. 
 
