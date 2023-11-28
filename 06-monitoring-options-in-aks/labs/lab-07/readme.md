@@ -1,4 +1,4 @@
-# lab-07 - use Azure Monitor Data Source in Grafana
+# lab-07 OPTIONAL - use Azure Monitor Data Source in Grafana
 
 ## Estimated completion time - xx min
 
