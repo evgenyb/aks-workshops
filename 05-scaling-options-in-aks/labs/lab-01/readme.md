@@ -1,4 +1,4 @@
-# lab-01 - provision workshop resources 
+# lab-01 OPTIONAL - provision workshop resources 
 
 ## Estimated completion time - 20 min
 
