@@ -17,7 +17,7 @@ NAME                             STATUS   ROLES   AGE   VERSION
 aks-system-36621428-vmss000000   Ready    agent   18m   v1.21.7
 
 # scale up cluster to two nodes
-az aks scale --resource-group iac-ws5-rg --name iac-ws5-aks --node-count 2
+az aks scale --resource-group <your-unique-id>-rg --name <your-unique-id>-aks --node-count 2
 
 # Get number of nodes
 kubectl get nodes
