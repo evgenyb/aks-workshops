@@ -1,4 +1,4 @@
-# lab-03 - create monitoring dashboard for test application
+# lab-03 OPTIONAL - create monitoring dashboard for test application
 
 ## Estimated completion time - xx min
 
