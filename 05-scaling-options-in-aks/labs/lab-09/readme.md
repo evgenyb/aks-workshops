@@ -56,14 +56,14 @@ Get base64 encoded connection string for `order-consumer` key.
 You can either copy it from Azure Portal, or use this `az cli` command to query it.
 
 ```bash
-az servicebus namespace list -g iac-ws5-rg | jq .[].name -r
+az servicebus namespace list -g <YOUR-UNUQUE-ID>-rg | jq .[].name -r
 ```
 
-Use it for all further `az servicebus` commands instead of `iac-ws5-<YOUR-UNUQUE-ID>-sbns`.
+Use it for all further `az servicebus` commands instead of <YOUR-UNUQUE-ID>-sbns`.
 
 ```bash
 # Get base64 encoded connection string
-az servicebus queue authorization-rule keys list --resource-group iac-ws5-rg --namespace-name iac-ws5-<YOUR-UNUQUE-ID>-sbns --queue-name orders --name order-consumer | jq .primaryConnectionString -r | base64 -n 0
+az servicebus queue authorization-rule keys list --resource-group <YOUR-UNUQUE-ID>-rg --namespace-name <YOUR-UNUQUE-ID>-sbns --queue-name orders --name order-consumer | jq .primaryConnectionString -r | base64 -n 0
 ```
 
 Copy the above string and replace `<base64-encoded-connection-string>` in `deploy-autoscaling.yaml` file with it.
@@ -190,7 +190,7 @@ net.OrderGenerator\Program.cs` file
 
 ```bash
 # Get order-generator connection string
-az servicebus queue authorization-rule keys list --resource-group iac-ws5-rg --namespace-name iac-ws5-<YOUR-UNUQUE-ID>-sbns --queue-name orders --name order-generator | jq .primaryConnectionString -r 
+az servicebus queue authorization-rule keys list --resource-group <YOUR-UNUQUE-ID>-rg --namespace-name iac-ws5-<YOUR-UNUQUE-ID>-sbns --queue-name orders --name order-generator | jq .primaryConnectionString -r 
 ```
 Lines 12 and 13 in your `.\src\Keda.Samples.Dotnet.OrderGenerator\Program.cs` should look something similar to 
 
