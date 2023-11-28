@@ -26,7 +26,7 @@ aks-system-36621428-vmss000000   Ready    agent   19m   v1.21.7
 aks-system-36621428-vmss000001   Ready    agent   43s   v1.21.7
 
 # scale cluster down to one node
-az aks scale --resource-group iac-ws5-rg --name iac-ws5-aks --node-count 1
+az aks scale --resource-group <your-unique-id>-rg --name <your-unique-id>-aks --node-count 1
 
 # Get number of nodes
 kubectl get nodes
