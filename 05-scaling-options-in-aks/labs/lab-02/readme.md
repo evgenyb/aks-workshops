@@ -1,4 +1,4 @@
-# lab-02 - build and deploy test application
+# lab-02 OPTIONAL - build and deploy test application
 
 ## Estimated completion time - 10 min
 
